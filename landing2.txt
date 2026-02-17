@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HR Manpower & Attendance Monitoring System</title>
+<link rel="icon" type="image/x-icon" href="/assets/images/company-logo.jpg">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- AOS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Inter', sans-serif; }
+
+/* Animated Gradient Background */
+.hero-bg {
+  background: linear-gradient(-45deg, #7f1d1d, #b91c1c, #991b1b, #ef4444);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}
+@keyframes gradientMove {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+</style>
+</head>
+
+<body class="min-h-screen bg-gray-900 flex items-center justify-center relative overflow-hidden">
+
+  <!-- Background Image -->
+  <div class="absolute inset-0">
+    <img src="assets/images/company-event.jpg"
+         class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+
+  <!-- Wrapper -->
+  <div class="relative z-10 w-full max-w-lg px-6 flex flex-col items-center justify-center min-h-screen">
+
+    <!-- Logo -->
+    <img src="assets/images/company-logo.jpg"
+         class="h-16 mb-6 rounded-full shadow-lg border-2 border-white/30">
+
+    <h1 class="text-2xl font-bold text-white mb-2 text-center">
+      HR Manpower Monitoring System
+    </h1>
+    <p class="text-gray-300 text-sm mb-8 text-center">
+      Corporate Access Portal
+    </p>
+
+    <!-- Access Button -->
+    <button id="showLoginBtn"
+      class="bg-red-700 text-white px-10 py-3 rounded-lg font-semibold hover:bg-red-800 transition shadow-lg">
+      Access System
+    </button>
+
+    <!-- Transparent Login Form (Hidden Initially) -->
+    <div id="loginForm" class="fixed inset-0 flex items-center justify-center px-6 hidden">
+
+      <!-- Dark Overlay with Blur -->
+      <div id="overlayBg"
+          class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+
+      <!-- Login Card -->
+      <div class="relative w-full max-w-md glass rounded-2xl shadow-2xl p-8 max-h-[90vh] overflow-auto">
+
+        <!-- Close Button -->
+        <button id="closeLogin"
+          class="absolute top-4 right-4 text-white hover:text-red-400 text-lg">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <h2 class="text-xl font-semibold text-white mb-6 text-center">
+          Secure Login
+        </h2>
+
+        <form action="login.php" method="POST" class="space-y-5">
+
+          <!-- Role Selection -->
+          <div>
+            <label class="block text-sm text-white mb-2">Select Role</label>
+            <select name="role" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-600 focus:outline-none">
+              <option value="">-- Select Role --</option>
+              <option value="vp">Vice President</option>
+              <option value="senior_hr">Senior HR</option>
+              <option value="hr_officer">HR Officer</option>
+              <option value="branch_admin">Branch Admin</option>
+              <option value="employee">Employee</option>
+            </select>
+          </div>
+
+          <!-- Username -->
+          <div>
+            <label class="block text-sm text-white mb-2">ID / Username</label>
+            <input type="text" name="username" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-600 focus:outline-none"
+              placeholder="Enter your ID">
+          </div>
+
+          <!-- Password -->          
+            <div class="relative">
+            <label class="block text-sm text-white mb-2">Password</label>
+
+            <input type="password" name="password" id="passwordField" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-red-600 focus:outline-none"
+              placeholder="Enter your password">
+
+            <!-- Toggle Button -->
+            <button type="button" id="togglePassword"
+              class="absolute right-4 top-[42px] text-gray-600 hover:text-red-600">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+
+
+          <!-- Submit Button -->
+          <button type="submit"
+            class="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-red-800 transition shadow-lg">
+            Login
+          </button>
+
+        </form>
+
+        <!-- Security Notice -->
+        <div class="mt-6 border-t border-white/30 pt-4 text-center text-xs text-gray-200">
+          Authorized Personnel Only<br>
+          System activity is monitored and logged.
+        </div>
+
+      </div>
+    </div>
+    <!-- Footer -->
+    <p class="text-center text-gray-400 text-xs mt-8">
+      © 2026 Logistics Services Corporation<br>
+      HR Monitoring System v1.0
+    </p>
+
+  </div>
+
+  <!-- Script to Show Login Form -->
+  <script>
+  const btn = document.getElementById('showLoginBtn');
+  const formWrapper = document.getElementById('loginForm');
+  const closeBtn = document.getElementById('closeLogin');
+
+  btn.addEventListener('click', () => {
+    formWrapper.classList.remove('hidden');
+    btn.classList.add('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    formWrapper.classList.add('hidden');
+    btn.classList.remove('hidden');
+  });
+
+
+  const passwordField = document.getElementById('passwordField');
+  const togglePassword = document.getElementById('togglePassword');
+
+  togglePassword.addEventListener('click', () => {
+    const isPassword = passwordField.type === 'password';
+
+    passwordField.type = isPassword ? 'text' : 'password';
+
+    togglePassword.innerHTML = isPassword
+      ? '<i class="fas fa-eye-slash"></i>'
+      : '<i class="fas fa-eye"></i>';
+  });
+  </script>
+
+  <!-- Tailwind Animation -->
+  <style>
+    @keyframes fadeIn {
+      0% {opacity:0; transform: translateY(-20px);}
+      100% {opacity:1; transform: translateY(0);}
+    }
+    .animate-fadeIn {animation: fadeIn 0.8s ease forwards;}
+  </style>
+
+</body>
+</html>
