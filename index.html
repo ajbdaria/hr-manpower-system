@@ -42,8 +42,11 @@ body { font-family: 'Inter', sans-serif; }
 
  /* ── MARQUEE ── */
   .marquee-strip {
-    background: #b91c1c; /* Tailwind red-700 */
-    display: flex; white-space: nowrap;
+    background: #b91c1c;
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;   /* ✅ prevents horizontal scroll */
+    width: 100%;
   }
   .marquee-track {
     display: flex; gap: 3rem; animation: marquee 22s linear infinite;
@@ -132,6 +135,9 @@ body { font-family: 'Inter', sans-serif; }
   }
 }
 
+.bg-red-50 {
+  background: linear-gradient(135deg, #fff5f5, #ffe4e6);
+}
 </style>
 </head>
 
@@ -221,13 +227,14 @@ body { font-family: 'Inter', sans-serif; }
     <strong>Operations Supervisor</strong> <span>●</span>
   </div>
 </div>
-<!-- ================= MISSION & VISION ================= -->
+<!-- ================= MISSION, VISION & CORE VALUES ================= -->
 <section class="py-28 bg-gray-50">
   <div class="max-w-7xl mx-auto px-6">
 
+    <!-- Section Header -->
     <div class="text-center mb-16">
       <h2 class="text-4xl font-bold mb-4">
-        Our Mission & Vision
+        Our Mission, Vision & Core Values
       </h2>
       <p class="text-gray-600 max-w-2xl mx-auto">
         More than logistics — we build careers, empower people, and move
@@ -235,7 +242,8 @@ body { font-family: 'Inter', sans-serif; }
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-10">
+    <!-- Mission & Vision -->
+    <div class="grid md:grid-cols-2 gap-10 mb-16">
 
       <!-- Mission -->
       <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition"
@@ -248,10 +256,8 @@ body { font-family: 'Inter', sans-serif; }
         </div>
 
         <p class="text-gray-600 leading-relaxed">
-          To deliver reliable logistics and workforce solutions while
-          creating meaningful employment opportunities. We are committed
-          to efficiency, integrity, and supporting the personal and
-          professional growth of every team member.
+          - To provide quality service for package handling and delivery to our clients.<br>
+          - To promote committed service with high client satisfaction feedback.
         </p>
       </div>
 
@@ -266,51 +272,33 @@ body { font-family: 'Inter', sans-serif; }
         </div>
 
         <p class="text-gray-600 leading-relaxed">
-          To become a leading logistics and manpower provider in the region —
-          recognized for innovation, strong leadership, and a workplace
-          culture where people are valued, supported, and inspired to grow.
+          Docejo Logistics Services envisions itself to become the leading logistics service company that offers
+          the best quality and "mapag-arugang" delivery service every Filipino deserves.
         </p>
       </div>
 
     </div>
-  </div>
-</section>
 
-<!-- ================= FEATURES ================= -->
-<section id="features" class="py-28 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-6 text-center">
-    <h3 class="text-4xl font-bold mb-6">Powerful HR Modules</h3>
-    <p class="text-gray-600 mb-14 max-w-2xl mx-auto">
-      Built for efficiency, accuracy, and smarter decision-making.
-    </p>
-
-    <div class="grid md:grid-cols-3 gap-10">
-
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up">
-        <i class="fa fa-user-clock text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Attendance Tracking</h4>
-        <p class="text-gray-600">
-          Real-time logging with accurate time monitoring.
-        </p>
+    <!-- Core Values -->
+    <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition"
+         data-aos="fade-up">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-xl bg-green-600 text-white flex items-center justify-center text-2xl">
+          <i class="fa fa-heart"></i>
+        </div>
+        <h3 class="text-2xl font-semibold">Core Values</h3>
       </div>
 
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="100">
-        <i class="fa fa-users text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Manpower Monitoring</h4>
-        <p class="text-gray-600">
-          Monitor workforce distribution across departments.
-        </p>
-      </div>
-
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="200">
-        <i class="fa fa-file-lines text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Automated Reports</h4>
-        <p class="text-gray-600">
-          Generate professional HR reports instantly.
-        </p>
-      </div>
-
+      <ul class="text-gray-600 leading-relaxed space-y-2">
+        <li><strong>D - Discipline:</strong> Ability to follow rules, regulations, and procedures, staying committed to workplace ethics.</li>
+        <li><strong>O - Objective:</strong> Educate employees with purpose and work toward overarching company goals.</li>
+        <li><strong>C - Cooperative:</strong> Willingness to help others, resolve conflicts fairly, and follow chain of command.</li>
+        <li><strong>E - Enthusiasm:</strong> Positive attitude motivates self and others without dwelling on challenges.</li>
+        <li><strong>J - Justly:</strong> Fair treatment in workplace includes mutual respect, strong interpersonal relationships, and honest communication.</li>
+        <li><strong>O - Outstanding:</strong> Exceeds established expectations with consistent work quality and timely responsibility.</li>
+      </ul>
     </div>
+
   </div>
 </section>
 
@@ -522,6 +510,74 @@ body { font-family: 'Inter', sans-serif; }
   </div>
 </section>
 
+<!-- ================= GENERAL APPLICATION ================= -->
+<section class="mt-20">
+  <div class="max-w-5xl mx-auto px-6">
+
+    <div class="bg-red-50 rounded-2xl p-10 text-center shadow-md">
+
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+        Don't See Your Role? Send Us Your Resume.
+      </h2>
+
+      <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+        We're always growing. Submit a general application and be the first
+        to know when the right position opens up for you.
+      </p>
+
+      <button onclick="openGeneralApplication()"
+        class="inline-flex items-center gap-2 bg-red-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-800 transition">
+
+        Send Your Resume
+        <i class="fa fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+<section id="features" class="py-28 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <h3 class="text-4xl font-bold mb-6">Powerful HR Modules</h3>
+    <p class="text-gray-600 mb-14 max-w-2xl mx-auto">
+      Built for efficiency, accuracy, and smarter decision-making.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up">
+        <i class="fa fa-user-clock text-5xl text-red-700 mb-6"></i>
+        <h4 class="text-xl font-semibold mb-3">Attendance Tracking</h4>
+        <p class="text-gray-600">
+          Real-time logging with accurate time monitoring.
+        </p>
+      </div>
+
+      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="100">
+        <i class="fa fa-users text-5xl text-red-700 mb-6"></i>
+        <h4 class="text-xl font-semibold mb-3">Manpower Monitoring</h4>
+        <p class="text-gray-600">
+          Monitor workforce distribution across departments.
+        </p>
+      </div>
+
+      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="200">
+        <i class="fa fa-file-lines text-5xl text-red-700 mb-6"></i>
+        <h4 class="text-xl font-semibold mb-3">Automated Reports</h4>
+        <p class="text-gray-600">
+          Generate professional HR reports instantly.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
 <!-- ================= CTA ================= -->
 <section class="py-28 bg-red-700 text-white text-center">
   <h3 class="text-4xl font-bold mb-6">
@@ -658,6 +714,46 @@ class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
 
   </div>
 </div>
+
+
+
+<!-- GENERAL APPLICATION MODAL -->
+<div id="generalModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+  <div class="bg-white rounded-xl w-full max-w-md p-8 relative">
+
+    <button onclick="closeGeneralApplication()"
+      class="absolute top-3 right-4 text-gray-500 text-xl">&times;</button>
+
+    <h3 class="text-xl font-bold mb-4">General Application</h3>
+
+    <p class="text-gray-600 text-sm mb-6">
+      Upload your resume and our HR team will contact you when a suitable
+      position becomes available.
+    </p>
+
+    <form action="submit_general_application.php" method="POST" enctype="multipart/form-data">
+
+      <input type="text" name="fullname" placeholder="Full Name"
+        class="w-full border rounded-lg p-3 mb-4" required>
+
+      <input type="email" name="email" placeholder="Email Address"
+        class="w-full border rounded-lg p-3 mb-4" required>
+
+      <input type="file" name="resume"
+        class="w-full border rounded-lg p-3 mb-6"
+        accept=".pdf,.doc,.docx" required>
+
+      <button type="submit"
+        class="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-red-800 transition">
+        Submit Resume
+      </button>
+
+    </form>
+
+  </div>
+</div>
 <script>
 function openModal(position) {
   document.getElementById('jobTitle').innerText = position;
@@ -781,6 +877,16 @@ document.getElementById("requirementsModal")
     closeRequirements();
   }
 });
+
+
+function openGeneralApplication() {
+  document.getElementById("generalModal").classList.remove("hidden");
+  document.getElementById("generalModal").classList.add("flex");
+}
+
+function closeGeneralApplication() {
+  document.getElementById("generalModal").classList.add("hidden");
+}
 </script>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
