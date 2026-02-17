@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Branch Overview</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+
+<style>
+    body {
+        background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+    }
+</style>
+</head>
+
+<body class="font-sans">
+
+<div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-gradient-to-b from-red-700 to-red-500 text-white shadow-2xl">
+        <div class="p-6 text-2xl font-bold border-b border-red-400">
+            Company
+        </div>
+
+        <nav class="mt-6 space-y-2 px-4 text-sm">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 hover:bg-red-600 rounded-lg">
+                <i data-feather="home"></i> Home
+            </a>
+
+            <a href="#" class="flex items-center gap-3 p-3 bg-red-600 rounded-lg">
+                <i data-feather="layers"></i> Branch Overview
+            </a>
+
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-600 rounded-lg">
+                <i data-feather="user-plus"></i> Recruitment
+            </a>
+
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-red-600 rounded-lg">
+                <i data-feather="settings"></i> Settings
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="flex-1 p-8">
+
+        <!-- HEADER -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-700">
+                Branch Overview
+            </h1>
+
+            <button class="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition">
+                + Add Branch
+            </button>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="grid grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-gray-500 text-sm">Total Branches</p>
+                <h2 class="text-3xl font-bold mt-2">8</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-gray-500 text-sm">At Target</p>
+                <h2 class="text-3xl font-bold text-green-600 mt-2">4</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-gray-500 text-sm">Below Target</p>
+                <h2 class="text-3xl font-bold text-yellow-500 mt-2">2</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-gray-500 text-sm">Critical</p>
+                <h2 class="text-3xl font-bold text-red-600 mt-2">2</h2>
+            </div>
+
+        </div>
+
+        <!-- BRANCH CARDS GRID -->
+        <div class="grid grid-cols-3 gap-6">
+
+            <!-- Branch Card -->
+            <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">Daet Branch</h3>
+                    <span class="text-red-600 text-sm font-medium">Critical</span>
+                </div>
+
+                <p class="text-sm text-gray-500 mb-2">184 / 200 Employees</p>
+
+                <!-- Progress -->
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="bg-red-600 h-2 rounded-full" style="width: 92%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span>Gap: -16</span>
+                    <span>Urgent Hiring Needed</span>
+                </div>
+            </div>
+
+            <!-- Branch Card -->
+            <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">Labo Branch</h3>
+                    <span class="text-green-600 text-sm font-medium">At Target</span>
+                </div>
+
+                <p class="text-sm text-gray-500 mb-2">180 / 180 Employees</p>
+
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="bg-green-600 h-2 rounded-full" style="width: 100%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span>Gap: +5</span>
+                    <span>Stable Workforce</span>
+                </div>
+            </div>
+
+            <!-- Branch Card -->
+            <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">Vinzons Branch</h3>
+                    <span class="text-yellow-500 text-sm font-medium">Below Target</span>
+                </div>
+
+                <p class="text-sm text-gray-500 mb-2">145 / 150 Employees</p>
+
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 97%"></div>
+                </div>
+
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span>Gap: -5</span>
+                    <span>Monitoring Required</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+feather.replace();
+</script>
+
+</body>
+</html>
