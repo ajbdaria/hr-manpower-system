@@ -172,7 +172,6 @@ body { font-family: 'Inter', sans-serif; }
 
       <!-- Card 1 -->
       <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-
         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -194,16 +193,15 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>J&T CP-BUHI 1</p>
           </div>
 
-          <button onclick="openModal()"
+          <button onclick="openModal('Delivery Rider')"
               class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
               Apply Now
-            </button>
+          </button>
         </div>
       </div>
 
       <!-- Card 2 -->
       <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-
         <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -225,16 +223,15 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Logistics HR</p>
           </div>
 
-          <a href="mailto:docejologisticservices.hrd@gmail.com"
-             class="block text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-            Apply Now
-          </a>
+          <button onclick="openModal('HR Assistant')"
+              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+              Apply Now
+          </button>
         </div>
       </div>
 
       <!-- Card 3 -->
       <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-
         <img src="https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -256,10 +253,10 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Operations</p>
           </div>
 
-          <a href="mailto:docejologisticservices.hrd@gmail.com"
-             class="block text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-            Apply Now
-          </a>
+          <button onclick="openModal('Operations Supervisor')"
+              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+              Apply Now
+          </button>
         </div>
       </div>
 
@@ -267,6 +264,7 @@ body { font-family: 'Inter', sans-serif; }
 
   </div>
 </section>
+
 
 
 
@@ -336,17 +334,66 @@ body { font-family: 'Inter', sans-serif; }
   </div>
 </footer>
 
-<!-- Load Modal Component -->
-<div id="modalContainer"></div>
+<!-- ================= APPLICATION MODAL ================= -->
+<div id="applicationModal"
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
 
+  <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 relative">
 
+    <button onclick="closeModal()"
+            class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold mb-2 text-gray-800">
+      Apply for <span id="jobTitle" class="text-red-700"></span>
+    </h2>
+
+    <form class="space-y-4 mt-6">
+
+      <input type="text" placeholder="Full Name"
+        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <input type="email" placeholder="Email Address"
+        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <input type="tel" placeholder="Phone Number"
+        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <textarea rows="3" placeholder="Address"
+        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none"></textarea>
+
+      <input type="file"
+        class="w-full border rounded-lg p-3">
+
+      <button type="submit"
+        class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800 transition">
+        Submit Application
+      </button>
+
+    </form>
+
+  </div>
+</div>
 <script>
-fetch('components/modals.html')
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById('modalContainer').innerHTML = data;
-  });
+function openModal(position) {
+  document.getElementById('jobTitle').innerText = position;
+  document.getElementById('applicationModal').classList.remove('hidden');
+  document.getElementById('applicationModal').classList.add('flex');
+}
+
+function closeModal() {
+  document.getElementById('applicationModal').classList.add('hidden');
+  document.getElementById('applicationModal').classList.remove('flex');
+}
+
+document.getElementById('applicationModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeModal();
+  }
+});
 </script>
+
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
