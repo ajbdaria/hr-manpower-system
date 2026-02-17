@@ -1,0 +1,59 @@
+<!-- Application Modal -->
+<div id="applicationModal"
+     class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-8 relative">
+
+    <!-- Close Button -->
+    <button onclick="closeModal()"
+            class="absolute top-4 right-4 text-gray-500 hover:text-red-600">
+      ✕
+    </button>
+
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">
+      Job Application Form
+    </h2>
+
+    <form class="space-y-4">
+
+      <div class="grid grid-cols-2 gap-4">
+        <input type="text" placeholder="First Name"
+               class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+        <input type="text" placeholder="Last Name"
+               class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+      </div>
+
+      <input type="email" placeholder="Email Address"
+             class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <input type="tel" placeholder="Phone Number"
+             class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <textarea rows="3" placeholder="Address"
+                class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none"></textarea>
+
+      <input type="file"
+             class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+
+      <button type="submit"
+              class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:bg-red-800 transition">
+        Submit Application
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById('applicationModal').classList.remove('hidden');
+  document.getElementById('applicationModal').classList.add('flex');
+}
+
+function closeModal() {
+  document.getElementById('applicationModal').classList.add('hidden');
+  document.getElementById('applicationModal').classList.remove('flex');
+}
+</script>

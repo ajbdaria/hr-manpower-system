@@ -194,10 +194,10 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>J&T CP-BUHI 1</p>
           </div>
 
-          <a href="mailto:docejologisticservices.hrd@gmail.com"
-             class="block text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-            Apply Now
-          </a>
+          <button onclick="openModal()"
+              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+              Apply Now
+            </button>
         </div>
       </div>
 
@@ -336,6 +336,17 @@ body { font-family: 'Inter', sans-serif; }
   </div>
 </footer>
 
+<!-- Load Modal Component -->
+<div id="modalContainer"></div>
+
+
+<script>
+fetch('components/modals.html')
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById('modalContainer').innerHTML = data;
+  });
+</script>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
