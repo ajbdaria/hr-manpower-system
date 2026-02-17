@@ -1,0 +1,10 @@
+<!-- Load Modal Component -->
+<div id="modalContainer"></div>
+
+<script>
+fetch('components/modal.html')
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById('modalContainer').innerHTML = data;
+  });
+</script>

@@ -33,18 +33,27 @@ body {
 
 <body class="min-h-screen relative flex items-center justify-center overflow-hidden">
 
-<!-- Background Image -->
+<!-- Background -->
 <div class="absolute inset-0">
     <img src="assets/images/company-logn-bg.png"
-         class="w-full h-full object-cover">
-    <div class="absolute inset-0 bg-gradient-to-br from-black/80 via-red-900/70 to-black/80"></div>
+         class="w-full h-full object-cover scale-110">
+
+    <!-- Red Themed Overlay -->
+    <div class="absolute inset-0 
+                bg-gradient-to-br 
+                from-red-900/80 
+                via-red-800/70 
+                to-black/90 
+                backdrop-blur-sm">
+    </div>
 </div>
+
 
 <!-- Login Card -->
 <div class="relative z-10 w-full max-w-md px-6">
 
-    <div class="backdrop-blur-xl bg-white/10 border border-white/20 
-                rounded-3xl shadow-2xl p-8 text-white">
+    <div class="backdrop-blur-2xl bg-white/10 border border-white/20 
+                rounded-3xl shadow-2xl p-8 text-white transition-all duration-500">
 
         <!-- Logo -->
         <div class="text-center mb-8">
@@ -62,7 +71,7 @@ body {
         <!-- Form -->
         <form action="login.php" method="POST" class="space-y-6">
 
-            <!-- ROLE SELECTOR -->
+            <!-- ROLE -->
             <div>
                 <label class="text-sm text-gray-300 mb-2 block">
                     Login As
@@ -73,14 +82,14 @@ body {
                            border border-white/20 text-white
                            focus:outline-none focus:ring-2 focus:ring-brand">
                     <option value="" class="text-black">Select Role</option>
-                    <option value="branch_hr" class="text-black">Branch HR</option>
-                    <option value="hq_hr" class="text-black">Head Quarter HR</option>
+                    <option value="branch_hr" class="text-black">Branch Admin</option>
+                    <option value="hq_hr" class="text-black">HR Officers</option>
                     <option value="senior_hr" class="text-black">Senior HR</option>
-                    <option value="super_admin" class="text-black">Super Admin / VPIA</option>
+                    <option value="super_admin" class="text-black">Admin / VPIA</option>
                 </select>
             </div>
 
-            <!-- Email -->
+            <!-- EMAIL -->
             <div class="relative">
                 <input type="email" name="email" required
                     class="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/10 
@@ -96,10 +105,10 @@ body {
                 </label>
             </div>
 
-            <!-- Password -->
+            <!-- PASSWORD -->
             <div class="relative">
                 <input type="password" name="password" id="password" required
-                    class="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/10 
+                    class="peer w-full px-4 pt-5 pb-2 pr-12 rounded-xl bg-white/10 
                            border border-white/20 text-white placeholder-transparent
                            focus:outline-none focus:ring-2 focus:ring-brand"
                     placeholder="Password">
@@ -111,15 +120,17 @@ body {
                     Password
                 </label>
 
-                <button type="button" onclick="togglePassword()"
-                        class="absolute right-4 top-4 text-gray-300 hover:text-white">
+                <!-- Eye Toggle -->
+                <button type="button"
+                        onclick="togglePassword()"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition">
                     <i id="eyeIcon" class="fa fa-eye"></i>
                 </button>
             </div>
 
-            <!-- Options -->
+            <!-- OPTIONS -->
             <div class="flex items-center justify-between text-sm text-gray-300">
-                <label class="flex items-center gap-2">
+                <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" 
                            class="rounded border-gray-300 text-brand focus:ring-brand">
                     Remember me
@@ -128,17 +139,14 @@ body {
                     Forgot password?
                 </a>
             </div>
-
-            <!-- Button -->
-            <button type="button"
+            <!-- SUBMIT BUTTON -->
+            <button type="submit"
                 onclick="window.location.href='dashboard.html'"
                 class="w-full bg-brand hover:bg-brandDark 
                     py-3 rounded-xl font-semibold shadow-lg 
                     transition hover:scale-105">
                 Sign In
             </button>
-
-
         </form>
 
         <!-- Footer -->
@@ -148,7 +156,6 @@ body {
 
     </div>
 </div>
-
 
 <!-- Script -->
 <script>

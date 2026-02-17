@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Careers | CTD Logistics Services Corporation</title>
+<link rel="icon" href="/mnt/user-data/uploads/1771308668391_ctd-logo.jpg">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --red:    #c0182a;
+    --red-dk: #8b0f1d;
+    --gold:   #f5a623;
+    --coal:   #0e0e0e;
+    --offwhite: #f7f4f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--coal);
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .4;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(14,14,14,.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:.05em; }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2.5rem; font-size: .9rem; font-weight: 500; }
+  .nav-links a { color: rgba(255,255,255,.65); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: #fff; }
+  .nav-cta {
+    background: var(--red); color: #fff; padding: .6rem 1.5rem;
+    border-radius: 6px; font-family: 'Syne',sans-serif; font-weight:700;
+    font-size:.85rem; letter-spacing:.04em; text-decoration:none;
+    transition: background .2s, transform .15s;
+  }
+  .nav-cta:hover { background: var(--red-dk); transform: translateY(-1px); }
+  /* Logo container */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: .05em;
+}
+
+/* Logo image */
+.nav-logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;      /* makes it round */
+  border: 2px solid rgba(255,255,255,.15);
+}
+
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 0 3rem;
+    min-height: calc(100vh - 88px);
+    padding-top: 88px;   /* offset for fixed navbar */
+  }
+  .hero-bg-img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url("/assets/images/company-event.jpg") center / cover no-repeat;
+    filter: saturate(.3) brightness(.35);
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(14,14,14,.95) 45%, rgba(192,24,42,.25) 100%);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 720px; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: .6rem;
+    font-size: .8rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 28px; height: 2px; background: var(--gold);
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800; line-height: 1.02; letter-spacing: -.02em;
+  }
+  .hero h1 em { font-style: normal; color: var(--red); }
+
+  .hero-sub {
+    margin-top: 1.5rem; font-size: 1.15rem; line-height: 1.75;
+    color: rgba(255,255,255,.6); max-width: 520px;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--red); color: #fff;
+    padding: .9rem 2rem; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem;
+    text-decoration: none; letter-spacing: .03em;
+    transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 24px rgba(192,24,42,.4);
+  }
+  .btn-primary:hover { background: var(--red-dk); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(192,24,42,.5); }
+
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,.25); color: #fff;
+    padding: .9rem 2rem; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: .95rem;
+    text-decoration: none;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: #fff; background: rgba(255,255,255,.07); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 4rem;
+    padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,.1);
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800;
+    color: var(--red); line-height: 1;
+  }
+  .stat-label { font-size: .8rem; color: rgba(255,255,255,.5); margin-top: .3rem; letter-spacing: .05em; text-transform: uppercase; }
+
+  /* ── MARQUEE ── */
+  .marquee-strip {
+    background: var(--red); padding: .85rem 0; overflow: hidden;
+    display: flex; white-space: nowrap;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem; animation: marquee 22s linear infinite;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: .85rem; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .marquee-track span { color: rgba(255,255,255,.55); }
+  .marquee-track strong { color: #fff; }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  /* ── WHY US ── */
+  .section { padding: 7rem 3rem; }
+  .section-label {
+    font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--red); font-weight: 600; margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+    line-height: 1.1; letter-spacing: -.02em;
+  }
+
+  .perks-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5px; margin-top: 4rem; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.06); border-radius: 16px; overflow: hidden;
+  }
+  .perk-card {
+    background: #141414; padding: 2.5rem 2rem;
+    transition: background .25s;
+  }
+  .perk-card:hover { background: #1c1c1c; }
+  .perk-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(192,24,42,.15); border: 1px solid rgba(192,24,42,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: var(--red); margin-bottom: 1.25rem;
+  }
+  .perk-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; margin-bottom:.5rem; }
+  .perk-desc { font-size:.88rem; line-height:1.65; color:rgba(255,255,255,.5); }
+
+  /* ── JOBS ── */
+  .jobs-section { padding: 7rem 3rem; background: var(--offwhite); color: var(--coal); }
+  .jobs-section .section-label { color: var(--red); }
+  .jobs-section .section-title { color: var(--coal); }
+
+  .jobs-filter {
+    display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 2.5rem;
+  }
+  .filter-btn {
+    padding: .5rem 1.25rem; border-radius: 999px; font-size: .82rem; font-weight: 600;
+    cursor: pointer; border: 1.5px solid rgba(14,14,14,.15);
+    background: transparent; color: rgba(14,14,14,.55);
+    font-family: 'DM Sans', sans-serif;
+    transition: all .2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--coal); color: #fff; border-color: var(--coal);
+  }
+
+  .jobs-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem; margin-top: 3rem;
+  }
+
+  .job-card {
+    background: #fff; border-radius: 16px;
+    overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,.07);
+    transition: transform .25s, box-shadow .25s;
+    display: flex; flex-direction: column;
+  }
+  .job-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,.13); }
+
+  .job-card-img {
+    width: 100%; height: 180px; object-fit: cover;
+    filter: saturate(.9);
+  }
+
+  .job-card-body { padding: 1.75rem; flex: 1; display: flex; flex-direction: column; }
+
+  .job-badge {
+    display: inline-block; padding: .3rem .85rem; border-radius: 999px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .badge-red    { background: #fde8ea; color: var(--red); }
+  .badge-blue   { background: #e8f0fe; color: #1a56db; }
+  .badge-green  { background: #e6f4ea; color: #1e7e34; }
+  .badge-orange { background: #fff3e0; color: #e65100; }
+
+  .job-title {
+    font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 800;
+    color: var(--coal); margin-bottom: .5rem;
+  }
+  .job-desc { font-size: .88rem; color: rgba(14,14,14,.55); line-height: 1.6; margin-bottom: 1.25rem; }
+
+  .job-meta { display: flex; flex-direction: column; gap: .4rem; font-size: .8rem; color: rgba(14,14,14,.5); margin-bottom: 1.5rem; }
+  .job-meta span i { color: var(--red); width: 16px; }
+
+  .job-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+  .job-tag {
+    font-size: .72rem; padding: .25rem .7rem; border-radius: 5px;
+    background: var(--offwhite); color: rgba(14,14,14,.6); font-weight: 500;
+  }
+
+  .job-apply-btn {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    background: var(--coal); color: #fff;
+    padding: .85rem; border-radius: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: .88rem;
+    cursor: pointer; border: none; width: 100%; margin-top: auto;
+    transition: background .2s, transform .15s;
+  }
+  .job-apply-btn:hover { background: var(--red); transform: translateY(-1px); }
+  .job-apply-btn i { font-size: .75rem; }
+
+  /* ── CULTURE ── */
+  .culture-section {
+    padding: 7rem 3rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  @media(max-width:768px){
+    .culture-section { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+    nav { padding: 1rem 1.5rem; }
+    .hero, .section, .jobs-section { padding-left:1.5rem; padding-right:1.5rem; }
+    .culture-section { padding: 4rem 1.5rem; }
+    .hero-stats { gap:2rem; }
+  }
+
+  .culture-imgs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; position: relative;
+  }
+  .culture-imgs img {
+    width: 100%; border-radius: 14px; object-fit: cover;
+    filter: saturate(.8);
+  }
+  .culture-imgs img:first-child { grid-row: span 2; height: 380px; }
+  .culture-imgs img:not(:first-child) { height: 180px; }
+
+  .culture-badge {
+    position: absolute; bottom: -1.5rem; left: 50%; transform: translateX(-50%);
+    background: var(--red); color: #fff; border-radius: 12px; padding: 1rem 1.5rem;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem;
+    white-space: nowrap; box-shadow: 0 8px 24px rgba(192,24,42,.4);
+  }
+  .culture-badge span { font-size: 1.5rem; font-weight: 800; display: block; }
+
+  .culture-text .section-title { color: #fff; margin-bottom:1.5rem; }
+  .culture-text p { color:rgba(255,255,255,.55); line-height:1.8; font-size:.95rem; margin-bottom:1rem; }
+
+  .culture-points { margin-top:2rem; display:flex; flex-direction:column; gap:1rem; }
+  .culture-point {
+    display:flex; align-items:flex-start; gap:1rem;
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+    padding:1rem 1.25rem; border-radius:12px;
+  }
+  .culture-point-icon { color:var(--gold); font-size:1rem; margin-top:.15rem; flex-shrink:0; }
+  .culture-point-text { font-size:.88rem; color:rgba(255,255,255,.6); line-height:1.6; }
+  .culture-point-text strong { color:#fff; font-weight:600; display:block; margin-bottom:.2rem; }
+
+  /* ── PROCESS ── */
+  .process-section { padding: 7rem 3rem; background: var(--offwhite); }
+  .process-steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem; margin-top: 4rem; position: relative;
+  }
+  .process-step { text-align: center; }
+  .step-num {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--coal); color: #fff;
+    font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;
+  }
+  .step-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; color:var(--coal); margin-bottom:.5rem; }
+  .step-desc { font-size:.85rem; color:rgba(14,14,14,.55); line-height:1.65; }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    margin: 0 3rem 7rem; border-radius: 20px; overflow: hidden;
+    position: relative; padding: 5rem 4rem;
+    background: linear-gradient(135deg, var(--red-dk), var(--red));
+  }
+  .cta-banner::before {
+    content:''; position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .cta-banner-inner { position:relative; z-index:1; max-width:650px; }
+  .cta-banner h2 { font-size:clamp(2rem,4vw,3rem); font-weight:800; line-height:1.1; margin-bottom:1rem; }
+  .cta-banner p { color:rgba(255,255,255,.7); font-size:1rem; margin-bottom:2rem; line-height:1.7; }
+  .cta-banner .btn-white {
+    background:#fff; color:var(--red); padding:.9rem 2rem; border-radius:8px;
+    font-family:'Syne',sans-serif; font-weight:700; text-decoration:none;
+    font-size:.95rem; display:inline-block;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .cta-banner .btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.25); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #090909; padding: 4rem 3rem 2rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer-grid { display:grid; grid-template-columns: 2fr 1fr 1fr; gap:4rem; margin-bottom:3rem; }
+  .footer-brand { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:.75rem; }
+  .footer-brand span { color:var(--red); }
+  .footer-desc { font-size:.85rem; color:rgba(255,255,255,.4); line-height:1.8; }
+  .footer-col h4 { font-family:'Syne',sans-serif; font-weight:700; font-size:.85rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:1rem; }
+  .footer-col a { display:block; font-size:.88rem; color:rgba(255,255,255,.5); text-decoration:none; margin-bottom:.6rem; transition:color .2s; }
+  .footer-col a:hover { color:#fff; }
+  .footer-bottom { border-top:1px solid rgba(255,255,255,.06); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:rgba(255,255,255,.25); }
+  @media(max-width:768px){
+    .footer-grid { grid-template-columns:1fr; gap:2rem; }
+    .cta-banner { margin:0 1.5rem 4rem; padding:3rem 2rem; }
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(8px);
+    z-index:200; display:none; align-items:center; justify-content:center; padding:1.5rem;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal-box {
+    background:#1a1a1a; border:1px solid rgba(255,255,255,.1); border-radius:20px;
+    width:100%; max-width:520px; padding:2.5rem; position:relative;
+    animation: modalIn .3s ease;
+  }
+  @keyframes modalIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .modal-close {
+    position:absolute; top:1.25rem; right:1.25rem; background:rgba(255,255,255,.08);
+    border:none; color:#fff; width:34px; height:34px; border-radius:50%;
+    cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center;
+    transition:background .2s;
+  }
+  .modal-close:hover { background:var(--red); }
+  .modal-box h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; margin-bottom:.4rem; }
+  .modal-box .modal-sub { font-size:.85rem; color:rgba(255,255,255,.45); margin-bottom:2rem; }
+  .modal-box .modal-sub strong { color:var(--gold); }
+  .form-group { margin-bottom:1rem; }
+  .form-group label { display:block; font-size:.78rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:.4rem; }
+  .form-group input, .form-group textarea, .form-group select {
+    width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+    border-radius:8px; padding:.75rem 1rem; color:#fff; font-family:'DM Sans',sans-serif;
+    font-size:.9rem; outline:none; transition:border-color .2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--red); }
+  .form-group textarea { resize:vertical; min-height:90px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .submit-btn {
+    width:100%; background:var(--red); color:#fff; padding:.9rem;
+    border:none; border-radius:10px; font-family:'Syne',sans-serif;
+    font-weight:700; font-size:1rem; cursor:pointer; margin-top:.5rem;
+    transition:background .2s, transform .15s;
+  }
+  .submit-btn:hover { background:var(--red-dk); transform:translateY(-1px); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up { opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .fade-up-d1 { transition-delay:.1s; }
+  .fade-up-d2 { transition-delay:.2s; }
+  .fade-up-d3 { transition-delay:.3s; }
+  .fade-up-d4 { transition-delay:.4s; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <!-- Logo -->
+  <div class="nav-logo">
+    <img src="/assets/images/company-logo.jpg" alt="Docejo Logistics Logo">
+    <span>DOCEJO <strong>LOGISTICS</strong></span>
+  </div>
+
+  <!-- Links -->
+  <div class="nav-links">
+    <a href="#features">System</a>
+    <a href="#why-us">Benefits</a>
+    <a href="#careers">Careers</a>
+    <a href="#culture">Culture</a>
+    <a href="#process">Process</a>
+  </div>
+
+  <!-- Actions -->
+  <div class="nav-actions">
+    <a href="/login.php" class="nav-login">Login</a>
+    <a href="#careers" class="nav-cta">View Open Roles ↓</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">We're Actively Hiring</div>
+    <h1>Build a Career<br>That <em>Moves</em><br>With You.</h1>
+    <p class="hero-sub">
+      Join Docejo Logistics — where your skills drive real impact. 
+      Competitive pay, real growth, and a team that has your back.
+    </p>
+    <div class="hero-actions">
+      <a href="#careers" class="btn-primary">Explore Open Positions <i class="fa fa-arrow-down" style="margin-left:.4rem;font-size:.8rem"></i></a>
+      <a href="#culture" class="btn-ghost">Our Culture</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Employees</div>
+      </div>
+      <div>
+        <div class="stat-num">12</div>
+        <div class="stat-label">Branches</div>
+      </div>
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Open Roles</div>
+      </div>
+      <div>
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Culture Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section class="section" id="why-us">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label fade-up">Why Docejo</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;margin-bottom:4rem;" class="fade-up">
+      <h2 class="section-title">More Than<br>Just a Job.</h2>
+      <p style="color:rgba(255,255,255,.5);font-size:.95rem;line-height:1.8;">
+        We believe great logistics starts with great people. That's why we invest in every team member — from competitive benefits to career pathways that actually go somewhere.
+      </p>
+    </div>
+    <div class="perks-grid">
+      <div class="perk-card fade-up">
+        <div class="perk-icon"><i class="fa fa-peso-sign"></i></div>
+        <div class="perk-title">Competitive Pay</div>
+        <div class="perk-desc">Above-market salaries with performance bonuses reviewed regularly.</div>
+      </div>
+      <div class="perk-card fade-up fade-up-d1">
+        <div class="perk-icon"><i class="fa fa-shield-halved"></i></div>
+        <div class="perk-title">SSS, PhilHealth & Pag-IBIG</div>
+        <div class="perk-desc">Full statutory benefits from day one. No delays, no exceptions.</div>
+      </div>
+      <div class="perk-card fade-up fade-up-d2">
+        <div class="perk-icon"><i class="fa fa-chart-line"></i></div>
+        <div class="perk-title">Career Growth</div>
+        <div class="perk-desc">Clear promotion paths with skills training and mentorship programs.</div>
+      </div>
+      <div class="perk-card fade-up fade-up-d3">
+        <div class="perk-icon"><i class="fa fa-calendar-check"></i></div>
+        <div class="perk-title">Paid Leave</div>
+        <div class="perk-desc">Vacation and sick leaves that actually get approved when you need them.</div>
+      </div>
+      <div class="perk-card fade-up fade-up-d4">
+        <div class="perk-icon"><i class="fa fa-people-group"></i></div>
+        <div class="perk-title">Supportive Team</div>
+        <div class="perk-desc">A culture built on respect, collaboration, and celebrating wins together.</div>
+      </div>
+      <div class="perk-card fade-up">
+        <div class="perk-icon"><i class="fa fa-location-dot"></i></div>
+        <div class="perk-title">Multiple Branches</div>
+        <div class="perk-desc">Opportunities across all our branches in Camarines Sur and beyond.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOB LISTINGS -->
+<section class="jobs-section" id="careers">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">Open Positions</p>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;">
+      <h2 class="section-title fade-up">Find Your<br>Perfect Role.</h2>
+      <div class="jobs-filter">
+        <button class="filter-btn active" onclick="filterJobs('all', this)">All Roles</button>
+        <button class="filter-btn" onclick="filterJobs('field', this)">Field</button>
+        <button class="filter-btn" onclick="filterJobs('office', this)">Office</button>
+        <button class="filter-btn" onclick="filterJobs('management', this)">Management</button>
+      </div>
+    </div>
+
+    <div class="jobs-grid" id="jobsGrid">
+
+      <!-- JOB 1 -->
+      <div class="job-card" data-category="field">
+        <img class="job-card-img" src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" alt="Delivery Rider">
+        <div class="job-card-body">
+          <span class="job-badge badge-red">Full Time · Field</span>
+          <div class="job-title">Delivery Rider</div>
+          <p class="job-desc">Deliver parcels efficiently and safely within your assigned route, ensuring customer satisfaction on every drop.</p>
+          <div class="job-meta">
+            <span><i class="fa fa-map-marker-alt"></i> Buhi, Camarines Sur</span>
+            <span><i class="fa fa-building"></i> J&T CP-BUHI 1</span>
+            <span><i class="fa fa-clock"></i> Mon – Sat | 8:00 AM – 6:00 PM</span>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag">Valid License</span>
+            <span class="job-tag">Motorcycle</span>
+            <span class="job-tag">Physical Fitness</span>
+          </div>
+          <button class="job-apply-btn" onclick="openModal('Delivery Rider', 'Field', 'Buhi, Camarines Sur')">
+            Apply Now <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- JOB 2 -->
+      <div class="job-card" data-category="office">
+        <img class="job-card-img" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80" alt="HR Assistant">
+        <div class="job-card-body">
+          <span class="job-badge badge-blue">Full Time · Office</span>
+          <div class="job-title">HR Assistant</div>
+          <p class="job-desc">Support our HR team with recruitment, employee records, timekeeping, and day-to-day HR operations.</p>
+          <div class="job-meta">
+            <span><i class="fa fa-map-marker-alt"></i> Main Office</span>
+            <span><i class="fa fa-building"></i> Logistics HR Department</span>
+            <span><i class="fa fa-clock"></i> Mon – Fri | 8:00 AM – 5:00 PM</span>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag">HR Diploma/Degree</span>
+            <span class="job-tag">MS Office</span>
+            <span class="job-tag">Communication</span>
+          </div>
+          <button class="job-apply-btn" onclick="openModal('HR Assistant', 'Office', 'Main Office')">
+            Apply Now <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- JOB 3 -->
+      <div class="job-card" data-category="management">
+        <img class="job-card-img" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80" alt="Operations Supervisor">
+        <div class="job-card-body">
+          <span class="job-badge badge-green">Full Time · Supervisor</span>
+          <div class="job-title">Operations Supervisor</div>
+          <p class="job-desc">Lead branch operations, coordinate manpower distribution, and ensure targets are met with excellence every day.</p>
+          <div class="job-meta">
+            <span><i class="fa fa-map-marker-alt"></i> Branch Based</span>
+            <span><i class="fa fa-building"></i> Operations Division</span>
+            <span><i class="fa fa-clock"></i> Mon – Sat | Flexible Hours</span>
+          </div>
+          <div class="job-tags">
+            <span class="job-tag">Leadership</span>
+            <span class="job-tag">Logistics Experience</span>
+            <span class="job-tag">Decision Making</span>
+          </div>
+          <button class="job-apply-btn" onclick="openModal('Operations Supervisor', 'Management', 'Branch Based')">
+            Apply Now <i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section class="culture-section" id="culture">
+  <div class="culture-imgs fade-up">
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Team">
+    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=400&q=80" alt="Office">
+    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80" alt="Work">
+    <div class="culture-badge">
+      <span>4.8/5</span>
+      Employee Satisfaction
+    </div>
+  </div>
+  <div class="culture-text fade-up fade-up-d2">
+    <p class="section-label">Life at Docejo</p>
+    <h2 class="section-title">A Culture Built<br>for Real People.</h2>
+    <p>We don't just say we value our people — we show it. From transparent management to monthly team events, our workplace culture is something our employees are proud to be part of.</p>
+    <div class="culture-points">
+      <div class="culture-point">
+        <i class="fa fa-star culture-point-icon"></i>
+        <div class="culture-point-text">
+          <strong>Transparent Management</strong>
+          Leadership that listens, communicates openly, and acts with integrity.
+        </div>
+      </div>
+      <div class="culture-point">
+        <i class="fa fa-trophy culture-point-icon"></i>
+        <div class="culture-point-text">
+          <strong>Recognition & Rewards</strong>
+          Monthly top performer awards, bonuses, and public recognition.
+        </div>
+      </div>
+      <div class="culture-point">
+        <i class="fa fa-graduation-cap culture-point-icon"></i>
+        <div class="culture-point-text">
+          <strong>Learning & Development</strong>
+          Ongoing training programs to level up your skills and career.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label" style="color:var(--red);">Hiring Process</p>
+    <h2 class="section-title fade-up" style="color:var(--coal);">From Apply to<br>First Day in 4 Steps.</h2>
+    <div class="process-steps">
+      <div class="process-step fade-up">
+        <div class="step-num">01</div>
+        <div class="step-title">Apply Online</div>
+        <p class="step-desc">Submit your application with resume and basic info. Takes under 5 minutes.</p>
+      </div>
+      <div class="process-step fade-up fade-up-d1">
+        <div class="step-num">02</div>
+        <div class="step-title">Initial Review</div>
+        <p class="step-desc">Our HR team reviews your profile and reaches out within 3 business days.</p>
+      </div>
+      <div class="process-step fade-up fade-up-d2">
+        <div class="step-num">03</div>
+        <div class="step-title">Interview</div>
+        <p class="step-desc">A quick, friendly interview — in-person or virtual — with your future team.</p>
+      </div>
+      <div class="process-step fade-up fade-up-d3">
+        <div class="step-num">04</div>
+        <div class="step-title">Welcome Aboard!</div>
+        <p class="step-desc">Receive your offer letter, complete onboarding, and start your career.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">DOCEJO <span>LOGISTICS</span></div>
+      <p class="footer-desc">
+        Delivering reliable workforce and logistics management solutions with integrity, efficiency, and excellence. 
+        Our mission is to streamline operations and empower organizational growth.
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <a href="login.html">HR System Login</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="attendance.html">Attendance</a>
+      <a href="reports.html">Reports</a>
+      <a href="branches.html">Branches</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:support@logisticscorp.com">support@logisticscorp.com</a>
+      <a href="tel:+639000000000">+63 900 000 0000</a>
+      <a href="#">Main Office, Manila, Philippines</a>
+      <a href="#">Mon–Fri · 8:00 AM – 5:00 PM</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Docejo Logistics Services Corporation. All Rights Reserved.</span>
+    <span>HR Manpower Management System v1.0</span>
+  </div>
+</footer>
+
+<!-- APPLICATION MODAL -->
+<div class="modal-overlay" id="appModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Apply for <span id="modalJobTitle" style="color:var(--red)"></span></h2>
+    <p class="modal-sub">
+      <strong id="modalDept"></strong> · <span id="modalLoc"></span>
+    </p>
+    <form onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Juan" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Dela Cruz" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="juan@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+63 900 000 0000" required>
+      </div>
+      <div class="form-group">
+        <label>Why do you want to join us?</label>
+        <textarea placeholder="Tell us a bit about yourself and why you're a great fit..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Upload Resume (PDF)</label>
+        <input type="file" accept=".pdf,.doc,.docx">
+      </div>
+      <button type="submit" class="submit-btn">Submit Application →</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Modal
+  function openModal(job, dept, loc) {
+    document.getElementById('modalJobTitle').textContent = job;
+    document.getElementById('modalDept').textContent = dept;
+    document.getElementById('modalLoc').textContent = loc;
+    document.getElementById('appModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('appModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('appModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.submit-btn');
+    btn.textContent = '✓ Application Submitted!';
+    btn.style.background = '#166534';
+    setTimeout(closeModal, 1800);
+  }
+
+  // Job Filter
+  function filterJobs(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.job-card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
+    });
+  }
+
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

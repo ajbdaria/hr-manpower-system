@@ -39,6 +39,99 @@ body { font-family: 'Inter', sans-serif; }
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.2);
 }
+
+ /* ── MARQUEE ── */
+  .marquee-strip {
+    background: #b91c1c; /* Tailwind red-700 */
+    display: flex; white-space: nowrap;
+  }
+  .marquee-track {
+    display: flex; gap: 3rem; animation: marquee 22s linear infinite;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: .85rem; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .marquee-track span { color: rgba(255,255,255,.55); }
+  .marquee-track strong { color: #fff; }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+/* FILTER BUTTONS */
+.filter-btn{
+  padding: .55rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all .3s ease;
+}
+
+.filter-btn:hover{
+  background:#b91c1c;
+  color:white;
+  border-color:#b91c1c;
+}
+
+.filter-btn.active{
+  background:#b91c1c;
+  color:white;
+  border-color:#b91c1c;
+} 
+
+/* ===== MINIMALIST MINI HIRING PROCESS ===== */
+
+.mini-process {
+  padding: 0;              /* remove container spacing */
+  background: transparent; /* remove gray background */
+  border: none;            /* remove border */
+}
+
+/* Step Layout */
+.mini-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 180px;
+}
+
+/* Number Circle */
+.mini-num {
+  width: 38px;
+  height: 38px;
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+/* Text */
+.mini-title {
+  font-weight: 600;
+  color: #111827;
+  font-size: 14px;
+}
+
+.mini-desc {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Connecting Line (lighter + minimal) */
+.mini-line {
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+  min-width: 40px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .mini-line {
+    display: none;
+  }
+}
+
 </style>
 </head>
 
@@ -111,7 +204,77 @@ body { font-family: 'Inter', sans-serif; }
 
   </div>
 </section>
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+    <strong>Delivery Rider</strong> <span>●</span>
+    <strong>HR Assistant</strong> <span>●</span>
+    <strong>Operations Supervisor</strong> <span>●</span>
+  </div>
+</div>
+<!-- ================= MISSION & VISION ================= -->
+<section class="py-28 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
 
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold mb-4">
+        Our Mission & Vision
+      </h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">
+        More than logistics — we build careers, empower people, and move
+        communities forward.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10">
+
+      <!-- Mission -->
+      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition"
+           data-aos="fade-right">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-xl bg-red-700 text-white flex items-center justify-center text-2xl">
+            <i class="fa fa-bullseye"></i>
+          </div>
+          <h3 class="text-2xl font-semibold">Our Mission</h3>
+        </div>
+
+        <p class="text-gray-600 leading-relaxed">
+          To deliver reliable logistics and workforce solutions while
+          creating meaningful employment opportunities. We are committed
+          to efficiency, integrity, and supporting the personal and
+          professional growth of every team member.
+        </p>
+      </div>
+
+      <!-- Vision -->
+      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl transition"
+           data-aos="fade-left">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-xl bg-yellow-400 text-gray-900 flex items-center justify-center text-2xl">
+            <i class="fa fa-eye"></i>
+          </div>
+          <h3 class="text-2xl font-semibold">Our Vision</h3>
+        </div>
+
+        <p class="text-gray-600 leading-relaxed">
+          To become a leading logistics and manpower provider in the region —
+          recognized for innovation, strong leadership, and a workplace
+          culture where people are valued, supported, and inspired to grow.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 <!-- ================= FEATURES ================= -->
 <section id="features" class="py-28 bg-gray-50">
@@ -157,21 +320,96 @@ body { font-family: 'Inter', sans-serif; }
   <div class="max-w-7xl mx-auto px-6">
 
     <!-- Section Header -->
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-bold mb-4">
-        We're Hiring 🚀
-      </h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">
-        Join Docejo Logistic Services and grow your career with us.
-        Explore open positions below.
-      </p>
-    </div>
+   <!-- ================= FILTER HEADER ================= -->
+    <div class="mb-14">
 
+      <p class="text-red-700 font-semibold uppercase tracking-widest mb-3">
+        Open Positions
+      </p>
+
+      <div class="flex flex-wrap items-end justify-between gap-6">
+
+        <h2 class="text-4xl md:text-5xl font-bold leading-tight">
+          Find Your <br> Perfect Role.
+        </h2>
+
+        <!-- FILTER BUTTONS -->
+        <div class="flex flex-wrap gap-3" id="jobFilters">
+
+          <button class="filter-btn active"
+            onclick="filterJobs('all', this)">All Roles</button>
+
+          <button class="filter-btn"
+            onclick="filterJobs('field', this)">Field</button>
+
+          <button class="filter-btn"
+            onclick="filterJobs('office', this)">Office</button>
+
+          <button class="filter-btn"
+            onclick="filterJobs('management', this)">Management</button>
+
+        </div>
+
+      </div>
+    </div>  
+
+
+    <!-- ================= MINI HIRING PROCESS ================= -->
+    <div class="mini-process mt-6 mb-14">
+
+      <div class="flex flex-wrap items-center justify-between gap-6">
+
+        <!-- Step -->
+        <div class="mini-step">
+          <div class="mini-num">01</div>
+          <div>
+            <p class="mini-title">Apply</p>
+            <p class="mini-desc">Submit application online</p>
+          </div>
+        </div>
+
+        <div class="mini-line"></div>
+
+        <!-- Step -->
+        <div class="mini-step">
+          <div class="mini-num">02</div>
+          <div>
+            <p class="mini-title">Review</p>
+            <p class="mini-desc">HR checks your profile</p>
+          </div>
+        </div>
+
+        <div class="mini-line"></div>
+
+        <!-- Step -->
+        <div class="mini-step">
+          <div class="mini-num">03</div>
+          <div>
+            <p class="mini-title">Interview</p>
+            <p class="mini-desc">Quick friendly interview</p>
+          </div>
+        </div>
+
+        <div class="mini-line"></div>
+
+        <!-- Step -->
+        <div class="mini-step">
+          <div class="mini-num">04</div>
+          <div>
+            <p class="mini-title">Hired</p>
+            <p class="mini-desc">Start your first day</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
     <!-- Job Cards -->
     <div class="grid md:grid-cols-3 gap-8">
 
       <!-- Card 1 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
+        data-category="field">
         <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -179,11 +417,9 @@ body { font-family: 'Inter', sans-serif; }
           <span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">
             Full Time
           </span>
-
           <h3 class="text-xl font-semibold mt-4 mb-2">
             Delivery Rider
           </h3>
-
           <p class="text-gray-600 text-sm mb-4">
             Deliver parcels efficiently within assigned routes.
           </p>
@@ -192,16 +428,22 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-map-marker-alt mr-2 text-red-600"></i>Buhi, Camarines Sur</p>
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>J&T CP-BUHI 1</p>
           </div>
-
-          <button onclick="openModal('Delivery Rider')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+          <div class="flex gap-2">
+            <button onclick="openModal('Delivery Rider')"
+              class="w-full bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
               Apply Now
-          </button>
+            </button>
+
+            <button onclick="openRequirements('rider')"
+              class="w-full border border-gray-300 py-2 rounded-lg font-medium hover:bg-gray-100 transition">
+              Requirements
+            </button>
+          </div>
         </div>
       </div>
-
       <!-- Card 2 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
+       data-category="office">
         <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -223,15 +465,23 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Logistics HR</p>
           </div>
 
-          <button onclick="openModal('HR Assistant')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+          <div class="flex gap-2">
+            <button onclick="openModal('HR Assistant')"
+              class="w-full bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
               Apply Now
-          </button>
+            </button>
+
+            <button onclick="openRequirements('office')"
+              class="w-full border border-gray-300 py-2 rounded-lg font-medium hover:bg-gray-100 transition">
+              Requirements
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Card 3 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
+        data-category="management">
         <img src="https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80"
              class="w-full h-40 object-cover">
 
@@ -253,10 +503,17 @@ body { font-family: 'Inter', sans-serif; }
             <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Operations</p>
           </div>
 
-          <button onclick="openModal('Operations Supervisor')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
+          <div class="flex gap-2">
+            <button onclick="openModal('Operations Supervisor')"
+              class="w-full bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
               Apply Now
-          </button>
+            </button>
+
+            <button onclick="openRequirements('management')"
+              class="w-full border border-gray-300 py-2 rounded-lg font-medium hover:bg-gray-100 transition">
+              Requirements
+            </button>
+          </div>
         </div>
       </div>
 
@@ -264,9 +521,6 @@ body { font-family: 'Inter', sans-serif; }
 
   </div>
 </section>
-
-
-
 
 <!-- ================= CTA ================= -->
 <section class="py-28 bg-red-700 text-white text-center">
@@ -375,6 +629,35 @@ body { font-family: 'Inter', sans-serif; }
 
   </div>
 </div>
+
+
+<!-- ================= REQUIREMENTS MODAL ================= -->
+<div id="requirementsModal"
+class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-8 relative max-h-[85vh] overflow-y-auto">
+
+    <button onclick="closeRequirements()"
+      class="absolute top-4 right-4 text-xl text-gray-500 hover:text-red-600">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold mb-4">
+      Pre-Employment Requirements
+    </h2>
+
+    <div id="requirementsContent" class="text-sm text-gray-700 space-y-4"></div>
+
+    <div class="mt-6 flex justify-end">
+      <a href="assets/docs/GDC-Pre-Employment-Requirements.docx"
+         download
+         class="bg-red-700 text-white px-5 py-2 rounded-lg font-medium hover:bg-red-800 transition">
+         ⬇ Download Requirements (DOC)
+      </a>
+    </div>
+
+  </div>
+</div>
 <script>
 function openModal(position) {
   document.getElementById('jobTitle').innerText = position;
@@ -392,8 +675,113 @@ document.getElementById('applicationModal').addEventListener('click', function(e
     closeModal();
   }
 });
-</script>
 
+
+
+function filterJobs(category, btn){
+
+  const cards = document.querySelectorAll('.job-card');
+  const buttons = document.querySelectorAll('.filter-btn');
+
+  // active button style
+  buttons.forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  cards.forEach(card => {
+
+    const jobCategory = card.getAttribute('data-category');
+
+    if(category === 'all' || jobCategory === category){
+      card.style.display = 'block';
+      card.style.opacity = "0";
+      setTimeout(()=> card.style.opacity="1",50);
+    }else{
+      card.style.display = 'none';
+    }
+
+  });
+}
+
+
+
+const requirementsData = {
+
+  office: `
+    <p class="font-semibold text-red-700">Photocopy:</p>
+    <ul class="list-disc ml-6">
+      <li>Birth Certificate</li>
+      <li>Marriage Certificate (if married)</li>
+      <li>2 Valid IDs (with specimen signatures)</li>
+      <li>Diploma</li>
+      <li>Certificate of Employment (if any)</li>
+    </ul>
+
+    <p class="font-semibold text-red-700 mt-3">Original Copy:</p>
+    <ul class="list-disc ml-6">
+      <li>NBI/Police Clearance</li>
+      <li>Barangay Clearance</li>
+      <li>Medical Certificate (Fit to Work)</li>
+      <li>2pcs 2x2 Photo (Red Background)</li>
+      <li>On-Call Worker Agreement (Company Provided)</li>
+    </ul>
+  `,
+
+  management: `
+    <p class="font-semibold text-red-700">Standard Requirements:</p>
+    <ul class="list-disc ml-6">
+      <li>Birth Certificate</li>
+      <li>Valid IDs</li>
+      <li>Diploma</li>
+      <li>NBI Clearance</li>
+      <li>Barangay Clearance</li>
+      <li>Medical Certificate</li>
+    </ul>
+  `,
+
+  rider: `
+    <p class="font-semibold text-red-700">General Requirements:</p>
+    <ul class="list-disc ml-6">
+      <li>Birth Certificate</li>
+      <li>Valid IDs</li>
+      <li>NBI/Police Clearance</li>
+      <li>Barangay Clearance</li>
+      <li>Medical Certificate</li>
+      <li>2pcs 2x2 Photo</li>
+    </ul>
+
+    <p class="font-semibold text-red-700 mt-3">
+      Delivery Rider — Additional:
+    </p>
+    <ul class="list-disc ml-6">
+      <li>Driver’s License (not expired)</li>
+      <li>OR & CR (authorization if different owner)</li>
+    </ul>
+  `
+};
+
+function openRequirements(type) {
+  document.getElementById("requirementsContent").innerHTML =
+    requirementsData[type];
+
+  const modal = document.getElementById("requirementsModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeRequirements() {
+  const modal = document.getElementById("requirementsModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+/* click outside close */
+document.getElementById("requirementsModal")
+.addEventListener("click", function(e){
+  if(e.target === this){
+    closeRequirements();
+  }
+});
+</script>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
