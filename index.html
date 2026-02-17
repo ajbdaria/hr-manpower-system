@@ -42,363 +42,157 @@ body { font-family: 'Inter', sans-serif; }
 </style>
 </head>
 
-<body class="bg-white text-gray-800 scroll-smooth">
-
-<!-- ================= NAVBAR ================= -->
-<header class="fixed w-full backdrop-blur bg-white/80 shadow-sm z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-
-    <div class="flex items-center gap-3">
-      <img src="assets/images/company-logo.jpg" class="h-10">
-      <span class="font-bold text-lg text-gray-900 hidden sm:block">
-        HR MONITORING SYSTEM
-      </span>
-    </div>
-    
- <a href="#features" class="hover:text-red-700 transition">Modules</a>
-      <a href="#how" class="hover:text-red-700 transition">Workflow</a>
-      <a href="#benefits" class="hover:text-red-700 transition">Why Us</a>
-      <a href="#hiring" class="hover:text-red-700 transition">Hiring</a>
-    </nav>
-
-    <div class="flex gap-3">
-      <a href="#hiring" class="hidden sm:block border border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-700 hover:text-white transition">
-        We're Hiring
-      </a>
-      <a href="login.html" class="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition shadow">
-        Login
-      </a>
-    </div>
-
-  </div>
-</header>
-
-<!-- ================= HERO WITH IMAGE OVERLAY ================= -->
-<section class="relative pt-36 pb-28 text-white overflow-hidden">
+<body class="min-h-screen bg-gray-900 flex items-center justify-center relative overflow-hidden">
 
   <!-- Background Image -->
   <div class="absolute inset-0">
-    <img src="assets/images/company-event.jpg" 
+    <img src="assets/images/company-event.jpg"
          class="w-full h-full object-cover">
-    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-red-900/70 to-red-800/70"></div>
+    <div class="absolute inset-0 bg-black/50"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
+  <!-- Wrapper -->
+  <div class="relative z-10 w-full max-w-lg px-6 flex flex-col items-center justify-center min-h-screen">
 
-    <div data-aos="fade-right">
-      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-        Smarter HR. <br>
-        <span class="text-yellow-400">Better Workforce Control.</span>
-      </h1>
+    <!-- Logo -->
+    <img src="assets/images/company-logo.jpg"
+         class="h-16 mb-6 rounded-full shadow-lg border-2 border-white/30">
 
-      <p class="mt-6 text-lg text-gray-200 max-w-xl">
-        Empowering Docejo Logistic Services with modern HR monitoring,
-        manpower analytics, and attendance automation.
-      </p>
-
-      <div class="mt-10 flex flex-wrap gap-4">
-        <a href="login.html"
-           class="bg-white text-red-700 px-7 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition">
-          Access System
-        </a>
-
-        <a href="#hiring"
-           class="bg-red-700 px-7 py-3 rounded-xl font-semibold hover:bg-red-800 transition shadow-lg">
-          We're Hiring
-        </a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= FEATURES ================= -->
-<section id="features" class="py-28 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-6 text-center">
-    <h3 class="text-4xl font-bold mb-6">Powerful HR Modules</h3>
-    <p class="text-gray-600 mb-14 max-w-2xl mx-auto">
-      Built for efficiency, accuracy, and smarter decision-making.
+    <h1 class="text-2xl font-bold text-white mb-2 text-center">
+      HR Manpower Monitoring System
+    </h1>
+    <p class="text-gray-300 text-sm mb-8 text-center">
+      Corporate Access Portal
     </p>
 
-    <div class="grid md:grid-cols-3 gap-10">
-
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up">
-        <i class="fa fa-user-clock text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Attendance Tracking</h4>
-        <p class="text-gray-600">
-          Real-time logging with accurate time monitoring.
-        </p>
-      </div>
-
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="100">
-        <i class="fa fa-users text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Manpower Monitoring</h4>
-        <p class="text-gray-600">
-          Monitor workforce distribution across departments.
-        </p>
-      </div>
-
-      <div class="bg-white p-10 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition" data-aos="fade-up" data-aos-delay="200">
-        <i class="fa fa-file-lines text-5xl text-red-700 mb-6"></i>
-        <h4 class="text-xl font-semibold mb-3">Automated Reports</h4>
-        <p class="text-gray-600">
-          Generate professional HR reports instantly.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ================= MODERN HIRING SECTION ================= -->
-<section id="hiring" class="py-28 bg-white">
-
-  <div class="max-w-7xl mx-auto px-6">
-
-    <!-- Section Header -->
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-bold mb-4">
-        We're Hiring 🚀
-      </h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">
-        Join Docejo Logistic Services and grow your career with us.
-        Explore open positions below.
-      </p>
-    </div>
-
-    <!-- Job Cards -->
-    <div class="grid md:grid-cols-3 gap-8">
-
-      <!-- Card 1 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80"
-             class="w-full h-40 object-cover">
-
-        <div class="p-6">
-          <span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">
-            Full Time
-          </span>
-
-          <h3 class="text-xl font-semibold mt-4 mb-2">
-            Delivery Rider
-          </h3>
-
-          <p class="text-gray-600 text-sm mb-4">
-            Deliver parcels efficiently within assigned routes.
-          </p>
-
-          <div class="text-sm text-gray-500 space-y-1 mb-4">
-            <p><i class="fa fa-map-marker-alt mr-2 text-red-600"></i>Buhi, Camarines Sur</p>
-            <p><i class="fa fa-briefcase mr-2 text-red-600"></i>J&T CP-BUHI 1</p>
-          </div>
-
-          <button onclick="openModal('Delivery Rider')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-              Apply Now
-          </button>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
-             class="w-full h-40 object-cover">
-
-        <div class="p-6">
-          <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-            Office
-          </span>
-
-          <h3 class="text-xl font-semibold mt-4 mb-2">
-            HR Assistant
-          </h3>
-
-          <p class="text-gray-600 text-sm mb-4">
-            Assist with recruitment, employee records, and HR documentation.
-          </p>
-
-          <div class="text-sm text-gray-500 space-y-1 mb-4">
-            <p><i class="fa fa-map-marker-alt mr-2 text-red-600"></i>Main Office</p>
-            <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Logistics HR</p>
-          </div>
-
-          <button onclick="openModal('HR Assistant')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-              Apply Now
-          </button>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80"
-             class="w-full h-40 object-cover">
-
-        <div class="p-6">
-          <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
-            Supervisor
-          </span>
-
-          <h3 class="text-xl font-semibold mt-4 mb-2">
-            Operations Supervisor
-          </h3>
-
-          <p class="text-gray-600 text-sm mb-4">
-            Oversee manpower distribution and branch operations.
-          </p>
-
-          <div class="text-sm text-gray-500 space-y-1 mb-4">
-            <p><i class="fa fa-map-marker-alt mr-2 text-red-600"></i>Branch Based</p>
-            <p><i class="fa fa-briefcase mr-2 text-red-600"></i>Operations</p>
-          </div>
-
-          <button onclick="openModal('Operations Supervisor')"
-              class="block w-full text-center bg-red-700 text-white py-2 rounded-lg font-medium hover:bg-red-800 transition">
-              Apply Now
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
-
-
-<!-- ================= CTA ================= -->
-<section class="py-28 bg-red-700 text-white text-center">
-  <h3 class="text-4xl font-bold mb-6">
-    Upgrade Your HR Operations Today
-  </h3>
-  <p class="mb-10 text-red-100">
-    Secure. Reliable. Modern.
-  </p>
-  <a href="login.html"
-     class="bg-white text-red-700 px-10 py-4 rounded-xl font-semibold shadow-lg hover:scale-105 transition">
-    Get Started Now
-  </a>
-</section>
-
-<!-- FOOTER -->
-<footer class="bg-gray-900 text-gray-300 pt-10 pb-6 mt-0">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-
-    <!-- Company Information -->
-    <div>
-      <h2 class="text-lg font-semibold text-white mb-3">
-        Logistics Services Corporation
-      </h2>
-      <p class="text-sm leading-relaxed">
-        Delivering reliable workforce and logistics management solutions 
-        with integrity, efficiency, and excellence. Our mission is to 
-        streamline operations and empower organizational growth through 
-        innovative HR and logistics systems.
-      </p>
-    </div>
-
-    <!-- Quick Links -->
-    <div>
-      <h2 class="text-lg font-semibold text-white mb-3">
-        Quick Links
-      </h2>
-      <ul class="space-y-2 text-sm">
-        <li><a href="dashboard.html" class="hover:text-white transition">Dashboard</a></li>
-        <li><a href="attendance.html" class="hover:text-white transition">Attendance</a></li>
-        <li><a href="reports.html" class="hover:text-white transition">Reports</a></li>
-        <li><a href="branches.html" class="hover:text-white transition">Branches</a></li>
-      </ul>
-    </div>
-
-    <!-- Contact Information -->
-    <div>
-      <h2 class="text-lg font-semibold text-white mb-3">
-        Contact Information
-      </h2>
-      <ul class="text-sm space-y-2">
-        <li>Email: support@logisticscorp.com</li>
-        <li>Phone: +63 900 000 0000</li>
-        <li>Address: Main Office, Manila, Philippines</li>
-        <li>Office Hours: Mon–Fri | 8:00 AM – 5:00 PM</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- Divider -->
-  <div class="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
-    &copy; 2026 Logistics Services Corporation. 
-    All Rights Reserved. | HR Manpower Management System v1.0
-  </div>
-</footer>
-
-<!-- ================= APPLICATION MODAL ================= -->
-<div id="applicationModal"
-     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
-
-  <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 relative">
-
-    <button onclick="closeModal()"
-            class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl">
-      &times;
+    <!-- Access Button -->
+    <button id="showLoginBtn"
+      class="bg-red-700 text-white px-10 py-3 rounded-lg font-semibold hover:bg-red-800 transition shadow-lg">
+      Access System
     </button>
 
-    <h2 class="text-2xl font-bold mb-2 text-gray-800">
-      Apply for <span id="jobTitle" class="text-red-700"></span>
-    </h2>
+    <!-- Transparent Login Form (Hidden Initially) -->
+    <div id="loginForm" class="fixed inset-0 flex items-center justify-center px-6 hidden">
 
-    <form class="space-y-4 mt-6">
+      <!-- Dark Overlay with Blur -->
+      <div id="overlayBg"
+          class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
 
-      <input type="text" placeholder="Full Name"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+      <!-- Login Card -->
+      <div class="relative w-full max-w-md glass rounded-2xl shadow-2xl p-8 max-h-[90vh] overflow-auto">
 
-      <input type="email" placeholder="Email Address"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+        <!-- Close Button -->
+        <button id="closeLogin"
+          class="absolute top-4 right-4 text-white hover:text-red-400 text-lg">
+          <i class="fas fa-times"></i>
+        </button>
 
-      <input type="tel" placeholder="Phone Number"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+        <h2 class="text-xl font-semibold text-white mb-6 text-center">
+          Secure Login
+        </h2>
 
-      <textarea rows="3" placeholder="Address"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none"></textarea>
+        <form action="login.php" method="POST" class="space-y-5">
 
-      <input type="file"
-        class="w-full border rounded-lg p-3">
+          <!-- Role Selection -->
+          <div>
+            <label class="block text-sm text-white mb-2">Select Role</label>
+            <select name="role" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-600 focus:outline-none">
+              <option value="">-- Select Role --</option>
+              <option value="vp">Vice President</option>
+              <option value="senior_hr">Senior HR</option>
+              <option value="hr_officer">HR Officer</option>
+              <option value="branch_admin">Branch Admin</option>
+              <option value="employee">Employee</option>
+            </select>
+          </div>
 
-      <button type="submit"
-        class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800 transition">
-        Submit Application
-      </button>
+          <!-- Username -->
+          <div>
+            <label class="block text-sm text-white mb-2">Employee ID / Username</label>
+            <input type="text" name="username" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-600 focus:outline-none"
+              placeholder="Enter your ID">
+          </div>
 
-    </form>
+          <!-- Password -->          <div class="relative">
+            <label class="block text-sm text-white mb-2">Password</label>
+
+            <input type="password" name="password" id="passwordField" required
+              class="w-full bg-white/90 text-gray-900 border border-white/30 rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-red-600 focus:outline-none"
+              placeholder="Enter your password">
+
+            <!-- Toggle Button -->
+            <button type="button" id="togglePassword"
+              class="absolute right-4 top-[42px] text-gray-600 hover:text-red-600">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+
+
+          <!-- Submit Button -->
+          <button type="submit"
+            class="w-full bg-red-700 text-white py-3 rounded-lg font-semibold hover:bg-red-800 transition shadow-lg">
+            Login
+          </button>
+
+        </form>
+
+        <!-- Security Notice -->
+        <div class="mt-6 border-t border-white/30 pt-4 text-center text-xs text-gray-200">
+          Authorized Personnel Only<br>
+          System activity is monitored and logged.
+        </div>
+
+      </div>
+    </div>
+    <!-- Footer -->
+    <p class="text-center text-gray-400 text-xs mt-8">
+      © 2026 Logistics Services Corporation<br>
+      HR Monitoring System v1.0
+    </p>
 
   </div>
-</div>
-<script>
-function openModal(position) {
-  document.getElementById('jobTitle').innerText = position;
-  document.getElementById('applicationModal').classList.remove('hidden');
-  document.getElementById('applicationModal').classList.add('flex');
-}
 
-function closeModal() {
-  document.getElementById('applicationModal').classList.add('hidden');
-  document.getElementById('applicationModal').classList.remove('flex');
-}
+  <!-- Script to Show Login Form -->
+  <script>
+  const btn = document.getElementById('showLoginBtn');
+  const formWrapper = document.getElementById('loginForm');
+  const closeBtn = document.getElementById('closeLogin');
 
-document.getElementById('applicationModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeModal();
-  }
-});
-</script>
+  btn.addEventListener('click', () => {
+    formWrapper.classList.remove('hidden');
+    btn.classList.add('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    formWrapper.classList.add('hidden');
+    btn.classList.remove('hidden');
+  });
 
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-AOS.init({ duration: 1000, once: true });
-</script>
+  const passwordField = document.getElementById('passwordField');
+  const togglePassword = document.getElementById('togglePassword');
+
+  togglePassword.addEventListener('click', () => {
+    const isPassword = passwordField.type === 'password';
+
+    passwordField.type = isPassword ? 'text' : 'password';
+
+    togglePassword.innerHTML = isPassword
+      ? '<i class="fas fa-eye-slash"></i>'
+      : '<i class="fas fa-eye"></i>';
+  });
+  </script>
+
+  <!-- Tailwind Animation -->
+  <style>
+    @keyframes fadeIn {
+      0% {opacity:0; transform: translateY(-20px);}
+      100% {opacity:1; transform: translateY(0);}
+    }
+    .animate-fadeIn {animation: fadeIn 0.8s ease forwards;}
+  </style>
 
 </body>
 </html>
