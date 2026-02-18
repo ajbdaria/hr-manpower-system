@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Announcements | HR Monitoring System</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+
+<!-- ================= NAVBAR ================= -->
+<header class="fixed w-full backdrop-blur bg-white/80 shadow-sm z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+
+    <!-- Logo & System Name -->
+    <a href="/index.html" class="flex items-center gap-3">
+        <img src="/assets/images/company-logo.jpg" class="h-10">
+        <span class="font-bold text-lg text-gray-900 hidden sm:block">
+            HR MONITORING SYSTEM
+        </span>
+    </a>
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center gap-8 font-medium text-gray-700">
+
+      <!-- ABOUT DROPDOWN -->
+      <div class="relative group">
+        <button class="hover:text-red-700 transition flex items-center gap-1">
+          About
+          <svg class="w-4 h-4 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-lg mt-3 w-56 py-3">
+          <a href="#history" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Company History
+          </a>
+          <a href="/pages/navs/mvc.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Mission & Vision
+          </a>
+          <a href="/pages/navs/org.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Organizational Chart
+          </a>
+          <a href="/pages/navs/department.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Departments
+          </a>
+        </div>
+      </div>
+      <a href="#hiring" class="hover:text-red-700 transition">
+        Careers
+      </a>
+    </nav>
+
+    <!-- Right Buttons -->
+    <div class="flex gap-3">
+      <a href="#hiring" class="hidden sm:block border border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-700 hover:text-white transition">
+        Apply Now
+      </a>
+      <a href="login.html" class="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition shadow">
+        Login
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================= PAGE HEADER ================= -->
+<section class="pt-32 pb-12 text-center bg-white shadow-sm">
+  <h1 class="text-4xl font-bold text-gray-800 mb-4">
+    Company Announcements
+  </h1>
+  <p class="text-gray-600 max-w-2xl mx-auto">
+    Stay updated with the latest news, updates, and official notices from 
+    <span class="font-semibold text-red-700">
+      GD Logistics Services Corporation
+    </span>
+  </p>
+</section>
+
+<!-- ================= ANNOUNCEMENTS SECTION ================= -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="space-y-8">
+
+      <!-- Announcement Card 1 -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500 border-l-4 border-red-600">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-gray-800">
+            📢 Quarterly General Meeting
+          </h3>
+          <span class="text-sm text-gray-500">
+            March 15, 2026
+          </span>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          All employees are invited to attend the Quarterly General Meeting 
+          to discuss performance updates, operational improvements, and 
+          upcoming company initiatives.
+        </p>
+      </div>
+
+      <!-- Announcement Card 2 -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500 border-l-4 border-green-600">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-gray-800">
+            🚚 New Delivery Fleet Expansion
+          </h3>
+          <span class="text-sm text-gray-500">
+            February 28, 2026
+          </span>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          We are proud to announce the addition of new delivery vehicles 
+          to enhance service efficiency and coverage areas nationwide.
+        </p>
+      </div>
+
+      <!-- Announcement Card 3 -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500 border-l-4 border-blue-600">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-gray-800">
+            🏆 Employee Recognition Program
+          </h3>
+          <span class="text-sm text-gray-500">
+            February 10, 2026
+          </span>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Congratulations to our outstanding employees for their dedication 
+          and commitment. Recognition awards will be distributed during the 
+          upcoming recognition ceremony.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-white py-8 text-center text-gray-500 text-sm border-t">
+  © 2026 GD Logistics Services Corporation. All Rights Reserved.
+</footer>
+
+</body>
+</html>
