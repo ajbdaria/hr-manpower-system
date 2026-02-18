@@ -49,113 +49,137 @@ body {
 </div>
 
 
-<!-- Login Card -->
-<div class="relative z-10 w-full max-w-md px-6">
+<!-- ================= LOGIN CARD ================= -->
+<div class="relative z-10 w-full max-w-5xl px-6">
 
-    <div class="backdrop-blur-2xl bg-white/10 border border-white/20 
-                rounded-3xl shadow-2xl p-8 text-white transition-all duration-500">
+  <div class="backdrop-blur-2xl bg-white/10 border border-white/20
+              rounded-3xl shadow-2xl overflow-hidden">
 
-        <!-- Logo -->
+    <div class="grid md:grid-cols-2">
+
+      <!-- ================= LEFT SIDE (LOGO / BRANDING) ================= -->
+      <div class="hidden md:flex flex-col justify-center items-center
+                  bg-gradient-to-br from-red-700/80 to-red-900/80
+                  text-white p-10 text-center">
+
+        <img src="assets/images/company-logo.jpg"
+             class="h-24 mb-6 rounded-xl shadow-xl">
+
+        <h1 class="text-3xl font-bold tracking-wide mb-3">
+          HR Manpower System
+        </h1>
+
+        <p class="text-sm text-gray-200 leading-relaxed max-w-xs">
+          Centralized manpower monitoring and recruitment management
+          system for all company branches.
+        </p>
+
+        <div class="mt-10 text-xs text-gray-300">
+          © 2026 Docejo Logistic Services
+        </div>
+      </div>
+
+
+      <!-- ================= RIGHT SIDE (FORM) ================= -->
+      <div class="p-8 md:p-10 text-white">
+
+        <!-- LOGIN HEADER -->
         <div class="text-center mb-8">
-            <img src="assets/images/company-logo.jpg"
-                 class="mx-auto h-14 mb-4 rounded-lg shadow-lg">
-
-            <h1 class="text-2xl font-bold tracking-wide">
-                HR Manpower System
-            </h1>
+            <h2 class="text-2xl font-bold mb-2">
+                Welcome Back
+            </h2>
             <p class="text-sm text-gray-300">
-                Select your role to continue
+                Sign in to access the HR Manpower System
             </p>
         </div>
-
-        <!-- Form -->
         <form action="login.php" method="POST" class="space-y-6">
+          <!-- ROLE -->
+          <div>
+            <label class="text-sm text-gray-300 mb-2 block">
+              Login As
+            </label>
+            <select name="role" required
+              class="w-full px-4 py-3 rounded-xl bg-white/10
+                     border border-white/20 text-white
+                     focus:outline-none focus:ring-2 focus:ring-red-500">
+              <option value="" class="text-black">Select Role</option>
+              <option value="branch_hr" class="text-black">Branch Admin</option>
+              <option value="hq_hr" class="text-black">HR Officers</option>
+              <option value="senior_hr" class="text-black">Senior HR</option>
+              <option value="super_admin" class="text-black">Admin / VPIA</option>
+            </select>
+          </div>
 
-            <!-- ROLE -->
-            <div>
-                <label class="text-sm text-gray-300 mb-2 block">
-                    Login As
-                </label>
+          <!-- EMAIL -->
+          <div class="relative">
+            <input type="email" name="email" required
+              class="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/10
+                     border border-white/20 text-white placeholder-transparent
+                     focus:outline-none focus:ring-2 focus:ring-red-500"
+              placeholder="Corporate Email">
 
-                <select name="role" required
-                    class="w-full px-4 py-3 rounded-xl bg-white/10 
-                           border border-white/20 text-white
-                           focus:outline-none focus:ring-2 focus:ring-brand">
-                    <option value="" class="text-black">Select Role</option>
-                    <option value="branch_hr" class="text-black">Branch Admin</option>
-                    <option value="hq_hr" class="text-black">HR Officers</option>
-                    <option value="senior_hr" class="text-black">Senior HR</option>
-                    <option value="super_admin" class="text-black">Admin / VPIA</option>
-                </select>
-            </div>
+            <label class="absolute left-4 top-2 text-sm text-gray-300
+                          peer-placeholder-shown:top-4
+                          peer-placeholder-shown:text-base
+                          peer-placeholder-shown:text-gray-400
+                          transition-all">
+              Corporate Email
+            </label>
+          </div>
 
-            <!-- EMAIL -->
-            <div class="relative">
-                <input type="email" name="email" required
-                    class="peer w-full px-4 pt-5 pb-2 rounded-xl bg-white/10 
-                           border border-white/20 text-white placeholder-transparent
-                           focus:outline-none focus:ring-2 focus:ring-brand"
-                    placeholder="Corporate Email">
-                <label class="absolute left-4 top-2 text-sm text-gray-300 
-                              peer-placeholder-shown:top-4 
-                              peer-placeholder-shown:text-base
-                              peer-placeholder-shown:text-gray-400
-                              transition-all">
-                    Corporate Email
-                </label>
-            </div>
+          <!-- PASSWORD -->
+          <div class="relative">
+            <input type="password" name="password" id="password" required
+              class="peer w-full px-4 pt-5 pb-2 pr-12 rounded-xl bg-white/10
+                     border border-white/20 text-white placeholder-transparent
+                     focus:outline-none focus:ring-2 focus:ring-red-500"
+              placeholder="Password">
 
-            <!-- PASSWORD -->
-            <div class="relative">
-                <input type="password" name="password" id="password" required
-                    class="peer w-full px-4 pt-5 pb-2 pr-12 rounded-xl bg-white/10 
-                           border border-white/20 text-white placeholder-transparent
-                           focus:outline-none focus:ring-2 focus:ring-brand"
-                    placeholder="Password">
-                <label class="absolute left-4 top-2 text-sm text-gray-300 
-                              peer-placeholder-shown:top-4 
-                              peer-placeholder-shown:text-base
-                              peer-placeholder-shown:text-gray-400
-                              transition-all">
-                    Password
-                </label>
+            <label class="absolute left-4 top-2 text-sm text-gray-300
+                          peer-placeholder-shown:top-4
+                          peer-placeholder-shown:text-base
+                          peer-placeholder-shown:text-gray-400
+                          transition-all">
+              Password
+            </label>
 
-                <!-- Eye Toggle -->
-                <button type="button"
-                        onclick="togglePassword()"
-                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition">
-                    <i id="eyeIcon" class="fa fa-eye"></i>
-                </button>
-            </div>
-
-            <!-- OPTIONS -->
-            <div class="flex items-center justify-between text-sm text-gray-300">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" 
-                           class="rounded border-gray-300 text-brand focus:ring-brand">
-                    Remember me
-                </label>
-                <a href="#" class="hover:text-white transition">
-                    Forgot password?
-                </a>
-            </div>
-            <!-- SUBMIT BUTTON -->
-            <button type="submit"
-                onclick="window.location.href='dashboard.html'"
-                class="w-full bg-brand hover:bg-brandDark 
-                    py-3 rounded-xl font-semibold shadow-lg 
-                    transition hover:scale-105">
-                Sign In
+            <!-- Eye Toggle -->
+            <button type="button"
+              onclick="togglePassword()"
+              class="absolute right-4 top-1/2 -translate-y-1/2
+                     text-gray-300 hover:text-white transition">
+              <i id="eyeIcon" class="fa fa-eye"></i>
             </button>
+          </div>
+
+          <!-- OPTIONS -->
+          <div class="flex items-center justify-between text-sm text-gray-300">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox"
+                class="rounded border-gray-300 text-red-600 focus:ring-red-600">
+              Remember me
+            </label>
+
+            <a href="#" class="hover:text-white transition">
+              Forgot password?
+            </a>
+          </div>
+
+          <!-- SUBMIT -->
+          <button type="submit"
+            class="w-full bg-red-700 hover:bg-red-800
+                   py-3 rounded-xl font-semibold shadow-lg
+                   transition hover:scale-105">
+            Sign In
+          </button>
+
         </form>
 
-        <!-- Footer -->
-        <div class="mt-8 text-center text-xs text-gray-400">
-            © 2026 Docejo Logistic Services. All rights reserved.
-        </div>
-
+      </div>
     </div>
+  </div>
 </div>
+
 
 <!-- Script -->
 <script>

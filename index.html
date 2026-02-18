@@ -424,98 +424,44 @@ body { font-family: 'Inter', sans-serif; }
   <div class="max-w-7xl mx-auto px-6">
 
     <!-- Section Header -->
-   <!-- ================= FILTER HEADER ================= -->
     <div class="mb-14">
-
       <p class="text-red-700 font-semibold uppercase tracking-widest mb-3">
         Open Positions
       </p>
 
       <div class="flex flex-wrap items-end justify-between gap-6">
-
         <h2 class="text-4xl md:text-5xl font-bold leading-tight">
           Find Your <br> Perfect Role.
         </h2>
 
         <!-- FILTER BUTTONS -->
         <div class="flex flex-wrap gap-3" id="jobFilters">
-
-          <button class="filter-btn active"
-            onclick="filterJobs('all', this)">All Roles</button>
-
-          <button class="filter-btn"
-            onclick="filterJobs('field', this)">Field</button>
-
-          <button class="filter-btn"
-            onclick="filterJobs('office', this)">Office</button>
-
-          <button class="filter-btn"
-            onclick="filterJobs('management', this)">Management</button>
-
+          <button class="filter-btn active" onclick="filterJobs('all', this)">All Roles</button>
+          <button class="filter-btn" onclick="filterJobs('field', this)">Field</button>
+          <button class="filter-btn" onclick="filterJobs('office', this)">Office</button>
+          <button class="filter-btn" onclick="filterJobs('management', this)">Management</button>
         </div>
-
       </div>
     </div>  
 
-
-    <!-- ================= MINI HIRING PROCESS ================= -->
-    <div class="mini-process mt-6 mb-14">
-
-      <div class="flex flex-wrap items-center justify-between gap-6">
-
-        <!-- Step -->
-        <div class="mini-step">
-          <div class="mini-num">01</div>
-          <div>
-            <p class="mini-title">Apply</p>
-            <p class="mini-desc">Submit application online</p>
-          </div>
-        </div>
-
-        <div class="mini-line"></div>
-
-        <!-- Step -->
-        <div class="mini-step">
-          <div class="mini-num">02</div>
-          <div>
-            <p class="mini-title">Review</p>
-            <p class="mini-desc">HR checks your profile</p>
-          </div>
-        </div>
-
-        <div class="mini-line"></div>
-
-        <!-- Step -->
-        <div class="mini-step">
-          <div class="mini-num">03</div>
-          <div>
-            <p class="mini-title">Interview</p>
-            <p class="mini-desc">Quick friendly interview</p>
-          </div>
-        </div>
-
-        <div class="mini-line"></div>
-
-        <!-- Step -->
-        <div class="mini-step">
-          <div class="mini-num">04</div>
-          <div>
-            <p class="mini-title">Hired</p>
-            <p class="mini-desc">Start your first day</p>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
     <!-- Job Cards -->
     <div class="grid md:grid-cols-3 gap-8">
 
       <!-- Card 1 -->
-      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
-        data-category="field">
-        <img src="/assets/images/hiring-poster.jpg"
-             class="w-full h-40 object-cover">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden relative"
+           data-category="field">
+
+        <!-- Image Container -->
+        <div class="relative">
+          <img src="/assets/images/hiring-poster.jpg"
+               class="w-full h-40 object-contain bg-gray-100">
+
+          <!-- View Icon -->
+          <button onclick="viewImage('/assets/images/hiring-poster.jpg')"
+                  class="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
 
         <div class="p-6">
           <span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">
@@ -545,11 +491,19 @@ body { font-family: 'Inter', sans-serif; }
           </div>
         </div>
       </div>
+
       <!-- Card 2 -->
-      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
-       data-category="office">
-        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
-             class="w-full h-40 object-cover">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden relative"
+           data-category="office">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80"
+               class="w-full h-40 object-contain bg-gray-100">
+
+          <button onclick="viewImage('https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80')"
+                  class="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
 
         <div class="p-6">
           <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
@@ -584,10 +538,17 @@ body { font-family: 'Inter', sans-serif; }
       </div>
 
       <!-- Card 3 -->
-      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
-        data-category="management">
-        <img src="https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80"
-             class="w-full h-40 object-cover">
+      <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden relative"
+           data-category="management">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80"
+               class="w-full h-40 object-contain bg-gray-100">
+
+          <button onclick="viewImage('https://images.unsplash.com/photo-1593642532871-8b12e02d091c?auto=format&fit=crop&w=800&q=80')"
+                  class="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition">
+            <i class="fa fa-eye"></i>
+          </button>
+        </div>
 
         <div class="p-6">
           <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
@@ -974,45 +935,144 @@ body { font-family: 'Inter', sans-serif; }
 
 <!-- ================= APPLICATION MODAL ================= -->
 <div id="applicationModal"
-     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+     class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4">
 
-  <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 relative">
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative
+              max-h-[90vh] flex flex-col overflow-hidden">
 
+    <!-- CLOSE -->
     <button onclick="closeModal()"
-            class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl">
+      class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl z-10">
       &times;
     </button>
 
-    <h2 class="text-2xl font-bold mb-2 text-gray-800">
-      Apply for <span id="jobTitle" class="text-red-700"></span>
-    </h2>
+    <!-- HEADER -->
+    <div class="p-6 border-b">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Apply for <span id="jobTitle" class="text-red-700"></span>
+      </h2>
+      <p class="text-sm text-gray-500 mt-1">
+        Please complete all required fields (<span class="text-red-600">*</span>)
+        to avoid application delay.
+      </p>
+    </div>
 
-    <form class="space-y-4 mt-6">
+    <!-- BODY (SCROLLABLE) -->
+    <div class="flex-1 overflow-y-auto p-6">
 
-      <input type="text" placeholder="Full Name"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+      <form id="applicationForm">
 
-      <input type="email" placeholder="Email Address"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+        <!-- ================= STEP 1 ================= -->
+        <div id="step1" class="space-y-4">
 
-      <input type="tel" placeholder="Phone Number"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none">
+          <h3 class="font-semibold text-lg text-gray-700">
+            Part 1 — Personal Information
+          </h3>
 
-      <textarea rows="3" placeholder="Address"
-        class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-red-600 outline-none"></textarea>
+          <!-- Full Name -->
+          <div>
+            <label class="font-medium">
+              Full Name <span class="text-red-600">*</span>
+            </label>
+            <input type="text" required
+              placeholder="Juan Dela Cruz"
+              class="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-red-600 outline-none">
+          </div>
 
-      <input type="file"
-        class="w-full border rounded-lg p-3">
+          <!-- Email -->
+          <div>
+            <label class="font-medium">
+              Email Address <span class="text-red-600">*</span>
+            </label>
+            <input type="email" required
+              placeholder="example@email.com"
+              class="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-red-600 outline-none">
+          </div>
 
-      <button type="submit"
-        class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800 transition">
-        Submit Application
-      </button>
+          <!-- Phone -->
+          <div>
+            <label class="font-medium">
+              Phone Number <span class="text-red-600">*</span>
+            </label>
+            <input type="tel" required
+              placeholder="09XXXXXXXXX"
+              class="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-red-600 outline-none">
+          </div>
 
-    </form>
+          <!-- Address -->
+          <div>
+            <label class="font-medium">
+              Complete Address <span class="text-red-600">*</span>
+            </label>
+            <textarea rows="3" required
+              placeholder="House No., Street, Barangay, City"
+              class="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-red-600 outline-none"></textarea>
+          </div>
 
+          <button type="button"
+            onclick="nextStep()"
+            class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800">
+            Next — Upload Requirements →
+          </button>
+        </div>
+
+
+        <!-- ================= STEP 2 ================= -->
+        <div id="step2" class="space-y-4 hidden">
+
+          <h3 class="font-semibold text-lg text-gray-700">
+            Part 2 — Upload Softcopy Requirements
+          </h3>
+
+          <!-- Instructions -->
+          <div class="bg-red-50 border border-red-200 p-4 rounded-lg text-sm">
+            <p class="font-semibold text-red-700">Important Instructions:</p>
+            <ul class="list-disc ml-5 mt-2 text-gray-700">
+              <li>Upload CLEAR scanned copies or photos.</li>
+              <li>Accepted format: PDF, JPG, PNG.</li>
+              <li>File must not exceed 5MB.</li>
+              <li>Incomplete uploads may delay approval.</li>
+            </ul>
+          </div>
+          <!-- Upload Resume -->
+          <div>
+            <label class="font-medium">
+              Resume / CV <span class="text-red-600">*</span>
+            </label>
+            <input type="file" required
+              class="w-full border rounded-lg p-3 mt-1">
+          </div>
+
+          <!-- Upload IDs -->
+          <div>
+            <label class="font-medium">
+              Valid ID Upload <span class="text-red-600">*</span>
+            </label>
+            <input type="file" required
+              class="w-full border rounded-lg p-3 mt-1">
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-3 pt-2">
+            <button type="button"
+              onclick="prevStep()"
+              class="w-1/2 border py-3 rounded-xl font-semibold">
+              ← Back
+            </button>
+
+            <button type="submit"
+              class="w-1/2 bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800">
+              Submit Application
+            </button>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
   </div>
 </div>
+
 
 
 <!-- ================= REQUIREMENTS MODAL ================= -->
@@ -1114,6 +1174,31 @@ class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
 
     <!-- Arrow -->
     <div id="arrowIndicator" class="scroll-arrow">↓</div>
+
+  </div>
+</div>
+
+<!-- ================= IMAGE VIEW MODAL ================= -->
+<div id="imageModal"
+     class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden p-4">
+
+  <div class="relative bg-white rounded-lg shadow-lg
+              max-w-4xl w-full
+              max-h-[90vh] overflow-hidden flex flex-col">
+
+    <!-- Close Button -->
+    <button onclick="closeImageModal()"
+            class="absolute top-2 right-2 text-gray-700 hover:text-gray-900 p-2 z-10">
+      <i class="fa fa-times fa-lg"></i>
+    </button>
+
+    <!-- Image Container -->
+    <div class="flex-1 flex items-center justify-center overflow-auto">
+      <img id="modalImage"
+           src=""
+           alt="Full Image"
+           class="max-h-[85vh] w-auto object-contain">
+    </div>
 
   </div>
 </div>
@@ -1275,6 +1360,31 @@ function toggleScroll() {
     atBottom = false;
   }
 }
+
+  function viewImage(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modalImg.src = src;
+    modal.classList.remove('hidden');
+  }
+
+  function closeImageModal() {
+    document.getElementById('imageModal').classList.add('hidden');
+  }
+
+
+  function nextStep() {
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+}
+
+function prevStep() {
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step1').classList.remove('hidden');
+}
+
+
+
 </script>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
