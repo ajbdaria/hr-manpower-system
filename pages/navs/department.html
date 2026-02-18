@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Departments | HR Monitoring System</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+
+<!-- ================= NAVBAR ================= -->
+<header class="fixed w-full backdrop-blur bg-white/80 shadow-sm z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+
+    <!-- Logo & System Name -->
+    <a href="/index.html" class="flex items-center gap-3">
+        <img src="/assets/images/company-logo.jpg" class="h-10">
+        <span class="font-bold text-lg text-gray-900 hidden sm:block">
+            HR MONITORING SYSTEM
+        </span>
+    </a>
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center gap-8 font-medium text-gray-700">
+
+      <!-- ABOUT DROPDOWN -->
+      <div class="relative group">
+        <button class="hover:text-red-700 transition flex items-center gap-1">
+          About
+          <svg class="w-4 h-4 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-lg mt-3 w-56 py-3">
+          <a href="#history" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Company History
+          </a>
+          <a href="/pages/navs/org.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Organizational Chart
+          </a>
+           <a href="/pages/navs/mvc.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Mission & Vision
+          </a>
+        </div>
+      </div>
+
+      <a href="#hiring" class="hover:text-red-700 transition">
+        Careers
+      </a>
+
+      <a href="#events" class="hover:text-red-700 transition">
+        Announcements
+      </a>
+
+    </nav>
+
+    <!-- Right Buttons -->
+    <div class="flex gap-3">
+      <a href="#hiring" class="hidden sm:block border border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-700 hover:text-white transition">
+        Apply Now
+      </a>
+      <a href="login.html" class="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition shadow">
+        Login
+      </a>
+    </div>
+
+  </div>
+</header>
+<!-- ================= PAGE HEADER ================= -->
+<section class="pt-32 pb-12 text-center bg-white shadow-sm">
+  <h1 class="text-4xl font-bold text-gray-800 mb-4">
+    Our Departments
+  </h1>
+  <p class="text-gray-600 max-w-2xl mx-auto">
+    Discover the core departments that drive the operations of 
+    <span class="font-semibold text-red-700">
+      GD Logistics Services Corporation
+    </span>
+  </p>
+</section>
+
+<!-- ================= DEPARTMENTS SECTION ================= -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="grid md:grid-cols-3 gap-8">
+
+      <!-- ================= FINANCE DEPARTMENT ================= -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500">
+        <div class="w-14 h-14 bg-green-600 text-white rounded-xl flex items-center justify-center text-xl mb-6 shadow-md">
+          <i class="fa fa-coins"></i>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Finance Department
+        </h3>
+
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Responsible for financial planning, budgeting, accounting, payroll processing, 
+          and ensuring compliance with financial regulations. The Finance Department 
+          safeguards the company’s financial stability and supports strategic decision-making.
+        </p>
+      </div>
+
+
+      <!-- ================= OPERATIONS DEPARTMENT ================= -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500">
+        <div class="w-14 h-14 bg-red-600 text-white rounded-xl flex items-center justify-center text-xl mb-6 shadow-md">
+          <i class="fa fa-truck-fast"></i>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Operations Department
+        </h3>
+
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Oversees logistics, package handling, delivery coordination, 
+          and overall service efficiency. This department ensures that 
+          operations run smoothly, meeting client expectations with 
+          reliability and excellence.
+        </p>
+      </div>
+
+
+      <!-- ================= ADMIN & HR DEPARTMENT ================= -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition duration-500">
+        <div class="w-14 h-14 bg-blue-600 text-white rounded-xl flex items-center justify-center text-xl mb-6 shadow-md">
+          <i class="fa fa-users"></i>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Admin & HR Department
+        </h3>
+
+        <p class="text-gray-600 text-sm leading-relaxed">
+          Manages recruitment, employee relations, training, performance monitoring, 
+          and administrative functions. The Admin & HR Department fosters 
+          a productive workplace culture while ensuring compliance with 
+          company policies and labor regulations.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

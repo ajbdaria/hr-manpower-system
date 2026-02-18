@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Organizational Chart | HR Monitoring System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+<!-- ================= NAVBAR ================= -->
+<header class="fixed w-full backdrop-blur bg-white/80 shadow-sm z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+
+    <!-- Logo & System Name -->
+    <a href="/index.html" class="flex items-center gap-3">
+        <img src="/assets/images/company-logo.jpg" class="h-10">
+        <span class="font-bold text-lg text-gray-900 hidden sm:block">
+            HR MONITORING SYSTEM
+        </span>
+    </a>
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center gap-8 font-medium text-gray-700">
+
+      <!-- ABOUT DROPDOWN -->
+      <div class="relative group">
+        <button class="hover:text-red-700 transition flex items-center gap-1">
+          About
+          <svg class="w-4 h-4 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-lg mt-3 w-56 py-3">
+          <a href="#history" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Company History
+          </a>
+          <a href="/pages/navs/mvc.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Mission & Vision
+          </a>
+          <a href="/pages/navs/department.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
+            Departments
+          </a>
+        </div>
+      </div>
+
+      <a href="#hiring" class="hover:text-red-700 transition">
+        Careers
+      </a>
+
+      <a href="#events" class="hover:text-red-700 transition">
+        Announcements
+      </a>
+
+    </nav>
+
+    <!-- Right Buttons -->
+    <div class="flex gap-3">
+      <a href="#hiring" class="hidden sm:block border border-red-700 text-red-700 px-4 py-2 rounded-lg hover:bg-red-700 hover:text-white transition">
+        Apply Now
+      </a>
+      <a href="login.html" class="bg-red-700 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition shadow">
+        Login
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================= PAGE HEADER ================= -->
+<section class="pt-32 pb-10 text-center bg-white shadow-sm">
+  <h1 class="text-4xl font-bold text-gray-800 mb-4">
+    Organizational Chart
+  </h1>
+  <p class="text-gray-600 max-w-2xl mx-auto">
+    View the official organizational structure of GD Logistics Services Corporation.
+  </p>
+</section>
+
+
+<!-- ================= TOP MANAGEMENT IMAGE SECTION ================= -->
+<section class="py-16 bg-gray-100">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Section Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-gray-800 mb-3">
+        Top Management
+      </h2>
+      <p class="text-gray-600">
+        Executive Leadership Team of GD Logistics Services Corporation
+      </p>
+    </div>
+
+    <!-- Image Container -->
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-10">
+
+      <!-- Placeholder Image -->
+      <img 
+        src="/assets/images/TOP-MANAGER.jpg" 
+        alt="Top Management"
+        class="w-full h-auto rounded-xl border border-gray-200 hover:scale-105 transition duration-300"
+      >
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= ORG IMAGE SECTION ================= -->
+<section class="py-16">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-10">
+
+      <!-- Organizational Chart Image -->
+      <img 
+        src="/assets/images/GDC PLANTILLA.jpg" 
+        alt="GD Logistics Organizational Chart"
+        class="w-full h-auto rounded-xl border border-gray-200 hover:scale-105 transition duration-300"
+      >
+
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
