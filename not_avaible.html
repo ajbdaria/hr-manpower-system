@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Page Not Available | HR Manpower System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                brand: '#C1121F',
+                brandDark: '#9B0D16',
+            }
+        }
+    }
+}
+</script>
+
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Floating animation */
+@keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Glow animation */
+@keyframes glow {
+    0%,100% { box-shadow: 0 0 20px rgba(255,0,0,0.4); }
+    50% { box-shadow: 0 0 40px rgba(255,0,0,0.8); }
+}
+
+.glow {
+    animation: glow 2s infinite ease-in-out;
+}
+</style>
+</head>
+
+<body class="min-h-screen relative flex items-center justify-center overflow-hidden text-white">
+
+<!-- Background -->
+<div class="absolute inset-0">
+    <img src="assets/images/company-logn-bg.png"
+         class="w-full h-full object-cover scale-110">
+
+    <!-- Same Red Overlay -->
+    <div class="absolute inset-0 
+                bg-gradient-to-br 
+                from-red-900/80 
+                via-red-800/70 
+                to-black/90 
+                backdrop-blur-sm">
+    </div>
+</div>
+
+
+<!-- 404 CARD -->
+<div class="relative z-10 w-full max-w-3xl px-6">
+
+  <div class="backdrop-blur-2xl bg-white/10 border border-white/20
+              rounded-3xl shadow-2xl p-10 text-center">
+
+      <!-- Animated Icon -->
+      <div class="flex justify-center mb-6">
+          <div class="w-24 h-24 flex items-center justify-center
+                      rounded-full bg-red-700/80 glow">
+              <i class="fas fa-triangle-exclamation text-4xl text-white float"></i>
+          </div>
+      </div>
+
+      <!-- 404 TEXT -->
+      <h1 class="text-6xl font-bold tracking-widest mb-3 text-red-500">
+          404
+      </h1>
+
+      <h2 class="text-2xl font-semibold mb-2">
+          Page Not Available
+      </h2>
+
+      <p class="text-gray-300 mb-8 max-w-lg mx-auto">
+          The page you are trying to access does not exist,
+          may have been removed, or is currently unavailable.
+      </p>
+
+      <!-- ACTION BUTTONS -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+
+          <button onclick="goBack()"
+              class="px-6 py-3 rounded-xl bg-white/10 border border-white/20
+                     hover:bg-white/20 transition">
+              <i class="fa fa-arrow-left mr-2"></i>
+              Go Back
+          </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-10 text-xs text-gray-400">
+          © 2026 Docejo Logistic Services
+      </div>
+
+  </div>
+</div>
+
+
+<script>
+function goBack() {
+    window.history.back();
+}
+
+</script>
+
+</body>
+</html>
