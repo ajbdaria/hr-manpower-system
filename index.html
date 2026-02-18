@@ -12,6 +12,9 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pQv6Vq8qksT3l+W+jJ3rVq0t7u+Jx2Q8zj3Gd6JfSeA1n+E5A0E6dI1Rk6R5E1YNWfxjK0h3p2DZh9g0fXoE3Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <!-- AOS -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
@@ -503,16 +506,15 @@ body { font-family: 'Inter', sans-serif; }
 
         <!-- Image Container -->
         <div class="relative">
-          <img src="/assets/images/hiring-poster.jpg"
+          <img src="assets/images/hiring-poster.jpg"
                class="w-full h-40 object-contain bg-gray-100">
 
           <!-- View Icon -->
-          <button onclick="viewImage('/assets/images/hiring-poster.jpg')"
+          <button onclick="viewImage('assets/images/hiring-poster.jpg')"
                   class="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition">
             <i class="fa fa-eye"></i>
           </button>
         </div>
-
         <div class="p-6">
           <span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">
             Full Time
@@ -932,8 +934,8 @@ body { font-family: 'Inter', sans-serif; }
 </section>
 
 <!-- FOOTER -->
-<footer class="bg-gray-900 text-gray-300 pt-10 pb-6 mt-0">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer class="bg-gray-900 text-gray-300 pt-10 pb-6 mt-0 relative">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
 
     <!-- Company Information -->
     <div>
@@ -948,11 +950,20 @@ body { font-family: 'Inter', sans-serif; }
       </p>
     </div>
 
+    <!-- About / Company Links -->
+    <div>
+      <h2 class="text-lg font-semibold text-white mb-3">About</h2>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#history" class="hover:text-white transition">Company History</a></li>
+        <li><a href="pages/navs/mvc.html" class="hover:text-white transition">Mission & Vision</a></li>
+        <li><a href="pages/navs/org.html" class="hover:text-white transition">Organizational Chart</a></li>
+        <li><a href="pages/navs/department.html" class="hover:text-white transition">Departments</a></li>
+      </ul>
+    </div>
+
     <!-- Quick Links -->
     <div>
-      <h2 class="text-lg font-semibold text-white mb-3">
-        Quick Links
-      </h2>
+      <h2 class="text-lg font-semibold text-white mb-3">Quick Links</h2>
       <ul class="space-y-2 text-sm">
         <li><a href="dashboard.html" class="hover:text-white transition">Dashboard</a></li>
         <li><a href="attendance.html" class="hover:text-white transition">Attendance</a></li>
@@ -961,19 +972,21 @@ body { font-family: 'Inter', sans-serif; }
       </ul>
     </div>
 
-    <!-- Contact Information -->
-    <div>
-      <h2 class="text-lg font-semibold text-white mb-3">
-        Contact Information
-      </h2>
-      <ul class="text-sm space-y-2">
-        <li>Email: support@logisticscorp.com</li>
-        <li>Phone: +63 900 000 0000</li>
-        <li>Address: Main Office, Manila, Philippines</li>
-        <li>Office Hours: Mon–Fri | 8:00 AM – 5:00 PM</li>
-      </ul>
-    </div>
+    <!-- Contact Information / Location -->
+      <div>
+        <h2 class="text-lg font-semibold text-white mb-3">Contact & Location</h2>
+        <ul class="text-sm space-y-2 mb-3">
+          <li>Email: support@logisticscorp.com</li>
+          <li>Phone: +63 900 000 0000</li>
+          <li>Address: Main Office, Manila, Philippines</li>
+          <li>Office Hours: Mon–Fri | 8:00 AM – 5:00 PM</li>
+        </ul>
 
+        <!-- Map Icon -->
+        <span id="viewMapBtn" class="text-red-600 hover:text-red-400 cursor-pointer text-2xl">
+          <i class="fas fa-map-marker-alt"></i> <!-- Font Awesome icon -->
+        </span>
+      </div>
   </div>
 
   <!-- Divider -->
@@ -982,6 +995,20 @@ body { font-family: 'Inter', sans-serif; }
     All Rights Reserved. | HR Manpower Management System v1.0
   </div>
 </footer>
+
+<!-- Modal -->
+<div id="mapModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden shadow-lg">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h3 class="text-lg font-semibold">GDC Main Office</h3>
+      <button id="closeMapBtn" class="text-gray-700 hover:text-red-700">&times;</button>
+    </div>
+    <div class="p-0">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d425.70923532773196!2d122.93868821453414!3d14.126217997886707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3398af002d2bd98f%3A0xe918c43c67aefd3!2sJ%26T%20EXPRESS%20F-TALISAY%20DH!5e1!3m2!1sen!2sph!4v1771402163774!5m2!1sen!2sph" 
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</div>
 
 <!-- ================= APPLICATION MODAL ================= -->
 <div id="applicationModal"
@@ -1437,6 +1464,29 @@ const mobileMenu = document.getElementById("mobileMenu");
 
 menuBtn.addEventListener("click", () => {
   mobileMenu.classList.toggle("hidden");
+});
+
+
+const viewBtn = document.getElementById('viewMapBtn');
+const modal = document.getElementById('mapModal');
+const closeBtn = document.getElementById('closeMapBtn');
+
+viewBtn.addEventListener('click', () => {
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+});
+
+closeBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+});
+
+// Close modal on outside click
+modal.addEventListener('click', (e) => {
+  if(e.target === modal){
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
 });
 </script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
