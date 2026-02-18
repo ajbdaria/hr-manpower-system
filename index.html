@@ -303,6 +303,8 @@ body { font-family: 'Inter', sans-serif; }
 
       <!-- ABOUT DROPDOWN -->
       <div class="relative group">
+
+        <!-- Button -->
         <button class="hover:text-red-700 transition flex items-center gap-1">
           About
           <svg class="w-4 h-4 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -310,22 +312,31 @@ body { font-family: 'Inter', sans-serif; }
           </svg>
         </button>
 
+        <!-- Invisible Hover Bridge -->
+        <div class="absolute left-0 top-full w-full h-3"></div>
+
         <!-- Dropdown Menu -->
-        <div class="absolute hidden group-hover:block bg-white shadow-lg rounded-lg mt-3 w-56 py-3">
+        <div class="absolute left-0 top-full hidden group-hover:block bg-white shadow-lg rounded-lg w-56 py-3 z-50">
+
           <a href="#history" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
             Company History
           </a>
+
           <a href="pages/navs/mvc.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
             Mission & Vision
           </a>
+
           <a href="pages/navs/org.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
             Organizational Chart
           </a>
+
           <a href="pages/navs/department.html" class="block px-5 py-2 hover:bg-red-50 hover:text-red-700 transition">
             Departments
           </a>
+
         </div>
       </div>
+
 
       <a href="#hiring" class="hover:text-red-700 transition">
         Careers
@@ -503,7 +514,7 @@ body { font-family: 'Inter', sans-serif; }
       <!-- Card 1 -->
       <div class="job-card bg-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
         data-category="field">
-        <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80"
+        <img src="/assets/images/hiring-poster.jpg"
              class="w-full h-40 object-cover">
 
         <div class="p-6">
