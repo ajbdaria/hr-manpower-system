@@ -29,7 +29,7 @@ body{font-family:'DM Sans',sans-serif;background:#F8F0EE;color:var(--dark);min-h
 .branch-tag .value{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--red-bright);}
 .nav-section{padding:8px 0;flex:1;}
 .nav-label{padding:14px 20px 6px;font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#A89693;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-left:3px solid transparent;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#A89693;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-left:3px solid transparent; text-decoration: none;}
 .nav-item:hover,.nav-item.active{color:var(--white);background:rgba(192,57,43,.12);border-left-color:var(--red);}
 .nav-item.active{color:var(--red-bright);}
 .nav-item .icon{width:20px;text-align:center;font-size:16px;}
@@ -253,18 +253,61 @@ body{font-family:'DM Sans',sans-serif;background:#F8F0EE;color:var(--dark);min-h
     </div>
   </div>
   <div class="branch-tag"><div class="label">Current Branch</div><div class="value">📍 North Branch — NCR</div></div>
-  <nav class="nav-section">
-    <div class="nav-label">Main Menu</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">📊</span> Dashboard</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">👤</span> Employees <span class="nav-badge">48</span></div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">🕐</span> Attendance</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">📅</span> Schedule</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">🔄</span> Deployment</div>
-    <div class="nav-label" style="margin-top:8px;">Management</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">🏖️</span> Leave Requests <span class="nav-badge">3</span></div>
-    <div class="nav-item active" onclick="setActive(this)"><span class="icon">📋</span> Reports</div>
-    <div class="nav-item" onclick="setActive(this)"><span class="icon">⚙️</span> Settings</div>
-  </nav>
+    <nav class="nav-section">
+  <div class="nav-label">Main Menu</div>
+
+  <a href="/pages/branch/branch_dashboard.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📊</span> Dashboard
+  </a>
+
+  <a href="/pages/branch/branch_employee.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">👤</span> Employees 
+    <span class="nav-badge">48</span>
+  </a>
+
+  <a href="/pages/branch/branch_attendance.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🕐</span> Attendance
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📅</span> Schedule
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🔄</span> Deployment
+  </a>
+
+  <div class="nav-label" style="margin-top:8px;">Management</div>
+
+  <a href="/pages/branch/branch_leave_req.html"
+     class="nav-item active"
+     onclick="setActive(this)">
+    <span class="icon">🏖️</span> Leave Requests 
+    <span class="nav-badge" id="pendingBadge">3</span>
+  </a>
+
+  <a href="/pages/branch/branch_reports.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📋</span> Reports
+  </a>
+
+  <a href="/pages/branch/branch_setting.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">⚙️</span> Settings
+  </a>
+</nav>
   <div class="sidebar-footer">
     <div class="admin-card">
       <div class="admin-av">BA</div>
