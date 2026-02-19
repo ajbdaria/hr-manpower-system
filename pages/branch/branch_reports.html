@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — Manpower Monitoring System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#C0392B;--red-bright:#E74C3C;--red-dark:#922B21;
+  --red-glow:rgba(192,57,43,0.14);
+  --dark:#610e03;--dark2:#2C1410;--dark3:#3D1A15;
+  --gray:#8B7B78;--light-gray:#F4EAE8;--cream:#FDF6F0;--white:#FFFFFF;
+  --success:#27AE60;--warning:#E67E22;--info:#2980B9;--purple:#8E44AD;
+  --border:#EDD8D5;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#F8F0EE;color:var(--dark);min-height:100vh;display:flex;}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:240px;min-height:100vh;background:var(--dark);position:fixed;left:0;top:0;bottom:0;z-index:100;border-right:2px solid var(--red-dark);display:flex;flex-direction:column;}
+.sidebar-logo{padding:28px 20px 20px;border-bottom:1px solid var(--dark3);}
+.logo-badge{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:38px;height:38px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--white);line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag{margin:14px 20px;background:var(--red-glow);border:1px solid var(--red-dark);border-radius:6px;padding:8px 12px;}
+.branch-tag .label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag .value{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--red-bright);}
+.nav-section{padding:8px 0;flex:1;}
+.nav-label{padding:14px 20px 6px;font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#A89693;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--white);background:rgba(192,57,43,.12);border-left-color:var(--red);}
+.nav-item.active{color:var(--red-bright);}
+.nav-item .icon{width:20px;text-align:center;font-size:16px;}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--dark3);}
+.admin-card{display:flex;align-items:center;gap:10px;}
+.admin-av{width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:white;flex-shrink:0;}
+.admin-info .name{font-size:13px;font-weight:600;color:var(--white);}
+.admin-info .role{font-size:11px;color:var(--gray);}
+.logout-btn{margin-left:auto;background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;transition:color .2s;}
+.logout-btn:hover{color:var(--red-bright);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--white);border-bottom:1px solid #E8D8D5;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(192,57,43,.06);}
+.topbar-left h1{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
+.topbar-left .subtitle{font-size:12px;color:var(--gray);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-date{font-size:12px;color:var(--gray);background:var(--light-gray);padding:6px 12px;border-radius:6px;}
+.notif-btn{position:relative;background:var(--light-gray);border:none;cursor:pointer;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.notif-btn .nb{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--white);}
+.content{padding:26px 32px;}
+
+/* ═══ BUTTONS ═══ */
+.btn-primary{background:var(--red);color:white;border:none;padding:9px 18px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-outline{background:none;color:var(--gray);border:1.5px solid var(--border);padding:8px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+.btn-outline:hover{border-color:var(--red);color:var(--red);}
+.btn-ghost{background:none;border:none;color:var(--gray);padding:6px 10px;border-radius:7px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-ghost:hover{background:var(--light-gray);color:var(--dark);}
+
+/* ═══ CONTROLS BAR ═══ */
+.controls-bar{background:var(--white);border-radius:14px;border:1px solid var(--border);padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeUp .4s ease both;}
+.cb-label{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap;}
+.filter-sel{background:var(--light-gray);border:1.5px solid var(--border);border-radius:9px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);cursor:pointer;outline:none;transition:border-color .2s;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B78' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.filter-sel:focus{border-color:var(--red);}
+.date-range{display:flex;align-items:center;gap:8px;}
+.date-input{background:var(--light-gray);border:1.5px solid var(--border);border-radius:9px;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .2s;}
+.date-input:focus{border-color:var(--red);}
+.cb-divider{width:1px;height:30px;background:var(--border);}
+.period-btns{display:flex;gap:4px;background:var(--light-gray);border-radius:9px;padding:3px;}
+.period-btn{padding:6px 12px;border-radius:7px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;}
+.period-btn.active{background:var(--white);color:var(--red);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+/* ═══ STAT CARDS ═══ */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+.kpi{background:var(--white);border-radius:14px;border:1px solid var(--border);padding:20px;position:relative;overflow:hidden;animation:fadeUp .4s ease both;cursor:default;transition:all .2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,.09);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);}
+.kpi.g::before{background:var(--success);}
+.kpi.b::before{background:var(--info);}
+.kpi.o::before{background:var(--warning);}
+.kpi.p::before{background:var(--purple);}
+.kpi:nth-child(1){animation-delay:.0s}.kpi:nth-child(2){animation-delay:.07s}.kpi:nth-child(3){animation-delay:.14s}.kpi:nth-child(4){animation-delay:.21s}
+.kpi-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.kpi-val{font-family:'Rajdhani',sans-serif;font-size:38px;font-weight:700;color:var(--dark);line-height:1;}
+.kpi-sub{font-size:12px;color:var(--gray);margin-top:6px;display:flex;align-items:center;gap:5px;}
+.trend-up{color:var(--success);font-weight:600;}
+.trend-down{color:var(--red);font-weight:600;}
+.kpi-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:32px;opacity:.12;}
+.kpi-sparkline{margin-top:12px;height:32px;display:flex;align-items:flex-end;gap:2px;}
+.spark-bar{flex:1;border-radius:2px 2px 0 0;min-height:4px;transition:opacity .2s;}
+.spark-bar:hover{opacity:.7;}
+
+/* ═══ CHART GRID ═══ */
+.chart-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.chart-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
+
+/* ═══ CARD ═══ */
+.card{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;animation:fadeUp .4s ease .28s both;}
+.card-hdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.card-body{padding:20px 22px;}
+.card-body.no-pad{padding:0;}
+
+/* ═══ BAR CHART ═══ */
+.bar-chart-wrap{height:180px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;position:relative;}
+.bc-grid-line{position:absolute;left:0;right:0;border-top:1px dashed #EDD8D5;font-size:10px;color:var(--gray);}
+.bc-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;z-index:1;}
+.bc-bars{display:flex;gap:2px;align-items:flex-end;width:100%;}
+.bc-bar{flex:1;border-radius:4px 4px 0 0;cursor:pointer;transition:opacity .2s;position:relative;}
+.bc-bar:hover{opacity:.8;}
+.bc-bar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--dark);color:white;font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;z-index:10;}
+.bc-lbl{font-size:10px;color:var(--gray);font-weight:500;}
+
+/* ═══ LINE CHART ═══ */
+.line-chart-wrap{position:relative;height:180px;padding-bottom:24px;}
+.lc-svg{width:100%;height:100%;}
+.lc-grid{stroke:#EDD8D5;stroke-width:1;stroke-dasharray:4 3;}
+.lc-line{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.lc-area{opacity:.1;}
+.lc-dot{cursor:pointer;transition:r .2s;}
+.lc-dot:hover{r:6;}
+
+/* ═══ DONUT CHART ═══ */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0;}
+.donut-svg{transform:rotate(-90deg);}
+.donut-center{text-align:center;margin-top:-100px;margin-bottom:12px;}
+.donut-val{font-family:'Rajdhani',sans-serif;font-size:34px;font-weight:700;color:var(--dark);}
+.donut-sub{font-size:11px;color:var(--gray);}
+.donut-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:4px;}
+.dl-item{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--light-gray);border-radius:8px;}
+.dl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.dl-label{font-size:11px;color:var(--gray);}
+.dl-val{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-left:auto;}
+
+/* ═══ HEATMAP ═══ */
+.heatmap-wrap{overflow-x:auto;}
+.heatmap{display:grid;grid-template-columns:auto repeat(7,1fr);gap:4px;align-items:center;}
+.hm-head{font-size:10px;font-weight:700;color:var(--gray);text-align:center;text-transform:uppercase;}
+.hm-label{font-size:10px;color:var(--gray);font-weight:600;padding-right:8px;white-space:nowrap;}
+.hm-cell{aspect-ratio:1;border-radius:4px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
+.hm-cell:hover{transform:scale(1.15);box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10;}
+.hm-cell:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--dark);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;pointer-events:none;z-index:20;}
+
+/* ═══ REPORT TABLE ═══ */
+.rpt-table{width:100%;border-collapse:collapse;}
+.rpt-table thead th{padding:11px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);text-align:left;background:var(--cream);border-bottom:2px solid var(--border);}
+.rpt-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+.rpt-table tbody tr:hover{background:var(--cream);}
+.rpt-table tbody tr:last-child{border-bottom:none;}
+.rpt-table tbody td{padding:12px 14px;font-size:13px;color:var(--dark);vertical-align:middle;}
+.perf-bar{display:flex;align-items:center;gap:8px;}
+.perf-track{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.perf-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+.emp-micro{display:flex;align-items:center;gap:8px;}
+.em-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+
+/* ═══ REPORT CARDS GRID ═══ */
+.report-types{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+.rt-card{background:var(--white);border-radius:14px;border:1px solid var(--border);padding:20px;cursor:pointer;transition:all .2s;text-align:center;position:relative;overflow:hidden;animation:fadeUp .4s ease both;}
+.rt-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(192,57,43,.12);border-color:var(--red);}
+.rt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border);transition:background .2s;}
+.rt-card:hover::before{background:var(--red);}
+.rt-card:nth-child(1){animation-delay:.0s}.rt-card:nth-child(2){animation-delay:.06s}.rt-card:nth-child(3){animation-delay:.12s}
+.rt-card:nth-child(4){animation-delay:.18s}.rt-card:nth-child(5){animation-delay:.24s}.rt-card:nth-child(6){animation-delay:.30s}
+.rt-icon{font-size:36px;margin-bottom:10px;}
+.rt-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.rt-desc{font-size:11px;color:var(--gray);line-height:1.5;}
+.rt-badge{position:absolute;top:12px;right:12px;background:var(--light-gray);color:var(--gray);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+
+/* ═══ SCHEDULE REPORT ═══ */
+.sched-items{display:flex;flex-direction:column;gap:0;}
+.sched-row{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+.sched-row:last-child{border-bottom:none;}
+.sched-row:hover{background:var(--cream);}
+.sr-info{display:flex;flex-direction:column;}
+.sr-name{font-size:13px;font-weight:600;color:var(--dark);}
+.sr-meta{font-size:11px;color:var(--gray);margin-top:1px;}
+.sr-right{display:flex;align-items:center;gap:10px;}
+.sr-size{font-size:12px;color:var(--gray);}
+.format-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;}
+.format-badge.csv{background:rgba(39,174,96,.1);color:var(--success);}
+.format-badge.pdf{background:rgba(192,57,43,.1);color:var(--red);}
+.format-badge.xlsx{background:rgba(41,128,185,.1);color:var(--info);}
+
+/* ═══ LEGEND ═══ */
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.cl-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray);}
+.cl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* ═══ PROGRESS RINGS ═══ */
+.rings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.ring-card{text-align:center;padding:16px 12px;background:var(--light-gray);border-radius:12px;}
+.ring-title{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;}
+.ring-svg-wrap{position:relative;display:inline-block;}
+.ring-center-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.ring-pct{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);}
+.ring-lbl{font-size:10px;color:var(--gray);}
+
+/* ═══ MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,10,8,.55);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:mfade .2s ease;}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border-radius:18px;width:500px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(26,10,8,.3);animation:mup .25s ease;}
+@keyframes mup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 26px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--white);z-index:10;border-radius:18px 18px 0 0;}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);}
+.modal-close{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--gray);transition:all .2s;}
+.modal-close:hover{background:var(--red);color:white;border-color:var(--red);}
+.modal-body{padding:24px 26px;}
+.modal-foot{padding:16px 26px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--white);border-radius:0 0 18px 18px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.7px;}
+.form-input,.form-select,.form-textarea{background:var(--light-gray);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .2s;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--red);}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B78' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.format-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.fmt-opt{border:2px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;}
+.fmt-opt:hover,.fmt-opt.active{border-color:var(--red);background:rgba(192,57,43,.05);}
+.fmt-opt .fo-icon{font-size:22px;margin-bottom:4px;}
+.fmt-opt .fo-label{font-size:12px;font-weight:700;color:var(--dark);}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--dark);color:white;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;min-width:240px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{border-left:4px solid var(--success);}
+.toast.error{border-left:4px solid var(--red);}
+.toast.info{border-left:4px solid var(--info);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ PRINT ═══ */
+@media print{
+  .sidebar,.topbar,.controls-bar,.topbar-right,.btn-primary,.btn-outline,.notif-btn{display:none!important;}
+  .main{margin-left:0;}
+  .content{padding:0;}
+  .card,.kpi{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <div class="logo-icon">👥</div>
+      <div><div class="logo-text">ManPower MS</div><div class="logo-sub">Monitoring System</div></div>
+    </div>
+  </div>
+  <div class="branch-tag"><div class="label">Current Branch</div><div class="value">📍 North Branch — NCR</div></div>
+  <nav class="nav-section">
+    <div class="nav-label">Main Menu</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">👤</span> Employees <span class="nav-badge">48</span></div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">🕐</span> Attendance</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">📅</span> Schedule</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">🔄</span> Deployment</div>
+    <div class="nav-label" style="margin-top:8px;">Management</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">🏖️</span> Leave Requests <span class="nav-badge">3</span></div>
+    <div class="nav-item active" onclick="setActive(this)"><span class="icon">📋</span> Reports</div>
+    <div class="nav-item" onclick="setActive(this)"><span class="icon">⚙️</span> Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-card">
+      <div class="admin-av">BA</div>
+      <div class="admin-info"><div class="name">Branch Admin</div><div class="role">Administrator</div></div>
+      <button class="logout-btn">⏏</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>📋 Reports & Analytics</h1>
+      <div class="subtitle">Comprehensive branch insights — attendance, manpower, performance, and leave trends.</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="dateDisplay"></div>
+      <button class="btn-outline" onclick="window.print()">🖨 Print</button>
+      <button class="btn-primary" onclick="openGenerateModal()">⬇ Generate Report</button>
+      <button class="notif-btn">🔔<span class="nb"></span></button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CONTROLS BAR -->
+    <div class="controls-bar">
+      <span class="cb-label">📅 Period</span>
+      <div class="period-btns">
+        <button class="period-btn" onclick="setPeriod('week',this)">This Week</button>
+        <button class="period-btn active" onclick="setPeriod('month',this)">This Month</button>
+        <button class="period-btn" onclick="setPeriod('quarter',this)">Quarter</button>
+        <button class="period-btn" onclick="setPeriod('year',this)">Year</button>
+        <button class="period-btn" onclick="setPeriod('custom',this)">Custom</button>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="date-range" id="customDateRange" style="display:none;">
+        <input class="date-input" type="date" id="dateFrom" value="2026-02-01">
+        <span style="font-size:12px;color:var(--gray);">to</span>
+        <input class="date-input" type="date" id="dateTo" value="2026-02-19">
+      </div>
+      <span class="cb-label" style="margin-left:4px;">🏢 Dept</span>
+      <select class="filter-sel" id="deptFilter" onchange="refreshCharts()">
+        <option value="">All Departments</option>
+        <option>Operations</option>
+        <option>Sales</option>
+        <option>Security</option>
+        <option>Admin</option>
+        <option>Logistics</option>
+      </select>
+      <button class="btn-outline" style="margin-left:auto;" onclick="refreshCharts()">🔄 Refresh</button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Avg. Attendance Rate</div>
+        <div class="kpi-val">84<span style="font-size:20px;font-weight:500;color:var(--gray);">%</span></div>
+        <div class="kpi-sub"><span class="trend-up">↑ 3.2%</span> vs last month</div>
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-sparkline" id="spark1"></div>
+      </div>
+      <div class="kpi g">
+        <div class="kpi-label">Total Present Days</div>
+        <div class="kpi-val">1<span style="font-size:22px;font-weight:500;">,</span>247</div>
+        <div class="kpi-sub"><span class="trend-up">↑ 42</span> vs last month</div>
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-sparkline" id="spark2"></div>
+      </div>
+      <div class="kpi b">
+        <div class="kpi-label">Leave Days Used</div>
+        <div class="kpi-val">42</div>
+        <div class="kpi-sub"><span class="trend-down">↑ 8</span> vs last month</div>
+        <div class="kpi-icon">🏖️</div>
+        <div class="kpi-sparkline" id="spark3"></div>
+      </div>
+      <div class="kpi o">
+        <div class="kpi-label">Late Incidents</div>
+        <div class="kpi-val">31</div>
+        <div class="kpi-sub"><span class="trend-up">↓ 12%</span> improved</div>
+        <div class="kpi-icon">⏰</div>
+        <div class="kpi-sparkline" id="spark4"></div>
+      </div>
+    </div>
+
+    <!-- ROW 1: MONTHLY ATTENDANCE + DEPT BREAKDOWN -->
+    <div class="chart-grid-2">
+      <!-- MONTHLY ATTENDANCE BAR CHART -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">📈 Monthly Attendance Trend</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-ghost" onclick="showToast('info','📋 Chart data copied!')">⬇</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart-wrap" id="monthlyBar">
+            <div class="bc-grid-line" style="bottom:75%;"><span style="position:absolute;right:0;font-size:9px;color:var(--gray);transform:translateY(-50%)">100%</span></div>
+            <div class="bc-grid-line" style="bottom:50%;"><span style="position:absolute;right:0;font-size:9px;color:var(--gray);transform:translateY(-50%)">75%</span></div>
+            <div class="bc-grid-line" style="bottom:25%;"><span style="position:absolute;right:0;font-size:9px;color:var(--gray);transform:translateY(-50%)">50%</span></div>
+          </div>
+          <div class="chart-legend">
+            <div class="cl-item"><div class="cl-dot" style="background:var(--success)"></div>Present</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--warning)"></div>Late</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div>Absent</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEPT ATTENDANCE DONUT -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">🏢 By Department</div>
+          <span style="font-size:12px;color:var(--gray);">February 2026</span>
+        </div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg class="donut-svg" width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#F4EAE8" stroke-width="18"/>
+              <!-- Operations 35% -->
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#C0392B" stroke-width="18" stroke-dasharray="326.7" stroke-dashoffset="0" stroke-linecap="butt"/>
+              <!-- Sales 20% -->
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#2980B9" stroke-width="18" stroke-dasharray="326.7" stroke-dashoffset="212.4" stroke-linecap="butt"/>
+              <!-- Security 18% -->
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#27AE60" stroke-width="18" stroke-dasharray="326.7" stroke-dashoffset="277.7" stroke-linecap="butt"/>
+              <!-- Admin 15% -->
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#E67E22" stroke-width="18" stroke-dasharray="326.7" stroke-dashoffset="336.5" stroke-linecap="butt"/>
+              <!-- Logistics 12% -->
+              <circle cx="70" cy="70" r="52" fill="none" stroke="#8E44AD" stroke-width="18" stroke-dasharray="326.7" stroke-dashoffset="385.5" stroke-linecap="butt"/>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-val">48</div>
+              <div class="donut-sub">Total Staff</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="dl-item"><div class="dl-dot" style="background:#C0392B"></div><div class="dl-label">Operations</div><div class="dl-val">17</div></div>
+            <div class="dl-item"><div class="dl-dot" style="background:#2980B9"></div><div class="dl-label">Sales</div><div class="dl-val">10</div></div>
+            <div class="dl-item"><div class="dl-dot" style="background:#27AE60"></div><div class="dl-label">Security</div><div class="dl-val">9</div></div>
+            <div class="dl-item"><div class="dl-dot" style="background:#E67E22"></div><div class="dl-label">Admin</div><div class="dl-val">7</div></div>
+            <div class="dl-item" style="grid-column:1/-1;"><div class="dl-dot" style="background:#8E44AD"></div><div class="dl-label">Logistics</div><div class="dl-val">5</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: ATTENDANCE HEATMAP -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hdr">
+        <div class="card-title">🗓 Attendance Heatmap — February 2026</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--gray);">
+          <span>Low</span>
+          <div style="display:flex;gap:3px;">
+            <div style="width:14px;height:14px;border-radius:3px;background:#F4EAE8;"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:rgba(192,57,43,.25);"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:rgba(192,57,43,.5);"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:rgba(192,57,43,.75);"></div>
+            <div style="width:14px;height:14px;border-radius:3px;background:#C0392B;"></div>
+          </div>
+          <span>High</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="heatmap-wrap">
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3: LINE CHART + LEAVE BREAKDOWN -->
+    <div class="chart-grid-2" style="margin-bottom:20px;">
+      <!-- WEEKLY TREND LINE CHART -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">📉 Weekly Attendance Line</div>
+          <span style="font-size:12px;color:var(--gray);">Last 8 weeks</span>
+        </div>
+        <div class="card-body">
+          <div class="line-chart-wrap">
+            <svg class="lc-svg" viewBox="0 0 400 160" preserveAspectRatio="none" id="lineChart"></svg>
+          </div>
+          <div class="chart-legend">
+            <div class="cl-item"><div class="cl-dot" style="background:var(--red);border-radius:50%"></div>This Branch</div>
+            <div class="cl-item"><div class="cl-dot" style="background:var(--gray);border-radius:50%"></div>Company Avg</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAVE TYPE BREAKDOWN -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">🏖️ Leave Type Breakdown</div>
+          <span style="font-size:12px;color:var(--gray);">Feb 2026</span>
+        </div>
+        <div class="card-body">
+          <div id="leaveBreakdown"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: PERFORMANCE RINGS -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hdr">
+        <div class="card-title">🎯 Branch Performance Indicators</div>
+        <span style="font-size:12px;color:var(--gray);">vs. Target this month</span>
+      </div>
+      <div class="card-body">
+        <div class="rings-grid" id="ringsGrid"></div>
+      </div>
+    </div>
+
+    <!-- ROW 5: TOP PERFORMERS + FREQUENT ABSENT -->
+    <div class="chart-grid-2" style="margin-bottom:20px;">
+      <!-- TOP PERFORMERS -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">🏆 Top Performers</div>
+          <span style="font-size:12px;color:var(--gray);">By attendance rate</span>
+        </div>
+        <div class="card-body no-pad">
+          <table class="rpt-table" id="topTable"></table>
+        </div>
+      </div>
+
+      <!-- MOST ABSENCES -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">⚠️ Attendance Concerns</div>
+          <span style="font-size:12px;color:var(--gray);">Needs attention</span>
+        </div>
+        <div class="card-body no-pad">
+          <table class="rpt-table" id="absentTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 6: GENERATED REPORTS LIST -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-hdr">
+        <div class="card-title">📁 Generated Reports</div>
+        <button class="btn-primary" style="font-size:12px;padding:7px 14px;" onclick="openGenerateModal()">＋ New Report</button>
+      </div>
+      <div class="sched-items" id="reportsList"></div>
+    </div>
+
+    <!-- ROW 7: QUICK GENERATE -->
+    <div class="section-title-row" style="margin-bottom:14px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--dark);">⚡ Quick Generate</div>
+      <div style="font-size:12px;color:var(--gray);margin-top:2px;">One-click report generation for common use cases.</div>
+    </div>
+    <div class="report-types">
+      <div class="rt-card" onclick="quickGenerate('Daily Attendance Summary')">
+        <div class="rt-badge">PDF</div>
+        <div class="rt-icon">📋</div>
+        <div class="rt-name">Daily Attendance</div>
+        <div class="rt-desc">Today's full attendance log with status and time-in/out.</div>
+      </div>
+      <div class="rt-card" onclick="quickGenerate('Weekly Manpower Report')">
+        <div class="rt-badge">XLSX</div>
+        <div class="rt-icon">📊</div>
+        <div class="rt-name">Manpower Report</div>
+        <div class="rt-desc">Weekly headcount, absences, and deployment status.</div>
+      </div>
+      <div class="rt-card" onclick="quickGenerate('Leave Utilization Report')">
+        <div class="rt-badge">PDF</div>
+        <div class="rt-icon">🏖️</div>
+        <div class="rt-name">Leave Utilization</div>
+        <div class="rt-desc">Per-employee leave balances, usage, and history.</div>
+      </div>
+      <div class="rt-card" onclick="quickGenerate('Late & Absent Report')">
+        <div class="rt-badge">CSV</div>
+        <div class="rt-icon">⏰</div>
+        <div class="rt-name">Late & Absent</div>
+        <div class="rt-desc">Flagged incidents with timestamps and frequency counts.</div>
+      </div>
+      <div class="rt-card" onclick="quickGenerate('Department Performance Report')">
+        <div class="rt-badge">PDF</div>
+        <div class="rt-icon">🏢</div>
+        <div class="rt-name">Dept. Performance</div>
+        <div class="rt-desc">Comparative attendance rates across all departments.</div>
+      </div>
+      <div class="rt-card" onclick="quickGenerate('Monthly Summary Report')">
+        <div class="rt-badge">XLSX</div>
+        <div class="rt-icon">📅</div>
+        <div class="rt-name">Monthly Summary</div>
+        <div class="rt-desc">Full branch summary including all metrics for the month.</div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ═══ GENERATE REPORT MODAL ═══ -->
+<div class="modal-overlay" id="generateModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">📊 Generate Custom Report</div>
+      <button class="modal-close" onclick="closeModal('generateModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Report Type *</label>
+        <select class="form-select" id="g_type">
+          <option value="">Select report type</option>
+          <option>Daily Attendance Summary</option>
+          <option>Weekly Manpower Report</option>
+          <option>Monthly Summary Report</option>
+          <option>Leave Utilization Report</option>
+          <option>Late & Absent Report</option>
+          <option>Department Performance Report</option>
+          <option>Employee Headcount Report</option>
+          <option>Overtime Report</option>
+          <option>Custom Range Report</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-select" id="g_dept">
+          <option value="">All Departments</option>
+          <option>Operations</option>
+          <option>Sales</option>
+          <option>Security</option>
+          <option>Admin</option>
+          <option>Logistics</option>
+        </select>
+      </div>
+      <div class="form-grid-2" style="margin-bottom:14px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Date From *</label>
+          <input class="form-input" type="date" id="g_from" value="2026-02-01">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Date To *</label>
+          <input class="form-input" type="date" id="g_to" value="2026-02-19">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Export Format *</label>
+        <div class="format-options">
+          <div class="fmt-opt active" onclick="selectFormat(this,'PDF')">
+            <div class="fo-icon">📄</div>
+            <div class="fo-label">PDF</div>
+          </div>
+          <div class="fmt-opt" onclick="selectFormat(this,'XLSX')">
+            <div class="fo-icon">📊</div>
+            <div class="fo-label">Excel</div>
+          </div>
+          <div class="fmt-opt" onclick="selectFormat(this,'CSV')">
+            <div class="fo-icon">📋</div>
+            <div class="fo-label">CSV</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Additional Notes</label>
+        <input class="form-input" id="g_notes" placeholder="e.g. For HQ submission, payroll period...">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeModal('generateModal')">Cancel</button>
+      <button class="btn-primary" onclick="generateReport()">📊 Generate Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── GLOBALS ───
+let selectedFormat = 'PDF';
+let generatedReports = [
+  {name:'Monthly Summary — January 2026', type:'Monthly Summary', date:'Feb 1, 2026', size:'1.2 MB', format:'PDF', dept:'All'},
+  {name:'Weekly Manpower — Week 6', type:'Manpower Report', date:'Feb 10, 2026', size:'845 KB', format:'XLSX', dept:'All'},
+  {name:'Late & Absent — Q1 2026', type:'Late & Absent', date:'Feb 15, 2026', size:'312 KB', format:'CSV', dept:'Operations'},
+  {name:'Leave Utilization — Feb 2026', type:'Leave Report', date:'Feb 18, 2026', size:'670 KB', format:'PDF', dept:'All'},
+];
+
+const empColors = ['#C0392B','#922B21','#2980B9','#27AE60','#E67E22','#8E44AD','#16A085','#D35400'];
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  buildSparklines();
+  buildMonthlyBar();
+  buildLineChart();
+  buildHeatmap();
+  buildLeaveBreakdown();
+  buildRings();
+  buildTopTable();
+  buildAbsentTable();
+  renderReportsList();
+});
+
+// ─── SPARKLINES ───
+const sparkData = [
+  [78,82,80,85,83,88,84,86,84],
+  [220,235,248,242,255,262,258,250,247],
+  [30,28,35,40,38,42,44,40,42],
+  [45,42,38,41,36,34,33,32,31],
+];
+const sparkColors = ['var(--red)','var(--success)','var(--info)','var(--warning)'];
+
+function buildSparklines() {
+  ['spark1','spark2','spark3','spark4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    const data = sparkData[i];
+    const max = Math.max(...data);
+    el.innerHTML = data.map((v,j) => {
+      const h = Math.max(4, Math.round((v/max)*32));
+      return `<div class="spark-bar" style="height:${h}px;background:${sparkColors[i]};opacity:${0.4 + (j/(data.length-1))*0.6};"></div>`;
+    }).join('');
+  });
+}
+
+// ─── MONTHLY BAR CHART ───
+const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+const presentData = [88,85,91,83,80,86,84];
+const lateData    = [8, 10,  6, 12, 14,  9,  8];
+const absentData  = [4,  5,  3,  5,  6,  5,  8];
+
+function buildMonthlyBar() {
+  const wrap = document.getElementById('monthlyBar');
+  const maxTotal = 100;
+  months.forEach((m, i) => {
+    const p = presentData[i], l = lateData[i], a = absentData[i];
+    const col = document.createElement('div');
+    col.className = 'bc-col';
+    col.innerHTML = `
+      <div class="bc-bars" style="height:${Math.round((p+l+a)/maxTotal*150)}px">
+        <div class="bc-bar" style="height:${Math.round(p/(p+l+a)*100)}%;background:var(--success);" data-tip="Present: ${p}%"></div>
+        <div class="bc-bar" style="height:${Math.round(l/(p+l+a)*100)}%;background:var(--warning);" data-tip="Late: ${l}%"></div>
+        <div class="bc-bar" style="height:${Math.round(a/(p+l+a)*100)}%;background:var(--red);opacity:.8;" data-tip="Absent: ${a}%"></div>
+      </div>
+      <div class="bc-lbl" style="font-weight:${i===6?'700':'400'};color:${i===6?'var(--red)':'var(--gray)'}">${m}</div>`;
+    wrap.appendChild(col);
+  });
+}
+
+// ─── LINE CHART ───
+function buildLineChart() {
+  const svg = document.getElementById('lineChart');
+  const branch  = [78, 82, 80, 85, 83, 88, 84, 84];
+  const company = [75, 78, 76, 80, 79, 82, 81, 80];
+  const w = 400, h = 160, pad = 20;
+  const iw = w - pad*2, ih = h - pad*2 - 20;
+  const x = (i) => pad + (i / (branch.length-1)) * iw;
+  const y = (v) => pad + ih - ((v - 65) / 35) * ih;
+
+  // Grid lines
+  let grid = '';
+  [70,80,90,100].forEach(v => {
+    const yv = y(v);
+    grid += `<line class="lc-grid" x1="${pad}" y1="${yv}" x2="${w-pad}" y2="${yv}"/>`;
+    grid += `<text x="${pad-2}" y="${yv+3}" text-anchor="end" font-size="9" fill="#8B7B78">${v}%</text>`;
+  });
+
+  // Labels
+  const weeks = ['W1','W2','W3','W4','W5','W6','W7','W8'];
+  let labels = weeks.map((w,i) => `<text x="${x(i)}" y="${h-4}" text-anchor="middle" font-size="9" fill="#8B7B78">${w}</text>`).join('');
+
+  // Lines
+  const makeLine = (data, color) => {
+    const pts = data.map((v,i) => `${x(i)},${y(v)}`).join(' ');
+    const area = `${x(0)},${y(65)} ` + data.map((v,i) => `${x(i)},${y(v)}`).join(' ') + ` ${x(data.length-1)},${y(65)}`;
+    return `
+      <polygon points="${area}" fill="${color}" class="lc-area"/>
+      <polyline class="lc-line" points="${pts}" stroke="${color}"/>
+      ${data.map((v,i) => `<circle class="lc-dot" cx="${x(i)}" cy="${y(v)}" r="4" fill="${color}" stroke="white" stroke-width="2">
+        <title>${v}%</title></circle>`).join('')}`;
+  };
+
+  svg.innerHTML = grid + labels + makeLine(company, '#8B7B78') + makeLine(branch, '#C0392B');
+}
+
+// ─── HEATMAP ───
+function buildHeatmap() {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weeks = ['W1','W2','W3','W4'];
+  const data = [
+    [88,91,93,90,84,55,30],
+    [86,89,95,88,82,60,28],
+    [90,92,91,87,85,58,32],
+    [85,88,90,89,81,52,25],
+  ];
+
+  const getColor = (v) => {
+    if (v === 0) return '#F4EAE8';
+    const pct = (v - 25) / 70;
+    const r = Math.round(192 + (255-192)*(1-pct));
+    const g = Math.round(57 * (1-pct));
+    const b = Math.round(43 * (1-pct));
+    return `rgba(${192},${57},${43},${0.1 + pct*0.9})`;
+  };
+
+  let html = '<div></div>';
+  days.forEach(d => { html += `<div class="hm-head">${d}</div>`; });
+  weeks.forEach((w, wi) => {
+    html += `<div class="hm-label">${w}</div>`;
+    days.forEach((d, di) => {
+      const v = data[wi][di];
+      html += `<div class="hm-cell" style="background:${getColor(v)};" data-tip="${d} ${w}: ${v}%"></div>`;
+    });
+  });
+  document.getElementById('heatmap').innerHTML = html;
+}
+
+// ─── LEAVE BREAKDOWN ───
+const leaveTypes = [
+  {label:'Sick Leave', icon:'🤒', count:18, days:42, color:'#C0392B'},
+  {label:'Vacation', icon:'🌴', count:12, days:38, color:'#2980B9'},
+  {label:'Emergency', icon:'🆘', count:5, days:10, color:'#E67E22'},
+  {label:'Maternity', icon:'💜', count:1, days:60, color:'#8E44AD'},
+  {label:'Bereavement', icon:'🕯', count:3, days:9, color:'#1A5276'},
+  {label:'Unpaid', icon:'📋', count:2, days:4, color:'#8B7B78'},
+];
+const maxLeave = 60;
+
+function buildLeaveBreakdown() {
+  document.getElementById('leaveBreakdown').innerHTML = leaveTypes.map(l => `
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;">${l.icon} ${l.label}</div>
+        <div style="display:flex;gap:12px;font-size:12px;color:var(--gray);">
+          <span>${l.count} emp</span>
+          <span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--dark);">${l.days} days</span>
+        </div>
+      </div>
+      <div style="height:8px;background:var(--light-gray);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${Math.round((l.days/maxLeave)*100)}%;background:${l.color};border-radius:4px;transition:width .6s ease;"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── RINGS ───
+const rings = [
+  {label:'Attendance Target', val:84, target:90, color:'#C0392B'},
+  {label:'On-Time Rate', val:89, target:85, color:'#27AE60'},
+  {label:'Leave Efficiency', val:72, target:80, color:'#2980B9'},
+  {label:'Retention Rate', val:96, target:95, color:'#8E44AD'},
+  {label:'Deployment Rate', val:91, target:88, color:'#E67E22'},
+  {label:'Shift Compliance', val:88, target:90, color:'#16A085'},
+];
+
+function buildRings() {
+  document.getElementById('ringsGrid').innerHTML = rings.map(r => {
+    const pct = r.val / 100;
+    const circ = 2 * Math.PI * 34;
+    const dash = circ * pct;
+    const metTarget = r.val >= r.target;
+    return `
+      <div class="ring-card">
+        <div class="ring-title">${r.label}</div>
+        <div class="ring-svg-wrap">
+          <svg width="90" height="90" viewBox="0 0 90 90" style="transform:rotate(-90deg)">
+            <circle cx="45" cy="45" r="34" fill="none" stroke="#EDD8D5" stroke-width="10"/>
+            <circle cx="45" cy="45" r="34" fill="none" stroke="${r.color}" stroke-width="10"
+              stroke-dasharray="${dash} ${circ - dash}" stroke-linecap="round"/>
+          </svg>
+          <div class="ring-center-text">
+            <div class="ring-pct" style="color:${r.color}">${r.val}%</div>
+            <div class="ring-lbl">/ ${r.target}%</div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:600;color:${metTarget?'var(--success)':'var(--warning)'};margin-top:6px;">
+          ${metTarget ? '✅ Target Met' : '⚠️ Below Target'}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ─── TOP TABLE ───
+const topEmps = [
+  {name:'Ana Santos', pos:'Supervisor', dept:'Admin', rate:97, color:'#2980B9'},
+  {name:'Grace Villanueva', pos:'HR Assistant', dept:'Admin', rate:95, color:'#16A085'},
+  {name:'Maria Reyes', pos:'Cashier', dept:'Operations', rate:92, color:'#C0392B'},
+  {name:'Ben Mercado', pos:'Cashier', dept:'Sales', rate:91, color:'#8E44AD'},
+  {name:'Liza Hernandez', pos:'Floor Staff', dept:'Operations', rate:89, color:'#2980B9'},
+];
+
+function buildTopTable() {
+  document.getElementById('topTable').innerHTML = `
+    <thead><tr>
+      <th>#</th><th>Employee</th><th>Department</th><th>Rate</th>
+    </tr></thead>
+    <tbody>${topEmps.map((e,i) => {
+      const init = e.name.split(' ').map(n=>n[0]).join('').slice(0,2);
+      const col = e.rate >= 95 ? 'var(--success)' : e.rate >= 90 ? 'var(--info)' : 'var(--warning)';
+      return `<tr>
+        <td><span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:${i<3?'var(--warning)':'var(--gray)'};">${i<3?['🥇','🥈','🥉'][i]:i+1}</span></td>
+        <td><div class="emp-micro"><div class="em-av" style="background:${e.color}">${init}</div><div><div style="font-weight:600;font-size:13px;">${e.name}</div><div style="font-size:11px;color:var(--gray);">${e.pos}</div></div></div></td>
+        <td><span style="font-size:12px;color:var(--gray);">${e.dept}</span></td>
+        <td>
+          <div class="perf-bar">
+            <div class="perf-track"><div class="perf-fill" style="width:${e.rate}%;background:${col};"></div></div>
+            <span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:${col};flex-shrink:0;">${e.rate}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+// ─── ABSENT TABLE ───
+const concernEmps = [
+  {name:'Rico Pascual', pos:'Delivery Staff', dept:'Logistics', rate:72, absences:7, color:'#1A5276'},
+  {name:'Roberto Lim', pos:'Security', dept:'Security', rate:75, absences:5, color:'#27AE60'},
+  {name:'Juan Dela Cruz', pos:'Floor Staff', dept:'Operations', rate:78, absences:4, color:'#922B21'},
+  {name:'Mark Espiritu', pos:'Security', dept:'Security', rate:80, absences:3, color:'#D35400'},
+];
+
+function buildAbsentTable() {
+  document.getElementById('absentTable').innerHTML = `
+    <thead><tr>
+      <th>Employee</th><th>Department</th><th>Absences</th><th>Rate</th>
+    </tr></thead>
+    <tbody>${concernEmps.map(e => {
+      const init = e.name.split(' ').map(n=>n[0]).join('').slice(0,2);
+      const col = e.rate < 75 ? 'var(--red)' : e.rate < 80 ? 'var(--warning)' : 'var(--gray)';
+      return `<tr>
+        <td><div class="emp-micro"><div class="em-av" style="background:${e.color}">${init}</div><div><div style="font-weight:600;font-size:13px;">${e.name}</div><div style="font-size:11px;color:var(--gray);">${e.pos}</div></div></div></td>
+        <td><span style="font-size:12px;color:var(--gray);">${e.dept}</span></td>
+        <td><span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--red);">${e.absences}</span><span style="font-size:11px;color:var(--gray);"> days</span></td>
+        <td>
+          <div class="perf-bar">
+            <div class="perf-track"><div class="perf-fill" style="width:${e.rate}%;background:${col};"></div></div>
+            <span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:${col};flex-shrink:0;">${e.rate}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+// ─── REPORTS LIST ───
+function renderReportsList() {
+  document.getElementById('reportsList').innerHTML = generatedReports.map((r,i) => {
+    const fmt = r.format.toLowerCase();
+    return `
+      <div class="sched-row">
+        <div class="sr-info">
+          <div class="sr-name">${r.name}</div>
+          <div class="sr-meta">📅 Generated ${r.date} · 🏢 ${r.dept} · ${r.type}</div>
+        </div>
+        <div class="sr-right">
+          <span class="sr-size">${r.size}</span>
+          <span class="format-badge ${fmt}">${r.format}</span>
+          <button class="btn-outline" style="padding:6px 12px;font-size:12px;" onclick="downloadReport('${r.name}')">⬇ Download</button>
+          <button class="btn-ghost" style="color:var(--red);" onclick="deleteReport(${i})">🗑</button>
+        </div>
+      </div>`;
+  }).join('') || `<div style="text-align:center;padding:40px;color:var(--gray);">
+    <div style="font-size:36px;margin-bottom:10px;">📭</div>
+    <div style="font-size:14px;font-weight:600;">No reports generated yet.</div>
+  </div>`;
+}
+
+function deleteReport(i) {
+  generatedReports.splice(i, 1);
+  renderReportsList();
+  showToast('info', '🗑 Report removed.');
+}
+
+function downloadReport(name) {
+  showToast('success', `⬇ Downloading "${name}"...`);
+}
+
+// ─── GENERATE ───
+function selectFormat(el, fmt) {
+  selectedFormat = fmt;
+  document.querySelectorAll('.fmt-opt').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function openGenerateModal() { openModal('generateModal'); }
+
+function generateReport() {
+  const type = document.getElementById('g_type').value;
+  const dept = document.getElementById('g_dept').value || 'All';
+  const from = document.getElementById('g_from').value;
+  const to = document.getElementById('g_to').value;
+  if (!type) { showToast('error', '⚠️ Please select a report type.'); return; }
+
+  const sizes = {'PDF':'1.1 MB','XLSX':'850 KB','CSV':'320 KB'};
+  const newReport = {
+    name: `${type} — ${fmtDateShort(from)} to ${fmtDateShort(to)}`,
+    type, date: 'Today', size: sizes[selectedFormat], format: selectedFormat, dept,
+  };
+  generatedReports.unshift(newReport);
+  renderReportsList();
+  closeModal('generateModal');
+  simulateDownload(newReport.name);
+}
+
+function quickGenerate(type) {
+  const formats = {'Daily Attendance Summary':'PDF','Weekly Manpower Report':'XLSX','Leave Utilization Report':'PDF','Late & Absent Report':'CSV','Department Performance Report':'PDF','Monthly Summary Report':'XLSX'};
+  const fmt = formats[type] || 'PDF';
+  const report = {name: `${type} — Feb 2026`, type, date:'Today', size:'750 KB', format:fmt, dept:'All'};
+  generatedReports.unshift(report);
+  renderReportsList();
+  simulateDownload(report.name);
+}
+
+function simulateDownload(name) {
+  showToast('info', `📊 Generating "${name}"...`);
+  setTimeout(() => showToast('success', `✅ "${name}" ready! Download started.`), 1800);
+}
+
+// ─── CONTROLS ───
+function setPeriod(period, btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cr = document.getElementById('customDateRange');
+  cr.style.display = period === 'custom' ? 'flex' : 'none';
+  refreshCharts();
+}
+
+function refreshCharts() {
+  showToast('info', '🔄 Charts refreshed!');
+}
+
+// ─── HELPERS ───
+function fmtDateShort(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${mo[+m-1]} ${+day}`;
+}
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+function setActive(el) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.className = `toast ${type} show`;
+  t.textContent = msg;
+  setTimeout(() => t.classList.remove('show'), 3400);
+}
+</script>
+</body>
+</html>
