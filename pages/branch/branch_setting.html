@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Manpower Monitoring System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#C0392B;--red-bright:#E74C3C;--red-dark:#922B21;
+  --red-glow:rgba(192,57,43,0.14);
+  --dark:#610e03;--dark2:#2C1410;--dark3:#3D1A15;
+  --gray:#8B7B78;--light-gray:#F4EAE8;--cream:#FDF6F0;--white:#FFFFFF;
+  --success:#27AE60;--warning:#E67E22;--info:#2980B9;--purple:#8E44AD;
+  --border:#EDD8D5;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#F8F0EE;color:var(--dark);min-height:100vh;display:flex;}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:240px;min-height:100vh;background:var(--dark);position:fixed;left:0;top:0;bottom:0;z-index:100;border-right:2px solid var(--red-dark);display:flex;flex-direction:column;}
+.sidebar-logo{padding:28px 20px 20px;border-bottom:1px solid var(--dark3);}
+.logo-badge{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:38px;height:38px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--white);line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag{margin:14px 20px;background:var(--red-glow);border:1px solid var(--red-dark);border-radius:6px;padding:8px 12px;}
+.branch-tag .label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag .value{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--red-bright);}
+.nav-section{padding:8px 0;flex:1;}
+.nav-label{padding:14px 20px 6px;font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#A89693;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-left:3px solid transparent; text-decoration: none;}
+.nav-item:hover,.nav-item.active{color:var(--white);background:rgba(192,57,43,.12);border-left-color:var(--red);}
+.nav-item.active{color:var(--red-bright);}
+.nav-item .icon{width:20px;text-align:center;font-size:16px;}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--dark3);}
+.admin-card{display:flex;align-items:center;gap:10px;}
+.admin-avatar-sm{width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:white;flex-shrink:0;}
+.admin-info .name{font-size:13px;font-weight:600;color:var(--white);}
+.admin-info .role{font-size:11px;color:var(--gray);}
+.logout-btn{margin-left:auto;background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;transition:color .2s;}
+.logout-btn:hover{color:var(--red-bright);}
+
+/* ═══ MAIN ═══ */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--white);border-bottom:1px solid #E8D8D5;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(192,57,43,.06);}
+.topbar-left h1{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
+.topbar-left .subtitle{font-size:12px;color:var(--gray);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-date{font-size:12px;color:var(--gray);background:var(--light-gray);padding:6px 12px;border-radius:6px;}
+.notif-btn{position:relative;background:var(--light-gray);border:none;cursor:pointer;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.notif-btn .nb{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--white);}
+
+/* ═══ SETTINGS LAYOUT ═══ */
+.settings-wrap{display:flex;min-height:calc(100vh - 65px);}
+
+/* LEFT NAV */
+.settings-nav{width:230px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);padding:24px 0;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto;}
+.sn-section{margin-bottom:6px;}
+.sn-label{padding:10px 22px 5px;font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1.2px;}
+.sn-item{display:flex;align-items:center;gap:10px;padding:10px 22px;font-size:13px;font-weight:500;color:var(--gray);cursor:pointer;transition:all .2s;border-left:3px solid transparent;position:relative;}
+.sn-item:hover{color:var(--dark);background:var(--light-gray);}
+.sn-item.active{color:var(--red);background:var(--light-gray);border-left-color:var(--red);font-weight:600;}
+.sn-item .si{font-size:16px;width:20px;text-align:center;}
+.sn-badge{margin-left:auto;background:var(--red);color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;}
+
+/* SETTINGS CONTENT */
+.settings-content{flex:1;padding:28px 32px;max-width:860px;}
+
+/* SECTION */
+.settings-section{display:none;animation:fadeIn .25s ease;}
+.settings-section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.section-header{margin-bottom:24px;}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:10px;}
+.section-subtitle{font-size:13px;color:var(--gray);margin-top:4px;}
+
+/* CARD */
+.sc{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px;}
+.sc-hdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.sc-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.sc-body{padding:20px 22px;}
+.sc-body.tight{padding:0;}
+
+/* PROFILE HEADER */
+.profile-hero{background:linear-gradient(135deg,var(--red-dark),var(--red));padding:28px 28px 50px;position:relative;overflow:hidden;}
+.profile-hero::after{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05);}
+.ph-name{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:white;}
+.ph-role{font-size:13px;color:rgba(255,255,255,.75);margin-top:3px;}
+.ph-meta{display:flex;gap:16px;margin-top:14px;}
+.ph-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;font-size:12px;color:white;font-weight:500;}
+
+.avatar-wrap{position:relative;display:inline-block;margin-bottom:20px;}
+.big-avatar{width:80px;height:80px;border-radius:50%;background:var(--red-dark);border:4px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:white;cursor:pointer;transition:all .2s;}
+.big-avatar:hover{border-color:white;}
+.avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+
+/* FORM ELEMENTS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid.single{grid-template-columns:1fr;}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.7px;}
+.form-input,.form-select,.form-textarea{background:var(--light-gray);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .2s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--red);background:var(--white);}
+.form-input:disabled{opacity:.55;cursor:not-allowed;}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B78' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+.form-hint{font-size:11px;color:var(--gray);margin-top:3px;}
+
+/* TOGGLE SWITCH */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.tr-info .tr-label{font-size:14px;font-weight:600;color:var(--dark);}
+.tr-info .tr-sub{font-size:12px;color:var(--gray);margin-top:2px;}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#D4C4C1;border-radius:24px;cursor:pointer;transition:background .25s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.15);}
+.toggle input:checked + .toggle-slider{background:var(--red);}
+.toggle input:checked + .toggle-slider::before{transform:translateX(20px);}
+
+/* BUTTONS */
+.btn-primary{background:var(--red);color:white;border:none;padding:10px 20px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-outline{background:none;color:var(--gray);border:1.5px solid var(--border);padding:9px 16px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-outline:hover{border-color:var(--red);color:var(--red);}
+.btn-danger{background:none;color:var(--red);border:1.5px solid rgba(192,57,43,.3);padding:9px 16px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-danger:hover{background:var(--red);color:white;border-color:var(--red);}
+.btn-success{background:var(--success);color:white;border:none;padding:10px 20px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-success:hover{background:#219a52;}
+
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+
+/* INFO ROWS */
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:13px 22px;border-bottom:1px solid var(--border);transition:background .15s;}
+.info-row:last-child{border-bottom:none;}
+.info-row:hover{background:var(--cream);}
+.ir-left .ir-label{font-size:13px;font-weight:600;color:var(--dark);}
+.ir-left .ir-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+.ir-right{display:flex;align-items:center;gap:10px;}
+.ir-val{font-size:13px;color:var(--gray);font-weight:500;}
+
+/* ROLE BADGE */
+.role-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;}
+.role-badge.admin{background:rgba(192,57,43,.1);color:var(--red);}
+.role-badge.manager{background:rgba(41,128,185,.1);color:var(--info);}
+.role-badge.viewer{background:rgba(139,123,120,.1);color:var(--gray);}
+
+/* USER LIST */
+.user-item{display:flex;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border);transition:background .15s;}
+.user-item:last-child{border-bottom:none;}
+.user-item:hover{background:var(--cream);}
+.ua{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+.ui-name{font-size:13px;font-weight:600;color:var(--dark);}
+.ui-email{font-size:11px;color:var(--gray);margin-top:1px;}
+.ui-actions{margin-left:auto;display:flex;gap:6px;}
+.icon-btn{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray);transition:all .2s;}
+.icon-btn:hover{background:var(--red);color:white;border-color:var(--red);}
+
+/* LEAVE POLICY TABLE */
+.policy-table{width:100%;border-collapse:collapse;}
+.policy-table thead th{padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);text-align:left;background:var(--cream);border-bottom:2px solid var(--border);}
+.policy-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+.policy-table tbody tr:hover{background:var(--cream);}
+.policy-table tbody tr:last-child{border-bottom:none;}
+.policy-table tbody td{padding:12px 14px;font-size:13px;color:var(--dark);}
+.policy-table .editable-cell input{background:var(--light-gray);border:1.5px solid var(--border);border-radius:6px;padding:5px 10px;width:70px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;text-align:center;}
+.policy-table .editable-cell input:focus{border-color:var(--red);}
+.type-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;}
+
+/* SHIFT TABLE */
+.shift-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border);transition:background .15s;}
+.shift-row:hover{background:var(--cream);}
+.shift-row:last-child{border-bottom:none;}
+.shift-name{font-size:13px;font-weight:700;color:var(--dark);}
+.shift-time{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--red);}
+.shift-emp-count{font-size:12px;color:var(--gray);background:var(--light-gray);padding:3px 10px;border-radius:6px;}
+
+/* DANGER ZONE */
+.danger-card{background:rgba(192,57,43,.04);border-radius:14px;border:1.5px solid rgba(192,57,43,.25);overflow:hidden;margin-bottom:16px;}
+.danger-card .sc-hdr{background:rgba(192,57,43,.06);border-bottom-color:rgba(192,57,43,.2);}
+.danger-card .sc-title{color:var(--red);}
+.danger-item{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid rgba(192,57,43,.1);}
+.danger-item:last-child{border-bottom:none;}
+.di-label{font-size:13px;font-weight:600;color:var(--dark);}
+.di-sub{font-size:12px;color:var(--gray);margin-top:2px;}
+
+/* NOTIFICATION CHANNELS */
+.nc-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.nc-row:last-child{border-bottom:none;}
+.nc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.nc-info .nc-label{font-size:13px;font-weight:600;color:var(--dark);}
+.nc-info .nc-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+
+/* SYSTEM INFO */
+.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sys-item{background:var(--light-gray);border-radius:10px;padding:14px 16px;}
+.sys-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);}
+.sys-val{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--dark);margin-top:4px;}
+.sys-val.good{color:var(--success);}
+.sys-val.warn{color:var(--warning);}
+
+/* PASSWORD STRENGTH */
+.pw-strength{height:5px;border-radius:3px;margin-top:6px;background:var(--border);overflow:hidden;}
+.pw-fill{height:100%;border-radius:3px;transition:width .3s,background .3s;}
+
+/* ACTIVITY LOG */
+.al-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.al-item:last-child{border-bottom:none;}
+.al-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.al-text{font-size:13px;font-weight:500;color:var(--dark);}
+.al-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+.al-time{margin-left:auto;font-size:11px;color:var(--gray);flex-shrink:0;white-space:nowrap;}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:240px;right:0;background:var(--dark);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;z-index:200;transform:translateY(100%);transition:transform .3s;box-shadow:0 -4px 24px rgba(0,0,0,.2);}
+.save-bar.visible{transform:translateY(0);}
+.save-bar-text{font-size:13px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:8px;}
+.save-bar-text .dot{width:8px;height:8px;border-radius:50%;background:var(--warning);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;right:28px;z-index:9999;background:var(--dark);color:white;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;min-width:240px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{border-left:4px solid var(--success);}
+.toast.error{border-left:4px solid var(--red);}
+.toast.info{border-left:4px solid var(--info);}
+.toast.warning{border-left:4px solid var(--warning);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,10,8,.55);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:mfade .2s ease;}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border-radius:16px;width:460px;max-width:96vw;box-shadow:0 24px 64px rgba(26,10,8,.3);animation:mup .25s ease;overflow:hidden;}
+@keyframes mup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--dark);}
+.modal-close{width:32px;height:32px;border-radius:7px;border:1.5px solid var(--border);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--gray);transition:all .2s;}
+.modal-close:hover{background:var(--red);color:white;border-color:var(--red);}
+.modal-body{padding:22px 24px;}
+.modal-foot{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:#FDF9F8;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <div class="logo-icon">👥</div>
+      <div><div class="logo-text">ManPower MS</div><div class="logo-sub">Monitoring System</div></div>
+    </div>
+  </div>
+  <div class="branch-tag"><div class="label">Current Branch</div><div class="value">📍 North Branch — NCR</div></div>
+  <nav class="nav-section">
+  <div class="nav-label">Main Menu</div>
+
+  <a href="/pages/branch/branch_dashboard.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📊</span> Dashboard
+  </a>
+
+  <a href="/pages/branch/branch_employee.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">👤</span> Employees 
+    <span class="nav-badge">48</span>
+  </a>
+
+  <a href="/pages/branch/branch_attendance.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🕐</span> Attendance
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📅</span> Schedule
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🔄</span> Deployment
+  </a>
+
+  <div class="nav-label" style="margin-top:8px;">Management</div>
+
+  <a href="/pages/branch/branch_leave_req.html"
+     class="nav-item active"
+     onclick="setActive(this)">
+    <span class="icon">🏖️</span> Leave Requests 
+    <span class="nav-badge" id="pendingBadge">3</span>
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📋</span> Reports
+  </a>
+
+  <a href="/pages/branch/branch_setting.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">⚙️</span> Settings
+  </a>
+</nav>
+  <div class="sidebar-footer">
+    <div class="admin-card">
+      <div class="admin-avatar-sm">BA</div>
+      <div class="admin-info"><div class="name">Branch Admin</div><div class="role">Administrator</div></div>
+      <button class="logout-btn">⏏</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>⚙️ Settings</h1>
+      <div class="subtitle">Manage your branch configuration, account, and system preferences.</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="dateDisplay"></div>
+      <button class="notif-btn">🔔<span class="nb"></span></button>
+    </div>
+  </div>
+
+  <div class="settings-wrap">
+
+    <!-- SETTINGS NAV -->
+    <nav class="settings-nav">
+      <div class="sn-section">
+        <div class="sn-label">Account</div>
+        <div class="sn-item active" onclick="showSection('profile',this)"><span class="si">👤</span> My Profile</div>
+        <div class="sn-item" onclick="showSection('security',this)"><span class="si">🔐</span> Security & Password</div>
+      </div>
+      <div class="sn-section">
+        <div class="sn-label">Branch</div>
+        <div class="sn-item" onclick="showSection('branch',this)"><span class="si">🏢</span> Branch Info</div>
+        <div class="sn-item" onclick="showSection('attendance',this)"><span class="si">🕐</span> Attendance Rules</div>
+        <div class="sn-item" onclick="showSection('shifts',this)"><span class="si">📅</span> Shift Schedules</div>
+        <div class="sn-item" onclick="showSection('leave',this)"><span class="si">🏖️</span> Leave Policies</div>
+      </div>
+      <div class="sn-section">
+        <div class="sn-label">System</div>
+        <div class="sn-item" onclick="showSection('users',this)"><span class="si">👥</span> User Accounts <span class="sn-badge">4</span></div>
+        <div class="sn-item" onclick="showSection('notifications',this)"><span class="si">🔔</span> Notifications</div>
+        <div class="sn-item" onclick="showSection('system',this)"><span class="si">🖥️</span> System Info</div>
+        <div class="sn-item" onclick="showSection('logs',this)"><span class="si">📝</span> Activity Logs</div>
+        <div class="sn-item" onclick="showSection('danger',this)"><span class="si">⚠️</span> Danger Zone</div>
+      </div>
+    </nav>
+
+    <!-- SETTINGS CONTENT -->
+    <div class="settings-content">
+
+      <!-- ─── PROFILE ─── -->
+      <div id="sec-profile" class="settings-section active">
+        <div class="section-header">
+          <div class="section-title">👤 My Profile</div>
+          <div class="section-subtitle">Update your personal information and account details.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="profile-hero">
+            <div class="avatar-wrap" onclick="showToast('info','📷 Photo upload coming soon!')">
+              <div class="big-avatar">BA</div>
+              <div class="avatar-edit">📷</div>
+            </div>
+            <div class="ph-name">Branch Administrator</div>
+            <div class="ph-role">North Branch · NCR Region</div>
+            <div class="ph-meta">
+              <div class="ph-badge">🏢 Branch Admin</div>
+              <div class="ph-badge">📅 Since Jan 2023</div>
+              <div class="ph-badge">✅ Verified</div>
+            </div>
+          </div>
+          <div class="sc-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input class="form-input" id="p_fname" value="Maria" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input class="form-input" id="p_lname" value="Cruz" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input class="form-input" id="p_email" value="admin@northbranch.com" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <input class="form-input" id="p_mobile" value="0917-123-4567" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Title</label>
+                <input class="form-input" id="p_title" value="Branch Administrator" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Employee ID</label>
+                <input class="form-input" value="ADM-001" disabled>
+                <div class="form-hint">System-generated. Cannot be changed.</div>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Office Address</label>
+                <input class="form-input" id="p_addr" value="2F North Branch Bldg., EDSA, Quezon City, NCR" oninput="markDirty()">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="saveSection('profile')">💾 Save Changes</button>
+              <button class="btn-outline" onclick="discardChanges()">↩ Discard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SECURITY ─── -->
+      <div id="sec-security" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🔐 Security & Password</div>
+          <div class="section-subtitle">Manage your login credentials and account security settings.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">🔑 Change Password</div></div>
+          <div class="sc-body">
+            <div class="form-grid single">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input class="form-input" type="password" id="pw_current" placeholder="Enter current password" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input class="form-input" type="password" id="pw_new" placeholder="At least 8 characters" oninput="checkPassword(this.value)">
+                <div class="pw-strength"><div class="pw-fill" id="pwFill" style="width:0;background:var(--red)"></div></div>
+                <div class="form-hint" id="pwHint">Enter a new password</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input class="form-input" type="password" id="pw_confirm" placeholder="Re-enter new password" oninput="markDirty()">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="changePassword()">🔐 Update Password</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">🛡️ Two-Factor Authentication</div></div>
+          <div class="sc-body">
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Enable 2FA via SMS</div>
+                <div class="tr-sub">Receive a one-time PIN on your registered mobile number every login.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Login Alerts via Email</div>
+                <div class="tr-sub">Get notified when someone logs in to your account from a new device.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Auto Logout after Inactivity</div>
+                <div class="tr-sub">Session expires automatically after 30 minutes of no activity.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="saveSection('security')">💾 Save Security Settings</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-hdr"><div class="sc-title">📱 Active Sessions</div></div>
+          <div class="sc-body tight">
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label">💻 Windows Chrome — This Device</div><div class="ir-sub">Quezon City, NCR · Last active: Just now</div></div>
+              <div class="ir-right"><span style="font-size:11px;background:rgba(39,174,96,.1);color:var(--success);font-weight:600;padding:3px 10px;border-radius:20px;">● Current</span></div>
+            </div>
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label">📱 Android Chrome — Mobile</div><div class="ir-sub">Quezon City, NCR · Last active: 2 hours ago</div></div>
+              <div class="ir-right"><button class="btn-danger" style="padding:5px 10px;font-size:11px;" onclick="showToast('success','📱 Session terminated.')">Revoke</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── BRANCH INFO ─── -->
+      <div id="sec-branch" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🏢 Branch Information</div>
+          <div class="section-subtitle">Configure your branch profile, contact details, and operating hours.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">🏷️ Branch Details</div></div>
+          <div class="sc-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Branch Name</label>
+                <input class="form-input" id="b_name" value="North Branch" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Branch Code</label>
+                <input class="form-input" value="NCR-NB-001" disabled>
+                <div class="form-hint">System-assigned. Contact HQ to change.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Region</label>
+                <select class="form-select" id="b_region" onchange="markDirty()">
+                  <option selected>National Capital Region (NCR)</option>
+                  <option>Region III — Central Luzon</option>
+                  <option>Region IV-A — CALABARZON</option>
+                  <option>Region VII — Central Visayas</option>
+                  <option>Region XI — Davao Region</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Branch Type</label>
+                <select class="form-select" id="b_type" onchange="markDirty()">
+                  <option selected>Main Branch</option>
+                  <option>Sub-Branch</option>
+                  <option>Satellite Office</option>
+                  <option>Warehouse</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Complete Address</label>
+                <input class="form-input" id="b_addr" value="2F North Branch Bldg., EDSA cor. Roosevelt Ave., Quezon City, Metro Manila" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Branch Phone</label>
+                <input class="form-input" id="b_phone" value="(02) 8123-4567" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Branch Email</label>
+                <input class="form-input" id="b_email" value="north@company.ph" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Operating Hours (Open)</label>
+                <input class="form-input" type="time" id="b_open" value="06:00" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Operating Hours (Close)</label>
+                <input class="form-input" type="time" id="b_close" value="22:00" oninput="markDirty()">
+              </div>
+              <div class="form-group full">
+                <label class="form-label">Branch Description</label>
+                <textarea class="form-textarea" id="b_desc" oninput="markDirty()">North Branch is the primary operations hub for NCR. Handles retail, logistics, and customer service for the northern metro area.</textarea>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="saveSection('branch')">💾 Save Branch Info</button>
+              <button class="btn-outline" onclick="discardChanges()">↩ Discard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ATTENDANCE RULES ─── -->
+      <div id="sec-attendance" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🕐 Attendance Rules</div>
+          <div class="section-subtitle">Set the rules for clocking in, late thresholds, and overtime computation.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">⏰ Time & Grace Period</div></div>
+          <div class="sc-body">
+            <div class="form-grid three">
+              <div class="form-group">
+                <label class="form-label">Official Start Time</label>
+                <input class="form-input" type="time" value="08:00" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Official End Time</label>
+                <input class="form-input" type="time" value="17:00" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Grace Period (mins)</label>
+                <input class="form-input" type="number" value="15" min="0" max="60" oninput="markDirty()">
+                <div class="form-hint">After this, marked as Late</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Half-Day Cutoff</label>
+                <input class="form-input" type="time" value="12:00" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Overtime After (hrs)</label>
+                <input class="form-input" type="number" value="8" min="1" max="12" oninput="markDirty()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Max Overtime (hrs/day)</label>
+                <input class="form-input" type="number" value="3" min="0" max="6" oninput="markDirty()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">📋 Attendance Policies</div></div>
+          <div class="sc-body">
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Require Selfie on Clock-In</div>
+                <div class="tr-sub">Employees must take a photo when clocking in as verification.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Geofence Required for Clock-In</div>
+                <div class="tr-sub">Employees must be within the allowed radius to log attendance.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Auto-Mark Absent After Cutoff</div>
+                <div class="tr-sub">If no clock-in by 10:00 AM, employee is automatically marked Absent.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Allow Manual Clock-In Override</div>
+                <div class="tr-sub">Admins can manually override attendance records with a reason.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Flag Late Arrivals Automatically</div>
+                <div class="tr-sub">Send alerts when an employee clocks in past the grace period.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Weekend Attendance Tracking</div>
+                <div class="tr-sub">Track attendance on Saturdays and Sundays for staff on weekend shifts.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="saveSection('attendance')">💾 Save Attendance Rules</button>
+          <button class="btn-outline" onclick="discardChanges()">↩ Discard</button>
+        </div>
+      </div>
+
+      <!-- ─── SHIFTS ─── -->
+      <div id="sec-shifts" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">📅 Shift Schedules</div>
+          <div class="section-subtitle">Define the shift templates used when assigning employees to schedules.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr">
+            <div class="sc-title">🗂️ Active Shifts</div>
+            <button class="btn-primary" style="font-size:12px;padding:7px 14px;" onclick="openShiftModal()">＋ Add Shift</button>
+          </div>
+          <div class="sc-body tight">
+            <div class="shift-row" style="background:var(--cream);border-bottom:1px solid var(--border);">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);">Shift Name</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);">Time Range</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);">Assigned</div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray);">Actions</div>
+            </div>
+            <div id="shiftList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── LEAVE POLICIES ─── -->
+      <div id="sec-leave" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🏖️ Leave Policies</div>
+          <div class="section-subtitle">Set the annual leave entitlements per leave type for this branch.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr">
+            <div class="sc-title">📋 Leave Entitlement Table</div>
+            <button class="btn-primary" style="font-size:12px;padding:7px 14px;" onclick="saveSection('leave')">💾 Save Policy</button>
+          </div>
+          <div class="sc-body tight">
+            <table class="policy-table">
+              <thead>
+                <tr>
+                  <th>Leave Type</th>
+                  <th>Days / Year</th>
+                  <th>Carry Over</th>
+                  <th>Paid</th>
+                  <th>Requires Docs</th>
+                </tr>
+              </thead>
+              <tbody id="leaveTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-hdr"><div class="sc-title">⚙️ Leave Policy Rules</div></div>
+          <div class="sc-body">
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Require Advance Notice (3 Days)</div>
+                <div class="tr-sub">Employees must file leave at least 3 working days before the start date.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Auto-Approve Sick Leave with Doc</div>
+                <div class="tr-sub">Sick leave with attached medical certificate is auto-approved.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Leave Balance Carries Over Annually</div>
+                <div class="tr-sub">Unused leave credits are carried to the next calendar year.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info">
+                <div class="tr-label">Notify HQ on Leave Approval</div>
+                <div class="tr-sub">Headquarters receives a report whenever a leave is approved at branch level.</div>
+              </div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="saveSection('leave')">💾 Save Leave Rules</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── USER ACCOUNTS ─── -->
+      <div id="sec-users" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">👥 User Accounts</div>
+          <div class="section-subtitle">Manage system users and their access roles for this branch.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr">
+            <div class="sc-title">🔑 System Users</div>
+            <button class="btn-primary" style="font-size:12px;padding:7px 14px;" onclick="openUserModal()">＋ Invite User</button>
+          </div>
+          <div class="sc-body tight" id="userList"></div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-hdr"><div class="sc-title">🔓 Role Permissions Overview</div></div>
+          <div class="sc-body tight">
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label"><span class="role-badge admin">Admin</span></div><div class="ir-sub">Full access — manage all records, approve leaves, configure settings.</div></div>
+            </div>
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label"><span class="role-badge manager">Manager</span></div><div class="ir-sub">View & manage employees and attendance. Cannot change system settings.</div></div>
+            </div>
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label"><span class="role-badge viewer">Viewer</span></div><div class="ir-sub">Read-only access — can view reports and dashboards only.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── NOTIFICATIONS ─── -->
+      <div id="sec-notifications" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🔔 Notification Settings</div>
+          <div class="section-subtitle">Choose what alerts you receive and through which channels.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">📣 Notification Channels</div></div>
+          <div class="sc-body">
+            <div class="nc-row">
+              <div class="nc-icon" style="background:rgba(41,128,185,.1);">📧</div>
+              <div class="nc-info"><div class="nc-label">Email Notifications</div><div class="nc-sub">admin@northbranch.com</div></div>
+              <label class="toggle" style="margin-left:auto;"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="nc-row">
+              <div class="nc-icon" style="background:rgba(39,174,96,.1);">💬</div>
+              <div class="nc-info"><div class="nc-label">SMS Alerts</div><div class="nc-sub">0917-123-4567</div></div>
+              <label class="toggle" style="margin-left:auto;"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="nc-row">
+              <div class="nc-icon" style="background:rgba(192,57,43,.1);">🔔</div>
+              <div class="nc-info"><div class="nc-label">In-App Notifications</div><div class="nc-sub">Browser push notifications</div></div>
+              <label class="toggle" style="margin-left:auto;"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">🎯 Alert Triggers</div></div>
+          <div class="sc-body">
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">Employee Absent (No Notice)</div><div class="tr-sub">Alert when an employee is absent without filing leave.</div></div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">Late Clock-In</div><div class="tr-sub">Alert when an employee clocks in past the grace period.</div></div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">New Leave Request Filed</div><div class="tr-sub">Notify when any employee submits a leave application.</div></div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">Geofence Violation</div><div class="tr-sub">Alert when an employee clocks in from outside the allowed zone.</div></div>
+              <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">Daily Attendance Summary</div><div class="tr-sub">Receive a daily digest of attendance at 9:00 AM.</div></div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="tr-info"><div class="tr-label">Weekly Manpower Report</div><div class="tr-sub">Receive a manpower summary every Monday morning.</div></div>
+              <label class="toggle"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="saveSection('notifications')">💾 Save Notification Prefs</button>
+        </div>
+      </div>
+
+      <!-- ─── SYSTEM INFO ─── -->
+      <div id="sec-system" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">🖥️ System Information</div>
+          <div class="section-subtitle">View system health, version details, and data usage.</div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">📊 System Status</div></div>
+          <div class="sc-body">
+            <div class="sys-grid">
+              <div class="sys-item"><div class="sys-label">System Version</div><div class="sys-val">v2.4.1</div></div>
+              <div class="sys-item"><div class="sys-label">Server Status</div><div class="sys-val good">● Online</div></div>
+              <div class="sys-item"><div class="sys-label">Database Usage</div><div class="sys-val warn">68%</div></div>
+              <div class="sys-item"><div class="sys-label">Last Backup</div><div class="sys-val" style="font-size:14px;">Feb 19, 2026</div></div>
+              <div class="sys-item"><div class="sys-label">Total Employees</div><div class="sys-val">48</div></div>
+              <div class="sys-item"><div class="sys-label">Total Records</div><div class="sys-val">12,450</div></div>
+              <div class="sys-item"><div class="sys-label">Storage Used</div><div class="sys-val" style="font-size:14px;">2.3 GB / 10 GB</div></div>
+              <div class="sys-item"><div class="sys-label">Uptime</div><div class="sys-val good">99.8%</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc" style="margin-bottom:16px;">
+          <div class="sc-hdr"><div class="sc-title">🔧 Maintenance</div></div>
+          <div class="sc-body tight">
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label">📦 Backup Data Now</div><div class="ir-sub">Create a manual backup of all branch records.</div></div>
+              <div class="ir-right"><button class="btn-outline" onclick="showToast('success','📦 Backup started. You will be notified when complete.')">Run Backup</button></div>
+            </div>
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label">🔄 Clear Cache</div><div class="ir-sub">Clear temporary files to improve system performance.</div></div>
+              <div class="ir-right"><button class="btn-outline" onclick="showToast('success','🔄 Cache cleared successfully!')">Clear Cache</button></div>
+            </div>
+            <div class="info-row">
+              <div class="ir-left"><div class="ir-label">📋 Export All Data</div><div class="ir-sub">Download a full export of all branch data as CSV.</div></div>
+              <div class="ir-right"><button class="btn-outline" onclick="showToast('info','📋 Preparing export... Download will start shortly.')">Export</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ACTIVITY LOGS ─── -->
+      <div id="sec-logs" class="settings-section">
+        <div class="section-header">
+          <div class="section-title">📝 Activity Logs</div>
+          <div class="section-subtitle">Review all admin actions performed in this branch system.</div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-hdr">
+            <div class="sc-title">🔍 Recent Actions</div>
+            <button class="btn-outline" onclick="showToast('info','📋 Full log exported!')">⬇ Export Log</button>
+          </div>
+          <div class="sc-body" id="activityLog"></div>
+        </div>
+      </div>
+
+      <!-- ─── DANGER ZONE ─── -->
+      <div id="sec-danger" class="settings-section">
+        <div class="section-header">
+          <div class="section-title" style="color:var(--red);">⚠️ Danger Zone</div>
+          <div class="section-subtitle">Irreversible actions. Please read carefully before proceeding.</div>
+        </div>
+
+        <div class="danger-card">
+          <div class="sc-hdr"><div class="sc-title">⚠️ Critical Actions</div></div>
+          <div class="danger-item">
+            <div>
+              <div class="di-label">🔄 Reset All Attendance Records</div>
+              <div class="di-sub">Permanently deletes all attendance logs for the current month. Cannot be undone.</div>
+            </div>
+            <button class="btn-danger" onclick="confirmDanger('reset-attendance','Reset this month\'s attendance records?')">Reset Records</button>
+          </div>
+          <div class="danger-item">
+            <div>
+              <div class="di-label">🗑️ Archive Inactive Employees</div>
+              <div class="di-sub">Move all inactive employees to the archive. They can be restored later.</div>
+            </div>
+            <button class="btn-danger" onclick="confirmDanger('archive-employees','Archive all inactive employees?')">Archive Employees</button>
+          </div>
+          <div class="danger-item">
+            <div>
+              <div class="di-label">🔃 Reset Leave Balances</div>
+              <div class="di-sub">Reset all employee leave balances to the default policy values for the new year.</div>
+            </div>
+            <button class="btn-danger" onclick="confirmDanger('reset-leaves','Reset all employee leave balances?')">Reset Balances</button>
+          </div>
+          <div class="danger-item">
+            <div>
+              <div class="di-label">🚫 Deactivate Branch</div>
+              <div class="di-sub">Deactivates this branch in the system. All data is preserved but access is suspended.</div>
+            </div>
+            <button class="btn-danger" onclick="confirmDanger('deactivate-branch','Deactivate North Branch?')">Deactivate Branch</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /settings-content -->
+  </div><!-- /settings-wrap -->
+</main>
+
+<!-- UNSAVED CHANGES BAR -->
+<div class="save-bar" id="saveBar">
+  <div class="save-bar-text"><span class="dot"></span> You have unsaved changes</div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn-outline" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2);" onclick="discardChanges()">↩ Discard</button>
+    <button class="btn-success" onclick="saveCurrentSection()">💾 Save Changes</button>
+  </div>
+</div>
+
+<!-- ADD SHIFT MODAL -->
+<div class="modal-overlay" id="shiftModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">📅 Add Shift Schedule</div>
+      <button class="modal-close" onclick="closeModal('shiftModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Shift Name *</label>
+        <input class="form-input" id="sm_name" placeholder="e.g. Morning Shift, Graveyard">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div class="form-group">
+          <label class="form-label">Start Time *</label>
+          <input class="form-input" type="time" id="sm_start" value="08:00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Time *</label>
+          <input class="form-input" type="time" id="sm_end" value="17:00">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Shift Color</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="colorPicker">
+          <div class="cpick active" data-col="#C0392B" style="width:28px;height:28px;border-radius:50%;background:#C0392B;cursor:pointer;border:3px solid white;box-shadow:0 0 0 2px #C0392B;" onclick="pickColor(this,'#C0392B')"></div>
+          <div class="cpick" data-col="#2980B9" style="width:28px;height:28px;border-radius:50%;background:#2980B9;cursor:pointer;" onclick="pickColor(this,'#2980B9')"></div>
+          <div class="cpick" data-col="#27AE60" style="width:28px;height:28px;border-radius:50%;background:#27AE60;cursor:pointer;" onclick="pickColor(this,'#27AE60')"></div>
+          <div class="cpick" data-col="#E67E22" style="width:28px;height:28px;border-radius:50%;background:#E67E22;cursor:pointer;" onclick="pickColor(this,'#E67E22')"></div>
+          <div class="cpick" data-col="#8E44AD" style="width:28px;height:28px;border-radius:50%;background:#8E44AD;cursor:pointer;" onclick="pickColor(this,'#8E44AD')"></div>
+          <div class="cpick" data-col="#16A085" style="width:28px;height:28px;border-radius:50%;background:#16A085;cursor:pointer;" onclick="pickColor(this,'#16A085')"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeModal('shiftModal')">Cancel</button>
+      <button class="btn-primary" onclick="addShift()">✅ Add Shift</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE USER MODAL -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">👤 Invite System User</div>
+      <button class="modal-close" onclick="closeModal('userModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Full Name *</label>
+        <input class="form-input" id="um_name" placeholder="e.g. Juan dela Cruz">
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Email Address *</label>
+        <input class="form-input" id="um_email" type="email" placeholder="user@company.ph">
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Access Role *</label>
+        <select class="form-select" id="um_role">
+          <option value="admin">Admin — Full Access</option>
+          <option value="manager">Manager — Manage Only</option>
+          <option value="viewer">Viewer — Read Only</option>
+        </select>
+      </div>
+      <div style="background:rgba(41,128,185,.08);border:1.5px solid rgba(41,128,185,.2);border-radius:9px;padding:12px 14px;font-size:12px;color:var(--info);">
+        📧 An invitation email will be sent to the address above with instructions to set their password.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeModal('userModal')">Cancel</button>
+      <button class="btn-primary" onclick="inviteUser()">📤 Send Invitation</button>
+    </div>
+  </div>
+</div>
+
+<!-- DANGER CONFIRM MODAL -->
+<div class="modal-overlay" id="dangerModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" style="color:var(--red);">⚠️ Confirm Action</div>
+      <button class="modal-close" onclick="closeModal('dangerModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:10px 0 20px;">
+        <div style="font-size:48px;margin-bottom:12px;">⚠️</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:8px;" id="dm-title2">Confirm Action</div>
+        <div style="font-size:13px;color:var(--gray);line-height:1.6;" id="dm-sub2">This action cannot be undone.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type <strong>CONFIRM</strong> to proceed</label>
+        <input class="form-input" id="dangerInput" placeholder='Type "CONFIRM" here' oninput="checkDangerInput(this.value)">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeModal('dangerModal')">Cancel</button>
+      <button class="btn-danger" id="dangerConfirmBtn" style="opacity:.4;pointer-events:none;" onclick="executeDanger()">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───
+let isDirty = false;
+let currentSection = 'profile';
+let selectedShiftColor = '#C0392B';
+let pendingDangerAction = '';
+
+let shifts = [
+  {id:1, name:'Morning Shift', start:'06:00', end:'14:00', emp:12, color:'#27AE60'},
+  {id:2, name:'Mid Shift', start:'14:00', end:'22:00', emp:16, color:'#2980B9'},
+  {id:3, name:'Night Shift', start:'22:00', end:'06:00', emp:11, color:'#8E44AD'},
+  {id:4, name:'Day Shift', start:'08:00', end:'17:00', emp:9, color:'#E67E22'},
+];
+
+let users = [
+  {id:1, name:'Maria Cruz', email:'admin@northbranch.com', role:'admin', color:'#C0392B', initials:'MC', you:true},
+  {id:2, name:'Jose Reyes', email:'manager@northbranch.com', role:'manager', color:'#2980B9', initials:'JR', you:false},
+  {id:3, name:'Ana Gomez', email:'hr@northbranch.com', role:'manager', color:'#27AE60', initials:'AG', you:false},
+  {id:4, name:'Tonyo Santos', email:'viewer@northbranch.com', role:'viewer', color:'#E67E22', initials:'TS', you:false},
+];
+
+const leavePolicies = [
+  {type:'Sick Leave', color:'#C0392B', days:15, carryOver:true, paid:true, docs:false},
+  {type:'Vacation Leave', color:'#2980B9', days:15, carryOver:true, paid:true, docs:false},
+  {type:'Emergency Leave', color:'#E67E22', days:5, carryOver:false, paid:true, docs:false},
+  {type:'Maternity Leave', color:'#8E44AD', days:105, carryOver:false, paid:true, docs:true},
+  {type:'Paternity Leave', color:'#16A085', days:7, carryOver:false, paid:true, docs:true},
+  {type:'Bereavement Leave', color:'#1A5276', days:5, carryOver:false, paid:true, docs:true},
+  {type:'Unpaid Leave', color:'#8B7B78', days:30, carryOver:false, paid:false, docs:false},
+];
+
+const activityLogs = [
+  {icon:'💾', text:'Profile settings updated', sub:'Name and contact info changed', time:'10:32 AM Today', color:'var(--success)'},
+  {icon:'✅', text:'Leave approved — Maria Reyes', sub:'Vacation Leave · Feb 25–27, 2026', time:'09:18 AM Today', color:'var(--success)'},
+  {icon:'🛡️', text:'Geofence radius updated to 100m', sub:'Attendance Settings', time:'Yesterday 4:45 PM', color:'var(--info)'},
+  {icon:'❌', text:'Leave rejected — Ben Mercado', sub:'Emergency Leave · Feb 5–6', time:'Feb 5, 2026', color:'var(--red)'},
+  {icon:'👤', text:'New employee added — Mark Espiritu', sub:'EMP-008 · Security Guard', time:'Dec 1, 2025', color:'var(--warning)'},
+  {icon:'🔐', text:'Password changed', sub:'Security update', time:'Nov 28, 2025', color:'var(--purple)'},
+  {icon:'📋', text:'Shift schedule updated', sub:'Night Shift hours modified', time:'Nov 20, 2025', color:'var(--info)'},
+  {icon:'📅', text:'Leave policy updated', sub:'Vacation Leave days changed to 15', time:'Jan 2, 2026', color:'var(--success)'},
+];
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  renderShifts();
+  renderUsers();
+  renderLeaveTable();
+  renderActivityLog();
+});
+
+// ─── SECTION NAV ───
+function showSection(id, el) {
+  document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sn-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+  currentSection = id;
+  if (isDirty) hideSaveBar();
+}
+
+// ─── DIRTY STATE ───
+function markDirty() {
+  isDirty = true;
+  document.getElementById('saveBar').classList.add('visible');
+}
+
+function hideSaveBar() {
+  isDirty = false;
+  document.getElementById('saveBar').classList.remove('visible');
+}
+
+function discardChanges() {
+  hideSaveBar();
+  showToast('info', '↩ Changes discarded.');
+}
+
+function saveCurrentSection() { saveSection(currentSection); }
+
+function saveSection(name) {
+  hideSaveBar();
+  showToast('success', `✅ ${capFirst(name)} settings saved successfully!`);
+}
+
+// ─── SHIFTS ───
+function renderShifts() {
+  document.getElementById('shiftList').innerHTML = shifts.map(s => `
+    <div class="shift-row">
+      <div>
+        <div class="shift-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+          ${s.name}
+        </div>
+      </div>
+      <div class="shift-time">${fmtTime(s.start)} – ${fmtTime(s.end)}</div>
+      <div class="shift-emp-count">👤 ${s.emp} employees</div>
+      <div style="display:flex;gap:6px;">
+        <button class="icon-btn" onclick="showToast('info','✏️ Edit shift coming soon!')" title="Edit">✏️</button>
+        <button class="icon-btn" onclick="deleteShift(${s.id})" title="Delete">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteShift(id) {
+  shifts = shifts.filter(s => s.id !== id);
+  renderShifts();
+  showToast('success', '🗑 Shift deleted.');
+}
+
+function openShiftModal() { openModal('shiftModal'); }
+
+function addShift() {
+  const name = document.getElementById('sm_name').value.trim();
+  const start = document.getElementById('sm_start').value;
+  const end = document.getElementById('sm_end').value;
+  if (!name) { showToast('error', '⚠️ Please enter a shift name.'); return; }
+  shifts.push({ id: Date.now(), name, start, end, emp: 0, color: selectedShiftColor });
+  renderShifts();
+  closeModal('shiftModal');
+  document.getElementById('sm_name').value = '';
+  showToast('success', `✅ "${name}" shift added!`);
+}
+
+function pickColor(el, col) {
+  selectedShiftColor = col;
+  document.querySelectorAll('.cpick').forEach(c => {
+    c.style.boxShadow = 'none';
+    c.style.border = 'none';
+  });
+  el.style.boxShadow = `0 0 0 3px ${col}`;
+  el.style.border = '3px solid white';
+}
+
+// ─── USERS ───
+function renderUsers() {
+  document.getElementById('userList').innerHTML = users.map(u => `
+    <div class="user-item">
+      <div class="ua" style="background:${u.color}">${u.initials}</div>
+      <div>
+        <div class="ui-name">${u.name} ${u.you ? '<span style="font-size:10px;background:var(--light-gray);color:var(--gray);padding:1px 7px;border-radius:10px;font-weight:600;">You</span>' : ''}</div>
+        <div class="ui-email">${u.email}</div>
+      </div>
+      <span class="role-badge ${u.role}" style="margin-left:12px;">${capFirst(u.role)}</span>
+      <div class="ui-actions">
+        ${!u.you ? `
+          <button class="icon-btn" title="Edit Role" onclick="showToast('info','✏️ Role editor coming soon!')">✏️</button>
+          <button class="icon-btn" title="Remove" onclick="removeUser(${u.id})">🗑</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function removeUser(id) {
+  users = users.filter(u => u.id !== id);
+  renderUsers();
+  showToast('success', '🗑 User removed from this branch.');
+}
+
+function openUserModal() { openModal('userModal'); }
+
+function inviteUser() {
+  const name = document.getElementById('um_name').value.trim();
+  const email = document.getElementById('um_email').value.trim();
+  const role = document.getElementById('um_role').value;
+  if (!name || !email) { showToast('error', '⚠️ Please fill in name and email.'); return; }
+  const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const colors = ['#2980B9','#27AE60','#E67E22','#8E44AD','#16A085'];
+  users.push({ id: Date.now(), name, email, role, color: colors[users.length % colors.length], initials, you: false });
+  renderUsers();
+  closeModal('userModal');
+  document.getElementById('um_name').value = '';
+  document.getElementById('um_email').value = '';
+  showToast('success', `📤 Invitation sent to ${email}!`);
+}
+
+// ─── LEAVE TABLE ───
+function renderLeaveTable() {
+  document.getElementById('leaveTable').innerHTML = leavePolicies.map(p => `
+    <tr>
+      <td><span class="type-dot" style="background:${p.color}"></span>${p.type}</td>
+      <td class="editable-cell"><input type="number" value="${p.days}" min="0" max="365" oninput="markDirty()"></td>
+      <td>${toggleCell(p.carryOver)}</td>
+      <td>${toggleCell(p.paid)}</td>
+      <td>${toggleCell(p.docs)}</td>
+    </tr>
+  `).join('');
+}
+
+function toggleCell(checked) {
+  return `<label class="toggle" style="margin:0 auto;display:block;width:44px;">
+    <input type="checkbox" ${checked?'checked':''} onchange="markDirty()">
+    <span class="toggle-slider"></span>
+  </label>`;
+}
+
+// ─── ACTIVITY LOG ───
+function renderActivityLog() {
+  document.getElementById('activityLog').innerHTML = activityLogs.map(l => `
+    <div class="al-item">
+      <div class="al-dot" style="background:${l.color};margin-top:6px;"></div>
+      <div style="flex:1;">
+        <div class="al-text">${l.icon} ${l.text}</div>
+        <div class="al-sub">${l.sub}</div>
+      </div>
+      <div class="al-time">${l.time}</div>
+    </div>
+  `).join('');
+}
+
+// ─── PASSWORD ───
+function checkPassword(val) {
+  const fill = document.getElementById('pwFill');
+  const hint = document.getElementById('pwHint');
+  let strength = 0;
+  if (val.length >= 8) strength++;
+  if (/[A-Z]/.test(val)) strength++;
+  if (/[0-9]/.test(val)) strength++;
+  if (/[^A-Za-z0-9]/.test(val)) strength++;
+  const pct = (strength / 4) * 100;
+  const colors = ['#C0392B','#E67E22','#F1C40F','#27AE60'];
+  const labels = ['Too short','Weak','Fair','Strong','Very strong'];
+  fill.style.width = pct + '%';
+  fill.style.background = colors[strength-1] || '#EDD8D5';
+  hint.textContent = val.length < 2 ? 'Enter a new password' : labels[strength] || 'Very strong ✅';
+  hint.style.color = colors[strength-1] || 'var(--gray)';
+  markDirty();
+}
+
+function changePassword() {
+  const cur = document.getElementById('pw_current').value;
+  const nw = document.getElementById('pw_new').value;
+  const cf = document.getElementById('pw_confirm').value;
+  if (!cur || !nw || !cf) { showToast('error', '⚠️ Please fill in all password fields.'); return; }
+  if (nw !== cf) { showToast('error', '⚠️ New passwords do not match.'); return; }
+  if (nw.length < 8) { showToast('error', '⚠️ Password must be at least 8 characters.'); return; }
+  document.getElementById('pw_current').value = '';
+  document.getElementById('pw_new').value = '';
+  document.getElementById('pw_confirm').value = '';
+  document.getElementById('pwFill').style.width = '0';
+  hideSaveBar();
+  showToast('success', '🔐 Password updated successfully!');
+}
+
+// ─── DANGER ZONE ───
+function confirmDanger(action, msg) {
+  pendingDangerAction = action;
+  document.getElementById('dm-title2').textContent = msg;
+  document.getElementById('dm-sub2').textContent = 'This action is permanent and cannot be reversed. Please type CONFIRM below to proceed.';
+  document.getElementById('dangerInput').value = '';
+  document.getElementById('dangerConfirmBtn').style.opacity = '.4';
+  document.getElementById('dangerConfirmBtn').style.pointerEvents = 'none';
+  openModal('dangerModal');
+}
+
+function checkDangerInput(val) {
+  const btn = document.getElementById('dangerConfirmBtn');
+  if (val === 'CONFIRM') {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  } else {
+    btn.style.opacity = '.4';
+    btn.style.pointerEvents = 'none';
+  }
+}
+
+function executeDanger() {
+  closeModal('dangerModal');
+  showToast('warning', `⚠️ Action "${pendingDangerAction}" executed.`);
+}
+
+// ─── HELPERS ───
+function fmtTime(t) {
+  if (!t) return '—';
+  const [h, m] = t.split(':');
+  const hr = +h;
+  const ampm = hr >= 12 ? 'PM' : 'AM';
+  return `${hr % 12 || 12}:${m} ${ampm}`;
+}
+function capFirst(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+function setActive(el) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.className = `toast ${type} show`;
+  t.textContent = msg;
+  setTimeout(() => t.classList.remove('show'), 3400);
+}
+</script>
+</body>
+</html>

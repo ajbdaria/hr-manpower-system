@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave Requests — Manpower Monitoring System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#C0392B;--red-bright:#E74C3C;--red-dark:#922B21;
+  --red-glow:rgba(192,57,43,0.14);
+  --dark:#610e03;--dark2:#2C1410;--dark3:#3D1A15;
+  --gray:#8B7B78;--light-gray:#F4EAE8;--cream:#FDF6F0;--white:#FFFFFF;
+  --success:#27AE60;--warning:#E67E22;--info:#2980B9;--purple:#8E44AD;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#F8F0EE;color:var(--dark);min-height:100vh;display:flex;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;min-height:100vh;background:var(--dark);position:fixed;left:0;top:0;bottom:0;z-index:100;border-right:2px solid var(--red-dark);display:flex;flex-direction:column;}
+.sidebar-logo{padding:28px 20px 20px;border-bottom:1px solid var(--dark3);}
+.logo-badge{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:38px;height:38px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--white);line-height:1.2;}
+.logo-sub{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag{margin:14px 20px;background:var(--red-glow);border:1px solid var(--red-dark);border-radius:6px;padding:8px 12px;}
+.branch-tag .label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;}
+.branch-tag .value{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--red-bright);}
+.nav-section{padding:8px 0;flex:1;}
+.nav-label{padding:14px 20px 6px;font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1.5px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:#A89693;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-left:3px solid transparent; text-decoration: none;}
+.nav-item:hover,.nav-item.active{color:var(--white);background:rgba(192,57,43,.12);border-left-color:var(--red);}
+.nav-item.active{color:var(--red-bright);}
+.nav-item .icon{width:20px;text-align:center;font-size:16px;}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--dark3);}
+.admin-card{display:flex;align-items:center;gap:10px;}
+.admin-avatar{width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;color:white;flex-shrink:0;}
+.admin-info .name{font-size:13px;font-weight:600;color:var(--white);}
+.admin-info .role{font-size:11px;color:var(--gray);}
+.logout-btn{margin-left:auto;background:none;border:none;color:var(--gray);cursor:pointer;font-size:16px;transition:color .2s;}
+.logout-btn:hover{color:var(--red-bright);}
+
+/* ── MAIN ── */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--white);border-bottom:1px solid #E8D8D5;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(192,57,43,.06);}
+.topbar-left h1{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:.5px;}
+.topbar-left .subtitle{font-size:12px;color:var(--gray);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-date{font-size:12px;color:var(--gray);background:var(--light-gray);padding:6px 12px;border-radius:6px;}
+.notif-btn{position:relative;background:var(--light-gray);border:none;cursor:pointer;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:background .2s;}
+.notif-btn:hover{background:#E8D8D5;}
+.notif-btn .nbadge{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--white);}
+
+.content{padding:26px 32px;}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px;}
+.sc{background:var(--white);border-radius:12px;padding:16px 18px;border:1px solid #EDD8D5;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;animation:fadeUp .4s ease both;}
+.sc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(192,57,43,.1);}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);}
+.sc.g::after{background:var(--success);}
+.sc.o::after{background:var(--warning);}
+.sc.b::after{background:var(--info);}
+.sc.p::after{background:var(--purple);}
+.sc:nth-child(1){animation-delay:0s}.sc:nth-child(2){animation-delay:.06s}.sc:nth-child(3){animation-delay:.12s}.sc:nth-child(4){animation-delay:.18s}.sc:nth-child(5){animation-delay:.24s}
+.sc-lbl{font-size:11px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;}
+.sc-val{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--dark);line-height:1;}
+.sc-sub{font-size:11px;color:var(--gray);margin-top:4px;}
+.sc-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.13;}
+
+/* ── TAB BAR ── */
+.tab-bar{display:flex;gap:0;background:var(--white);border-radius:14px;border:1px solid #EDD8D5;overflow:hidden;margin-bottom:20px;animation:fadeUp .4s ease .28s both;}
+.tab-btn{flex:1;padding:14px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--gray);background:none;border:none;cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center;gap:8px;border-right:1px solid #EDD8D5;}
+.tab-btn:last-child{border-right:none;}
+.tab-btn:hover{background:var(--light-gray);color:var(--dark);}
+.tab-btn.active{background:var(--red);color:white;}
+.tab-btn .tbadge{background:rgba(255,255,255,.3);color:white;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;}
+.tab-btn:not(.active) .tbadge{background:var(--light-gray);color:var(--gray);}
+.tab-btn.active .tbadge{background:rgba(255,255,255,.25);color:white;}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid #EDD8D5;border-radius:9px;padding:9px 14px;flex:1;min-width:180px;transition:border-color .2s;}
+.search-wrap:focus-within{border-color:var(--red);}
+.search-wrap input{background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);width:100%;}
+.search-wrap input::placeholder{color:var(--gray);}
+.filter-sel{background:var(--white);border:1.5px solid #EDD8D5;border-radius:9px;padding:9px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);cursor:pointer;outline:none;transition:border-color .2s;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B78' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.filter-sel:focus{border-color:var(--red);}
+.btn-primary{background:var(--red);color:white;border:none;padding:9px 18px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-outline{background:none;color:var(--gray);border:1.5px solid #EDD8D5;padding:8px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-outline:hover{border-color:var(--red);color:var(--red);}
+.btn-success{background:var(--success);color:white;border:none;padding:8px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:6px;}
+.btn-success:hover{background:#219a52;}
+.btn-danger{background:var(--red);color:white;border:none;padding:8px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:flex;align-items:center;gap:6px;}
+.btn-danger:hover{background:var(--red-dark);}
+
+/* ── LEAVE CARDS GRID ── */
+.leave-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;animation:fadeUp .4s ease .3s both;}
+
+.leave-card{background:var(--white);border-radius:14px;border:1px solid #EDD8D5;overflow:hidden;transition:all .2s;position:relative;}
+.leave-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,57,43,.1);border-color:#d4b8b5;}
+
+.leave-card-accent{height:4px;width:100%;}
+.leave-card-accent.pending{background:linear-gradient(90deg,var(--warning),#f39c12);}
+.leave-card-accent.approved{background:linear-gradient(90deg,var(--success),#2ecc71);}
+.leave-card-accent.rejected{background:linear-gradient(90deg,var(--red),var(--red-bright));}
+.leave-card-accent.cancelled{background:linear-gradient(90deg,var(--gray),#a0908d);}
+
+.lc-body{padding:18px 20px 14px;}
+.lc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.lc-emp{display:flex;align-items:center;gap:10px;}
+.lc-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:white;flex-shrink:0;}
+.lc-name{font-weight:700;font-size:14px;color:var(--dark);}
+.lc-pos{font-size:11px;color:var(--gray);margin-top:1px;}
+
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.status-pill.pending{background:rgba(230,126,34,.1);color:var(--warning);}
+.status-pill.approved{background:rgba(39,174,96,.1);color:var(--success);}
+.status-pill.rejected{background:rgba(192,57,43,.1);color:var(--red);}
+.status-pill.cancelled{background:rgba(139,123,120,.12);color:var(--gray);}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+.lc-info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.lc-info-item{background:var(--light-gray);border-radius:9px;padding:10px 12px;}
+.lc-info-item .li-lbl{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
+.lc-info-item .li-val{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--dark);margin-top:2px;}
+
+.lc-type-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;}
+.lc-type-badge.sick{background:rgba(192,57,43,.08);color:var(--red);}
+.lc-type-badge.vacation{background:rgba(41,128,185,.08);color:var(--info);}
+.lc-type-badge.emergency{background:rgba(230,126,34,.1);color:var(--warning);}
+.lc-type-badge.maternity{background:rgba(142,68,173,.08);color:var(--purple);}
+.lc-type-badge.paternity{background:rgba(22,160,133,.08);color:#16A085;}
+.lc-type-badge.unpaid{background:rgba(139,123,120,.1);color:var(--gray);}
+.lc-type-badge.bereavement{background:rgba(26,10,8,.07);color:var(--dark2);}
+
+.lc-reason{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:12px;padding:10px 12px;background:var(--light-gray);border-radius:8px;border-left:3px solid #EDD8D5;}
+
+.lc-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--gray);margin-bottom:14px;}
+
+.lc-footer{padding:12px 20px;background:#FDF9F8;border-top:1px solid #F4EAE8;display:flex;gap:8px;align-items:center;}
+
+/* ── LEAVE BALANCE SIDEBAR ── */
+.main-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;}
+
+.balance-card{background:var(--white);border-radius:14px;border:1px solid #EDD8D5;overflow:hidden;position:sticky;top:90px;animation:fadeUp .4s ease .3s both;}
+.bc-hdr{padding:16px 20px;border-bottom:1px solid #F4EAE8;}
+.bc-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.bc-body{padding:16px 20px;}
+
+.balance-item{margin-bottom:14px;}
+.balance-item:last-child{margin-bottom:0;}
+.bi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.bi-label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--dark);}
+.bi-icon{font-size:16px;}
+.bi-count{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;}
+.bi-bar{height:7px;background:#EDD8D5;border-radius:4px;overflow:hidden;}
+.bi-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+.bi-detail{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--gray);}
+
+.mini-cal-wrap{margin-top:16px;padding-top:16px;border-top:1px solid #EDD8D5;}
+.mini-cal-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;}
+.mc-head{font-size:9px;font-weight:700;color:var(--gray);text-transform:uppercase;padding:3px 0;}
+.mc-day{font-size:11px;padding:5px 2px;border-radius:5px;cursor:pointer;font-weight:500;transition:background .15s;color:var(--dark);}
+.mc-day:hover{background:var(--light-gray);}
+.mc-day.today{background:var(--red);color:white;font-weight:700;border-radius:50%;}
+.mc-day.has-leave{background:rgba(41,128,185,.15);color:var(--info);}
+.mc-day.empty{color:transparent;pointer-events:none;}
+
+.quick-stats-mini{margin-top:14px;padding-top:14px;border-top:1px solid #EDD8D5;}
+.qsm-title{font-size:11px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;}
+.qsm-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--light-gray);border-radius:8px;margin-bottom:6px;}
+.qsm-row:last-child{margin-bottom:0;}
+.qsm-lbl{font-size:12px;font-weight:500;color:var(--dark);}
+.qsm-val{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,10,8,.55);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border-radius:18px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(26,10,8,.3);animation:slideUp .25s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 26px;border-bottom:1px solid #EDD8D5;position:sticky;top:0;background:var(--white);z-index:10;border-radius:18px 18px 0 0;}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);}
+.modal-close{width:34px;height:34px;border-radius:8px;border:1.5px solid #EDD8D5;background:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--gray);transition:all .2s;}
+.modal-close:hover{background:var(--red);color:white;border-color:var(--red);}
+.modal-body{padding:24px 26px;}
+.modal-foot{padding:16px 26px;border-top:1px solid #EDD8D5;display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--white);border-radius:0 0 18px 18px;}
+
+/* DETAIL MODAL */
+.dm-banner{height:80px;background:linear-gradient(135deg,var(--red-dark),var(--red));position:relative;}
+.dm-emp-row{display:flex;align-items:flex-end;gap:14px;padding:0 26px;margin-top:-28px;margin-bottom:18px;}
+.dm-avatar{width:56px;height:56px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:white;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,.2);}
+.dm-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);}
+.dm-sub{font-size:12px;color:var(--gray);}
+
+.dm-section{margin-bottom:18px;}
+.dm-section-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #EDD8D5;display:flex;align-items:center;gap:6px;}
+.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.dm-item{background:var(--light-gray);border-radius:9px;padding:12px 14px;}
+.dm-item .dl{font-size:10px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;}
+.dm-item .dv{font-size:14px;font-weight:600;color:var(--dark);margin-top:3px;}
+
+.dm-reason-box{background:var(--light-gray);border-radius:10px;padding:14px;border-left:4px solid var(--red);font-size:13px;color:var(--dark);line-height:1.6;}
+
+.approve-note{background:var(--light-gray);border-radius:10px;padding:14px;}
+.approve-note textarea{width:100%;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);resize:none;min-height:80px;line-height:1.5;}
+.approve-note textarea::placeholder{color:var(--gray);}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-label{font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;}
+.form-input,.form-select,.form-textarea{background:var(--light-gray);border:1.5px solid #EDD8D5;border-radius:9px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .2s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--red);}
+.form-textarea{resize:vertical;min-height:90px;}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B78' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer;}
+
+.days-preview{background:rgba(192,57,43,.06);border:1.5px solid rgba(192,57,43,.2);border-radius:9px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.dp-label{font-size:12px;color:var(--gray);font-weight:500;}
+.dp-val{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--red);}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray);}
+.empty-icon{font-size:52px;margin-bottom:14px;opacity:.5;}
+.empty-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.empty-sub{font-size:13px;line-height:1.5;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--dark);color:white;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;min-width:260px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{border-left:4px solid var(--success);}
+.toast.error{border-left:4px solid var(--red);}
+.toast.info{border-left:4px solid var(--info);}
+.toast.warning{border-left:4px solid var(--warning);}
+
+/* CONFIRM */
+.confirm-modal{background:var(--white);border-radius:18px;width:400px;max-width:96vw;padding:0;overflow:hidden;box-shadow:0 24px 64px rgba(26,10,8,.3);animation:slideUp .2s ease;}
+.cm-top{padding:28px;text-align:center;}
+.cm-icon{font-size:52px;margin-bottom:12px;}
+.cm-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;}
+.cm-sub{font-size:13px;color:var(--gray);line-height:1.5;}
+.cm-foot{padding:16px 28px;border-top:1px solid #EDD8D5;display:flex;gap:10px;justify-content:center;background:#FDF9F8;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <div class="logo-icon">👥</div>
+      <div><div class="logo-text">ManPower MS</div><div class="logo-sub">Monitoring System</div></div>
+    </div>
+  </div>
+  <div class="branch-tag"><div class="label">Current Branch</div><div class="value">📍 North Branch — NCR</div></div>
+  <nav class="nav-section">
+  <div class="nav-label">Main Menu</div>
+
+  <a href="/pages/branch/branch_dashboard.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📊</span> Dashboard
+  </a>
+
+  <a href="/pages/branch/branch_employee.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">👤</span> Employees 
+    <span class="nav-badge">48</span>
+  </a>
+
+  <a href="/pages/branch/branch_attendance.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🕐</span> Attendance
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📅</span> Schedule
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">🔄</span> Deployment
+  </a>
+
+  <div class="nav-label" style="margin-top:8px;">Management</div>
+
+  <a href="/pages/branch/branch_leave_req.html"
+     class="nav-item active"
+     onclick="setActive(this)">
+    <span class="icon">🏖️</span> Leave Requests 
+    <span class="nav-badge" id="pendingBadge">3</span>
+  </a>
+
+  <a href="#"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">📋</span> Reports
+  </a>
+
+  <a href="/pages/branch/branch_setting.html"
+     class="nav-item"
+     onclick="setActive(this)">
+    <span class="icon">⚙️</span> Settings
+  </a>
+</nav>
+
+  <div class="sidebar-footer">
+    <div class="admin-card">
+      <div class="admin-avatar">BA</div>
+      <div class="admin-info"><div class="name">Branch Admin</div><div class="role">Administrator</div></div>
+      <button class="logout-btn">⏏</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>🏖️ Leave Request Management</h1>
+      <div class="subtitle">Review, approve, or decline employee leave applications for this branch.</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="dateDisplay"></div>
+      <button class="btn-primary" onclick="openNewLeaveModal()">＋ File Leave</button>
+      <button class="notif-btn">🔔<span class="nbadge"></span></button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STAT CARDS -->
+    <div class="stat-row">
+      <div class="sc o" onclick="switchTab('pending')">
+        <div class="sc-lbl">Pending</div>
+        <div class="sc-val" id="stat-pending">3</div>
+        <div class="sc-sub">Awaiting review</div>
+        <div class="sc-icon">⏳</div>
+      </div>
+      <div class="sc g" onclick="switchTab('approved')">
+        <div class="sc-lbl">Approved</div>
+        <div class="sc-val" id="stat-approved">6</div>
+        <div class="sc-sub">This month</div>
+        <div class="sc-icon">✅</div>
+      </div>
+      <div class="sc" onclick="switchTab('rejected')">
+        <div class="sc-lbl">Rejected</div>
+        <div class="sc-val" id="stat-rejected">2</div>
+        <div class="sc-sub">This month</div>
+        <div class="sc-icon">❌</div>
+      </div>
+      <div class="sc b">
+        <div class="sc-lbl">On Leave Now</div>
+        <div class="sc-val" id="stat-active">4</div>
+        <div class="sc-sub">Currently absent</div>
+        <div class="sc-icon">🏖️</div>
+      </div>
+      <div class="sc p">
+        <div class="sc-lbl">Total Days Used</div>
+        <div class="sc-val" id="stat-days">42</div>
+        <div class="sc-sub">Branch total (Feb)</div>
+        <div class="sc-icon">📅</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- LEFT COLUMN -->
+      <div>
+        <!-- TAB BAR -->
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tab-pending" onclick="switchTab('pending')">⏳ Pending <span class="tbadge" id="tb-pending">3</span></button>
+          <button class="tab-btn" id="tab-approved" onclick="switchTab('approved')">✅ Approved <span class="tbadge" id="tb-approved">6</span></button>
+          <button class="tab-btn" id="tab-rejected" onclick="switchTab('rejected')">❌ Rejected <span class="tbadge" id="tb-rejected">2</span></button>
+          <button class="tab-btn" id="tab-cancelled" onclick="switchTab('cancelled')">🚫 Cancelled <span class="tbadge" id="tb-cancelled">1</span></button>
+          <button class="tab-btn" id="tab-all" onclick="switchTab('all')">📋 All <span class="tbadge" id="tb-all">12</span></button>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span>🔍</span>
+            <input type="text" id="srch" placeholder="Search by name, ID, or leave type..." oninput="renderCards()">
+          </div>
+          <select class="filter-sel" id="typeFilter" onchange="renderCards()">
+            <option value="">All Types</option>
+            <option value="Sick Leave">Sick Leave</option>
+            <option value="Vacation Leave">Vacation Leave</option>
+            <option value="Emergency Leave">Emergency Leave</option>
+            <option value="Maternity Leave">Maternity Leave</option>
+            <option value="Paternity Leave">Paternity Leave</option>
+            <option value="Bereavement Leave">Bereavement Leave</option>
+            <option value="Unpaid Leave">Unpaid Leave</option>
+          </select>
+          <button class="btn-outline" onclick="exportCSV()">⬇ Export</button>
+        </div>
+
+        <!-- CARDS -->
+        <div class="leave-grid" id="leaveGrid"></div>
+      </div>
+
+      <!-- RIGHT COLUMN: BALANCE + MINI CAL -->
+      <div>
+        <div class="balance-card">
+          <div class="bc-hdr">
+            <div class="bc-title">📊 Leave Balance Overview</div>
+          </div>
+          <div class="bc-body">
+            <!-- Leave types -->
+            <div class="balance-item">
+              <div class="bi-top">
+                <div class="bi-label"><span class="bi-icon">🤒</span> Sick Leave</div>
+                <div class="bi-count" style="color:var(--red);">8 / 15 days</div>
+              </div>
+              <div class="bi-bar"><div class="bi-fill" style="width:53%;background:var(--red);"></div></div>
+              <div class="bi-detail"><span>Used: 8 days</span><span>Remaining: 7 days</span></div>
+            </div>
+            <div class="balance-item">
+              <div class="bi-top">
+                <div class="bi-label"><span class="bi-icon">🌴</span> Vacation Leave</div>
+                <div class="bi-count" style="color:var(--info);">5 / 15 days</div>
+              </div>
+              <div class="bi-bar"><div class="bi-fill" style="width:33%;background:var(--info);"></div></div>
+              <div class="bi-detail"><span>Used: 5 days</span><span>Remaining: 10 days</span></div>
+            </div>
+            <div class="balance-item">
+              <div class="bi-top">
+                <div class="bi-label"><span class="bi-icon">🆘</span> Emergency Leave</div>
+                <div class="bi-count" style="color:var(--warning);">3 / 5 days</div>
+              </div>
+              <div class="bi-bar"><div class="bi-fill" style="width:60%;background:var(--warning);"></div></div>
+              <div class="bi-detail"><span>Used: 3 days</span><span>Remaining: 2 days</span></div>
+            </div>
+            <div class="balance-item">
+              <div class="bi-top">
+                <div class="bi-label"><span class="bi-icon">💜</span> Maternity</div>
+                <div class="bi-count" style="color:var(--purple);">0 / 105 days</div>
+              </div>
+              <div class="bi-bar"><div class="bi-fill" style="width:0%;background:var(--purple);"></div></div>
+              <div class="bi-detail"><span>Not used</span><span>Full balance</span></div>
+            </div>
+
+            <!-- MINI CALENDAR -->
+            <div class="mini-cal-wrap">
+              <div class="mini-cal-title">📅 February 2026</div>
+              <div class="mini-cal-grid" id="miniCal"></div>
+            </div>
+
+            <!-- QUICK STATS -->
+            <div class="quick-stats-mini">
+              <div class="qsm-title">Branch Leave Summary</div>
+              <div class="qsm-row">
+                <span class="qsm-lbl">🏖️ On Leave Today</span>
+                <span class="qsm-val" style="color:var(--info);">4</span>
+              </div>
+              <div class="qsm-row">
+                <span class="qsm-lbl">⏳ Pending Approval</span>
+                <span class="qsm-val" style="color:var(--warning);" id="qsm-pending">3</span>
+              </div>
+              <div class="qsm-row">
+                <span class="qsm-lbl">📆 Upcoming This Week</span>
+                <span class="qsm-val" style="color:var(--success);">2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══ DETAIL / APPROVE MODAL ═══ -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="width:600px;">
+    <div class="modal-hdr">
+      <div class="modal-title" id="dm-title">Leave Request Details</div>
+      <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div class="dm-banner" id="dm-banner"></div>
+      <div style="padding:0 26px 20px;">
+        <div class="dm-emp-row">
+          <div class="dm-avatar" id="dm-avatar"></div>
+          <div>
+            <div class="dm-name" id="dm-name"></div>
+            <div class="dm-sub" id="dm-sub"></div>
+          </div>
+          <div style="margin-left:auto;" id="dm-status-pill"></div>
+        </div>
+
+        <div class="dm-section">
+          <div class="dm-section-title">📋 Leave Details</div>
+          <div class="dm-grid" id="dm-details-grid"></div>
+        </div>
+
+        <div class="dm-section">
+          <div class="dm-section-title">💬 Reason / Remarks</div>
+          <div class="dm-reason-box" id="dm-reason"></div>
+        </div>
+
+        <div class="dm-section" id="dm-approve-section">
+          <div class="dm-section-title">📝 Admin Note (Optional)</div>
+          <div class="approve-note">
+            <textarea id="adminNote" placeholder="Add a note for the employee (e.g., approval conditions, reminders)..."></textarea>
+          </div>
+        </div>
+
+        <div id="dm-existing-note" class="dm-section" style="display:none;">
+          <div class="dm-section-title">📝 Admin Note</div>
+          <div class="dm-reason-box" style="border-left-color:var(--info);" id="dm-note-content"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot" id="dm-footer"></div>
+  </div>
+</div>
+
+<!-- ═══ NEW LEAVE MODAL ═══ -->
+<div class="modal-overlay" id="newLeaveModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">📝 File Leave Request</div>
+      <button class="modal-close" onclick="closeModal('newLeaveModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Employee *</label>
+        <select class="form-select" id="nl_emp">
+          <option value="">Select Employee</option>
+          <option value="EMP-001|Maria Reyes|Cashier">EMP-001 — Maria Reyes</option>
+          <option value="EMP-002|Juan Dela Cruz|Floor Staff">EMP-002 — Juan Dela Cruz</option>
+          <option value="EMP-003|Ana Santos|Supervisor">EMP-003 — Ana Santos</option>
+          <option value="EMP-004|Roberto Lim|Security Guard">EMP-004 — Roberto Lim</option>
+          <option value="EMP-005|Carla Torres|Inventory Staff">EMP-005 — Carla Torres</option>
+          <option value="EMP-006|Ben Mercado|Cashier">EMP-006 — Ben Mercado</option>
+          <option value="EMP-007|Grace Villanueva|HR Assistant">EMP-007 — Grace Villanueva</option>
+          <option value="EMP-008|Mark Espiritu|Security Guard">EMP-008 — Mark Espiritu</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Leave Type *</label>
+        <select class="form-select" id="nl_type">
+          <option value="">Select type</option>
+          <option value="Sick Leave">🤒 Sick Leave</option>
+          <option value="Vacation Leave">🌴 Vacation Leave</option>
+          <option value="Emergency Leave">🆘 Emergency Leave</option>
+          <option value="Maternity Leave">💜 Maternity Leave</option>
+          <option value="Paternity Leave">💙 Paternity Leave</option>
+          <option value="Bereavement Leave">🕯 Bereavement Leave</option>
+          <option value="Unpaid Leave">📋 Unpaid Leave</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Start Date *</label>
+          <input class="form-input" type="date" id="nl_start" oninput="calcDays()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Date *</label>
+          <input class="form-input" type="date" id="nl_end" oninput="calcDays()">
+        </div>
+      </div>
+      <div class="days-preview" id="daysPreview" style="margin-bottom:14px;">
+        <span class="dp-label">📅 Total Working Days</span>
+        <span class="dp-val" id="daysCount">— days</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason / Supporting Details *</label>
+        <textarea class="form-textarea" id="nl_reason" placeholder="Describe the reason for leave. Attach any supporting documents if needed."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Supporting Document (Optional)</label>
+        <div style="background:var(--light-gray);border:1.5px dashed #EDD8D5;border-radius:9px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s;" onclick="showToast('info','📎 File upload feature coming soon!')">
+          <div style="font-size:22px;margin-bottom:6px;">📎</div>
+          <div style="font-size:12px;color:var(--gray);font-weight:500;">Click to attach medical certificate, etc.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-outline" onclick="closeModal('newLeaveModal')">Cancel</button>
+      <button class="btn-primary" onclick="submitLeave()">📤 Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONFIRM MODAL ═══ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-modal">
+    <div class="cm-top">
+      <div class="cm-icon" id="cm-icon">✅</div>
+      <div class="cm-title" id="cm-title">Confirm Action</div>
+      <div class="cm-sub" id="cm-sub">Are you sure?</div>
+    </div>
+    <div class="cm-foot" id="cm-foot"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───
+const avatarColors=['#C0392B','#922B21','#2980B9','#27AE60','#E67E22','#8E44AD','#16A085','#D35400','#1A5276','#7D3C98'];
+const leaveTypeStyles={
+  'Sick Leave':{cls:'sick',icon:'🤒'},
+  'Vacation Leave':{cls:'vacation',icon:'🌴'},
+  'Emergency Leave':{cls:'emergency',icon:'🆘'},
+  'Maternity Leave':{cls:'maternity',icon:'💜'},
+  'Paternity Leave':{cls:'paternity',icon:'💙'},
+  'Bereavement Leave':{cls:'bereavement',icon:'🕯'},
+  'Unpaid Leave':{cls:'unpaid',icon:'📋'},
+};
+
+let leaves = [
+  {id:'LR-001',empId:'EMP-005',name:'Carla Torres',pos:'Inventory Staff',dept:'Logistics',type:'Sick Leave',start:'2026-02-15',end:'2026-02-25',days:9,status:'approved',reason:'Diagnosed with dengue fever. Attached medical certificate from PGH.',filed:'2026-02-14',note:'Get well soon! Please submit medical clearance upon return.',color:'#E67E22'},
+  {id:'LR-002',empId:'EMP-002',name:'Juan Dela Cruz',pos:'Floor Staff',dept:'Operations',type:'Vacation Leave',start:'2026-02-25',end:'2026-02-27',days:3,status:'pending',reason:'Family reunion trip to Cebu planned months in advance.',filed:'2026-02-18',note:'',color:'#922B21'},
+  {id:'LR-003',empId:'EMP-007',name:'Grace Villanueva',pos:'HR Assistant',dept:'Admin',type:'Emergency Leave',start:'2026-02-19',end:'2026-02-20',days:2,status:'pending',reason:'Family emergency — mother hospitalized at Makati Med.',filed:'2026-02-19',note:'',color:'#16A085'},
+  {id:'LR-004',empId:'EMP-001',name:'Maria Reyes',pos:'Cashier',dept:'Operations',type:'Vacation Leave',start:'2026-03-03',end:'2026-03-07',days:5,status:'pending',reason:'Pre-planned family trip to Baguio. No conflicts with schedule.',filed:'2026-02-17',note:'',color:'#C0392B'},
+  {id:'LR-005',empId:'EMP-009',name:'Liza Hernandez',pos:'Floor Staff',dept:'Operations',type:'Sick Leave',start:'2026-02-10',end:'2026-02-12',days:3,status:'approved',reason:'Flu with high-grade fever. Doctor advised rest for 3 days.',filed:'2026-02-09',note:'Hope you recover quickly!',color:'#2980B9'},
+  {id:'LR-006',empId:'EMP-006',name:'Ben Mercado',pos:'Cashier',dept:'Sales',type:'Emergency Leave',start:'2026-02-05',end:'2026-02-06',days:2,status:'rejected',reason:'Personal errands',filed:'2026-02-04',note:'Emergency leave is reserved for genuine emergencies. Please re-file as vacation leave.',color:'#8E44AD'},
+  {id:'LR-007',empId:'EMP-004',name:'Roberto Lim',pos:'Security Guard',dept:'Security',type:'Vacation Leave',start:'2026-01-20',end:'2026-01-24',days:5,status:'approved',reason:'Annual family vacation.',filed:'2026-01-15',note:'Approved. Coordinate with your replacement.',color:'#27AE60'},
+  {id:'LR-008',empId:'EMP-003',name:'Ana Santos',pos:'Supervisor',dept:'Admin',type:'Sick Leave',start:'2026-01-10',end:'2026-01-11',days:2,status:'approved',reason:'Severe migraine and hypertension episode.',filed:'2026-01-10',note:'',color:'#2980B9'},
+  {id:'LR-009',empId:'EMP-008',name:'Mark Espiritu',pos:'Security Guard',dept:'Security',type:'Unpaid Leave',start:'2026-02-28',end:'2026-02-28',days:1,status:'rejected',reason:'Personal matter',filed:'2026-02-18',note:'Insufficient notice period. Please file at least 3 days in advance.',color:'#D35400'},
+  {id:'LR-010',empId:'EMP-010',name:'Rico Pascual',pos:'Delivery Staff',dept:'Logistics',type:'Bereavement Leave',start:'2026-02-01',end:'2026-02-03',days:3,status:'approved',reason:'Death of grandfather. Funeral in Laguna.',filed:'2026-02-01',note:'Condolences. Approved.',color:'#1A5276'},
+  {id:'LR-011',empId:'EMP-006',name:'Ben Mercado',pos:'Cashier',dept:'Sales',type:'Vacation Leave',start:'2026-03-10',end:'2026-03-12',days:3,status:'cancelled',reason:'Trip cancelled due to family reasons.',filed:'2026-02-15',note:'',color:'#8E44AD'},
+  {id:'LR-012',empId:'EMP-007',name:'Grace Villanueva',pos:'HR Assistant',dept:'Admin',type:'Sick Leave',start:'2026-01-28',end:'2026-01-29',days:2,status:'approved',reason:'UTI, prescribed antibiotics and rest.',filed:'2026-01-27',note:'Get well soon.',color:'#16A085'},
+];
+
+let currentTab = 'pending';
+let actionLeaveId = null;
+let actionType = null;
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-PH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  buildMiniCal();
+  updateStats();
+  renderCards();
+  // Set default dates for new leave form
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('nl_start').value = today;
+  document.getElementById('nl_end').value = today;
+});
+
+// ─── TABS ───
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderCards();
+}
+
+// ─── RENDER CARDS ───
+function renderCards() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  const typeF = document.getElementById('typeFilter').value;
+
+  let filtered = leaves.filter(l => {
+    const match = (l.name + l.empId + l.type + l.dept).toLowerCase().includes(q);
+    const typeMatch = !typeF || l.type === typeF;
+    const tabMatch = currentTab === 'all' || l.status === currentTab;
+    return match && typeMatch && tabMatch;
+  });
+
+  const grid = document.getElementById('leaveGrid');
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title">No Leave Requests Found</div>
+      <div class="empty-sub">No ${currentTab === 'all' ? '' : currentTab + ' '}requests match your search criteria.</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(l => {
+    const lt = leaveTypeStyles[l.type] || {cls:'unpaid',icon:'📋'};
+    const sp = statusPill(l.status);
+    const isPending = l.status === 'pending';
+    const initials = l.name.split(' ').map(n=>n[0]).join('').slice(0,2);
+
+    return `<div class="leave-card" id="card-${l.id}">
+      <div class="leave-card-accent ${l.status}"></div>
+      <div class="lc-body">
+        <!-- TOP -->
+        <div class="lc-top">
+          <div class="lc-emp">
+            <div class="lc-avatar" style="background:${l.color}">${initials}</div>
+            <div>
+              <div class="lc-name">${l.name}</div>
+              <div class="lc-pos">${l.empId} · ${l.pos}</div>
+            </div>
+          </div>
+          ${sp}
+        </div>
+
+        <!-- TYPE BADGE -->
+        <div class="lc-type-badge ${lt.cls}">${lt.icon} ${l.type}</div>
+
+        <!-- DATE ROW -->
+        <div class="lc-info-row">
+          <div class="lc-info-item">
+            <div class="li-lbl">From</div>
+            <div class="li-val" style="font-size:13px;">${fmtDate(l.start)}</div>
+          </div>
+          <div class="lc-info-item">
+            <div class="li-lbl">To</div>
+            <div class="li-val" style="font-size:13px;">${fmtDate(l.end)}</div>
+          </div>
+          <div class="lc-info-item">
+            <div class="li-lbl">Days</div>
+            <div class="li-val" style="color:var(--red)">${l.days}</div>
+          </div>
+        </div>
+
+        <!-- REASON -->
+        <div class="lc-reason">"${truncate(l.reason, 90)}"</div>
+
+        <!-- META -->
+        <div class="lc-meta">
+          <span>📝 Filed: ${fmtDate(l.filed)}</span>
+          <span>🏢 ${l.dept}</span>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="lc-footer">
+        <button class="btn-outline" style="padding:7px 12px;font-size:12px;" onclick="openDetail('${l.id}')">👁 View Details</button>
+        ${isPending ? `
+          <button class="btn-success" style="padding:7px 12px;font-size:12px;" onclick="quickAction('${l.id}','approve')">✅ Approve</button>
+          <button class="btn-danger" style="padding:7px 12px;font-size:12px;" onclick="quickAction('${l.id}','reject')">❌ Reject</button>
+        ` : ''}
+        ${l.status === 'approved' ? `<span style="font-size:11px;color:var(--success);font-weight:600;margin-left:auto;">✅ Approved by Admin</span>` : ''}
+        ${l.status === 'rejected' ? `<span style="font-size:11px;color:var(--red);font-weight:600;margin-left:auto;">❌ Rejected by Admin</span>` : ''}
+        ${l.status === 'cancelled' ? `<span style="font-size:11px;color:var(--gray);font-weight:600;margin-left:auto;">🚫 Cancelled</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── OPEN DETAIL ───
+function openDetail(id) {
+  const l = leaves.find(x => x.id === id);
+  if (!l) return;
+  const lt = leaveTypeStyles[l.type] || {cls:'unpaid',icon:'📋'};
+  const initials = l.name.split(' ').map(n=>n[0]).join('').slice(0,2);
+  const isPending = l.status === 'pending';
+
+  document.getElementById('dm-title').textContent = `${l.id} — ${l.type}`;
+  document.getElementById('dm-banner').style.background = `linear-gradient(135deg,${l.color}dd,${l.color}99)`;
+  document.getElementById('dm-avatar').textContent = initials;
+  document.getElementById('dm-avatar').style.background = l.color;
+  document.getElementById('dm-name').textContent = l.name;
+  document.getElementById('dm-sub').textContent = `${l.empId} · ${l.pos} · ${l.dept}`;
+  document.getElementById('dm-status-pill').innerHTML = statusPill(l.status);
+
+  document.getElementById('dm-details-grid').innerHTML = [
+    {l:'Leave Type', v:`${lt.icon} ${l.type}`},
+    {l:'Duration', v:`${l.days} day${l.days>1?'s':''}`},
+    {l:'Start Date', v:fmtDate(l.start)},
+    {l:'End Date', v:fmtDate(l.end)},
+    {l:'Date Filed', v:fmtDate(l.filed)},
+    {l:'Department', v:l.dept},
+  ].map(i=>`<div class="dm-item"><div class="dl">${i.l}</div><div class="dv">${i.v}</div></div>`).join('');
+
+  document.getElementById('dm-reason').textContent = l.reason;
+
+  // Admin note section
+  const approveSection = document.getElementById('dm-approve-section');
+  const existingNote = document.getElementById('dm-existing-note');
+  document.getElementById('adminNote').value = '';
+
+  if (isPending) {
+    approveSection.style.display = 'block';
+    existingNote.style.display = 'none';
+  } else {
+    approveSection.style.display = 'none';
+    if (l.note) {
+      existingNote.style.display = 'block';
+      document.getElementById('dm-note-content').textContent = l.note;
+    } else {
+      existingNote.style.display = 'none';
+    }
+  }
+
+  // Footer buttons
+  const footer = document.getElementById('dm-footer');
+  if (isPending) {
+    footer.innerHTML = `
+      <button class="btn-outline" onclick="closeModal('detailModal')">Close</button>
+      <button class="btn-danger" onclick="actionFromDetail('${id}','reject')">❌ Reject</button>
+      <button class="btn-success" onclick="actionFromDetail('${id}','approve')">✅ Approve</button>
+    `;
+  } else {
+    footer.innerHTML = `<button class="btn-outline" onclick="closeModal('detailModal')">Close</button>`;
+    if (l.status === 'approved') {
+      footer.innerHTML += `<button class="btn-danger" style="margin-left:auto;" onclick="actionFromDetail('${id}','reject')">❌ Revoke Approval</button>`;
+    }
+  }
+
+  openModal('detailModal');
+}
+
+function actionFromDetail(id, type) {
+  const note = document.getElementById('adminNote').value.trim();
+  const l = leaves.find(x => x.id === id);
+  if (l) l.note = note;
+  closeModal('detailModal');
+  showConfirm(id, type);
+}
+
+// ─── QUICK ACTION ───
+function quickAction(id, type) {
+  showConfirm(id, type);
+}
+
+function showConfirm(id, type) {
+  actionLeaveId = id;
+  actionType = type;
+  const l = leaves.find(x => x.id === id);
+  const isApprove = type === 'approve';
+
+  document.getElementById('cm-icon').textContent = isApprove ? '✅' : '❌';
+  document.getElementById('cm-title').textContent = isApprove ? 'Approve Leave Request?' : 'Reject Leave Request?';
+  document.getElementById('cm-sub').innerHTML = `
+    <strong>${l.name}</strong> — ${l.type}<br>
+    ${fmtDate(l.start)} to ${fmtDate(l.end)} (${l.days} day${l.days>1?'s':''})
+    <br><br>${isApprove ? 'This will mark the request as approved and notify the employee.' : 'This will reject the request. Please ensure a note was added.'}
+  `;
+  document.getElementById('cm-foot').innerHTML = `
+    <button class="btn-outline" onclick="closeModal('confirmModal')">Cancel</button>
+    <button class="${isApprove ? 'btn-success' : 'btn-danger'}" onclick="doAction()">
+      ${isApprove ? '✅ Yes, Approve' : '❌ Yes, Reject'}
+    </button>
+  `;
+  openModal('confirmModal');
+}
+
+function doAction() {
+  const l = leaves.find(x => x.id === actionLeaveId);
+  if (!l) return;
+  l.status = actionType === 'approve' ? 'approved' : 'rejected';
+  closeModal('confirmModal');
+  updateStats();
+  renderCards();
+  showToast(actionType === 'approve' ? 'success' : 'error',
+    actionType === 'approve'
+      ? `✅ ${l.name}'s leave has been approved!`
+      : `❌ ${l.name}'s leave has been rejected.`
+  );
+}
+
+// ─── SUBMIT NEW LEAVE ───
+function submitLeave() {
+  const empVal = document.getElementById('nl_emp').value;
+  const type = document.getElementById('nl_type').value;
+  const start = document.getElementById('nl_start').value;
+  const end = document.getElementById('nl_end').value;
+  const reason = document.getElementById('nl_reason').value.trim();
+
+  if (!empVal || !type || !start || !end || !reason) {
+    showToast('error', '⚠️ Please fill in all required fields.'); return;
+  }
+  if (new Date(end) < new Date(start)) {
+    showToast('error', '⚠️ End date cannot be before start date.'); return;
+  }
+
+  const [empId, name, pos] = empVal.split('|');
+  const days = calcWorkingDays(start, end);
+  const colorIdx = leaves.length % avatarColors.length;
+
+  const newLeave = {
+    id: `LR-${String(leaves.length+1).padStart(3,'0')}`,
+    empId, name, pos, dept: 'Operations',
+    type, start, end, days,
+    status: 'pending',
+    reason, filed: new Date().toISOString().split('T')[0],
+    note: '',
+    color: avatarColors[colorIdx],
+  };
+
+  leaves.unshift(newLeave);
+  updateStats();
+  closeModal('newLeaveModal');
+  switchTab('pending');
+  showToast('success', `📤 Leave request for ${name} submitted successfully!`);
+}
+
+function calcDays() {
+  const s = document.getElementById('nl_start').value;
+  const e = document.getElementById('nl_end').value;
+  if (s && e) {
+    const days = calcWorkingDays(s, e);
+    document.getElementById('daysCount').textContent = days + ' day' + (days !== 1 ? 's' : '');
+  }
+}
+
+function calcWorkingDays(start, end) {
+  let count = 0, cur = new Date(start);
+  const endD = new Date(end);
+  while (cur <= endD) {
+    const d = cur.getDay();
+    if (d !== 0 && d !== 6) count++;
+    cur.setDate(cur.getDate() + 1);
+  }
+  return Math.max(1, count);
+}
+
+// ─── STATS ───
+function updateStats() {
+  const p = leaves.filter(l=>l.status==='pending').length;
+  const a = leaves.filter(l=>l.status==='approved').length;
+  const r = leaves.filter(l=>l.status==='rejected').length;
+  const c = leaves.filter(l=>l.status==='cancelled').length;
+  const totalDays = leaves.filter(l=>l.status==='approved').reduce((s,l)=>s+l.days,0);
+
+  document.getElementById('stat-pending').textContent = p;
+  document.getElementById('stat-approved').textContent = a;
+  document.getElementById('stat-rejected').textContent = r;
+  document.getElementById('stat-days').textContent = totalDays;
+
+  document.getElementById('tb-pending').textContent = p;
+  document.getElementById('tb-approved').textContent = a;
+  document.getElementById('tb-rejected').textContent = r;
+  document.getElementById('tb-cancelled').textContent = c;
+  document.getElementById('tb-all').textContent = leaves.length;
+
+  document.getElementById('pendingBadge').textContent = p;
+  document.getElementById('qsm-pending').textContent = p;
+}
+
+// ─── MINI CALENDAR ───
+function buildMiniCal() {
+  const year = 2026, month = 1; // February
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = 19;
+
+  // Leave dates in Feb
+  const leaveDates = new Set();
+  leaves.forEach(l => {
+    if (l.status === 'approved') {
+      let cur = new Date(l.start);
+      const end = new Date(l.end);
+      while (cur <= end) {
+        if (cur.getFullYear() === 2026 && cur.getMonth() === 1) leaveDates.add(cur.getDate());
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+  });
+
+  const days = ['S','M','T','W','T','F','S'];
+  let html = days.map(d=>`<div class="mc-head">${d}</div>`).join('');
+  for (let i = 0; i < firstDay; i++) html += `<div class="mc-day empty">-</div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today;
+    const hasLeave = leaveDates.has(d);
+    html += `<div class="mc-day ${isToday?'today':hasLeave?'has-leave':''}">${d}</div>`;
+  }
+  document.getElementById('miniCal').innerHTML = html;
+}
+
+// ─── EXPORT ───
+function exportCSV() {
+  const h = 'ID,Employee,Position,Type,Start,End,Days,Status,Filed';
+  const rows = leaves.map(l => `${l.id},${l.name},${l.pos},${l.type},${l.start},${l.end},${l.days},${l.status},${l.filed}`);
+  const csv = [h, ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'leave-requests.csv';
+  a.click();
+  showToast('success', '📥 Leave data exported!');
+}
+
+// ─── HELPERS ───
+function statusPill(s) {
+  const m = {pending:'⏳ Pending',approved:'✅ Approved',rejected:'❌ Rejected',cancelled:'🚫 Cancelled'};
+  return `<span class="status-pill ${s}"><span class="pill-dot"></span>${m[s]||s}</span>`;
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${mo[+m-1]} ${+day}, ${y}`;
+}
+function truncate(str, n) { return str.length > n ? str.slice(0, n) + '…' : str; }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+function setActive(el) { 
+document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+
+function openNewLeaveModal() { openModal('newLeaveModal'); }
+
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.className = `toast ${type} show`;
+  t.textContent = msg;
+  setTimeout(() => t.classList.remove('show'), 3400);
+}
+</script>
+</body>
+</html>
