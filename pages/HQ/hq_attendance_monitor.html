@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDC ManPower — Attendance Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red-deep:    #6B1212;
+  --red-primary: #C0392B;
+  --red-bright:  #E74C3C;
+  --red-soft:    #F5C6C2;
+  --red-glow:    rgba(192,57,43,0.12);
+  --cream:       #FDF8F6;
+  --warm-white:  #FFFAF9;
+  --charcoal:    #1C1C1E;
+  --gray-dark:   #3A3A3C;
+  --gray-mid:    #6C6C70;
+  --gray-light:  #E5E0DF;
+  --gray-pale:   #F2EEEC;
+  --gold:        #C9A84C;
+  --green:       #1E8449;
+  --green-light: #27AE60;
+  --blue:        #1A5276;
+  --blue-light:  #2980B9;
+  --orange:      #D35400;
+  --orange-light:#E67E22;
+  --purple:      #6C3483;
+  --sidebar-w:   260px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:linear-gradient(170deg,#140606 0%,#2C0F0F 50%,#3D1515 100%);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:4px 0 30px rgba(0,0,0,0.35);}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.brand-logo{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.brand-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;box-shadow:0 4px 15px rgba(192,57,43,0.5);flex-shrink:0;letter-spacing:-1px;}
+.brand-text h2{font-family:'Playfair Display',serif;color:#fff;font-size:14px;letter-spacing:0.5px;line-height:1.2;}
+.brand-text span{color:var(--red-soft);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.hq-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),#A07830);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:7px;}
+.nav-section{padding:16px 0;flex:1;overflow-y:auto;}
+.nav-label{color:rgba(255,255,255,0.28);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 20px 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;font-size:13.5px;font-weight:500;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);border-left-color:var(--red-primary);}
+.nav-item.active{color:#fff;background:linear-gradient(90deg,rgba(192,57,43,0.28),transparent);border-left-color:var(--red-primary);}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;}
+.nbadge{margin-left:auto;background:var(--red-primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nbadge.gold{background:var(--gold);}
+.sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);}
+.s-avatar-info strong{color:#fff;font-size:12.5px;display:block;}
+.s-avatar-info small{color:rgba(255,255,255,0.38);font-size:10.5px;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 30px;height:62px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:50;box-shadow:0 1px 10px rgba(0,0,0,0.06);}
+.topbar-title{flex:1;}
+.topbar-title h1{font-family:'Playfair Display',serif;font-size:19px;color:var(--charcoal);display:flex;align-items:center;gap:9px;}
+.topbar-title p{font-size:11.5px;color:var(--gray-mid);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.date-chip{background:var(--gray-pale);border:1px solid var(--gray-light);padding:6px 13px;border-radius:20px;font-size:12px;color:var(--gray-dark);font-weight:500;display:flex;align-items:center;gap:5px;}
+.btn-primary{background:linear-gradient(135deg,var(--red-primary),var(--red-deep));color:#fff;border:none;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:0 3px 12px rgba(192,57,43,0.3);font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(192,57,43,0.4);}
+.notif-btn{position:relative;width:36px;height:36px;border-radius:9px;background:var(--gray-pale);border:1px solid var(--gray-light);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:all 0.2s;}
+.notif-btn:hover{background:var(--red-glow);border-color:var(--red-soft);}
+.notif-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--red-primary);border-radius:50%;border:2px solid #fff;}
+.content{padding:24px 30px;flex:1;}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-bottom:22px;}
+.kpi-card{background:#fff;border-radius:13px;padding:16px 15px;border:1px solid var(--gray-light);position:relative;overflow:hidden;transition:all 0.2s;animation:fadeUp 0.4s ease both;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi-card.c-green::before{background:linear-gradient(90deg,#1E8449,#27AE60);}
+.kpi-card.c-red::before{background:linear-gradient(90deg,var(--red-primary),var(--red-bright));}
+.kpi-card.c-orange::before{background:linear-gradient(90deg,var(--orange),var(--orange-light));}
+.kpi-card.c-blue::before{background:linear-gradient(90deg,var(--blue),var(--blue-light));}
+.kpi-card.c-gold::before{background:linear-gradient(90deg,var(--gold),#E5C16B);}
+.kpi-card:nth-child(1){animation-delay:.05s}.kpi-card:nth-child(2){animation-delay:.1s}.kpi-card:nth-child(3){animation-delay:.15s}.kpi-card:nth-child(4){animation-delay:.2s}.kpi-card:nth-child(5){animation-delay:.25s}
+.kpi-icon{position:absolute;top:13px;right:13px;font-size:20px;opacity:0.13;}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:9px;}
+.kpi-value{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px;}
+.kpi-sub{font-size:11px;color:var(--gray-mid);}
+.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;margin-top:5px;padding:2px 7px;border-radius:6px;}
+.t-up{color:var(--green-light);background:rgba(39,174,96,0.1);}
+.t-dn{color:var(--red-primary);background:rgba(192,57,43,0.1);}
+.t-neu{color:var(--blue-light);background:rgba(41,128,185,0.1);}
+
+/* ── LAYOUT ── */
+.row-2{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-bottom:18px;}
+.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:15px;border:1px solid var(--gray-light);overflow:hidden;animation:fadeUp 0.5s ease both;animation-delay:0.3s;}
+.card-header{padding:16px 20px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-pale);}
+.card-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--charcoal);}
+.cicon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.cicon.red{background:rgba(192,57,43,0.1);}
+.cicon.green{background:rgba(30,132,73,0.1);}
+.cicon.blue{background:rgba(41,128,185,0.1);}
+.cicon.gold{background:rgba(201,168,76,0.1);}
+.cicon.orange{background:rgba(211,84,0,0.1);}
+.card-action{font-size:12px;color:var(--red-primary);font-weight:600;cursor:pointer;padding:4px 9px;border-radius:7px;transition:background 0.2s;}
+.card-action:hover{background:var(--red-glow);}
+.card-body{padding:16px 20px;}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--gray-pale);flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:180px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:0.4;}
+.search-input{width:100%;border:1px solid var(--gray-light);border-radius:8px;padding:8px 12px 8px 34px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--gray-pale);outline:none;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--red-primary);background:#fff;}
+.sel{border:1px solid var(--gray-light);background:var(--gray-pale);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--charcoal);outline:none;cursor:pointer;}
+.sel:focus{border-color:var(--red-primary);}
+.tbtn{border:1px solid var(--gray-light);background:var(--gray-pale);border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;color:var(--gray-dark);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tbtn:hover,.tbtn.act{background:var(--red-glow);border-color:var(--red-soft);color:var(--red-primary);}
+.tbtn.green-btn{background:rgba(30,132,73,0.08);border-color:rgba(30,132,73,0.25);color:var(--green);}
+.tbtn.green-btn:hover{background:var(--green);color:#fff;}
+
+/* ── ATTENDANCE TABLE ── */
+.att-table{width:100%;border-collapse:collapse;}
+.att-table th{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-mid);padding:9px 12px;text-align:left;background:var(--gray-pale);white-space:nowrap;}
+.att-table th:first-child{border-radius:8px 0 0 8px;}
+.att-table th:last-child{border-radius:0 8px 8px 0;}
+.att-table td{padding:11px 12px;font-size:13px;border-bottom:1px solid var(--gray-pale);vertical-align:middle;}
+.att-table tr:last-child td{border-bottom:none;}
+.att-table tbody tr{transition:background 0.15s;cursor:pointer;}
+.att-table tbody tr:hover td{background:rgba(192,57,43,0.04);}
+
+.emp-cell{display:flex;align-items:center;gap:10px;}
+.emp-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.emp-name{font-weight:600;font-size:13px;line-height:1.2;}
+.emp-id{font-size:10.5px;color:var(--gray-mid);}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.pill-green{background:rgba(30,132,73,0.1);color:var(--green);}
+.pill-red{background:rgba(192,57,43,0.1);color:var(--red-primary);}
+.pill-orange{background:rgba(211,84,0,0.1);color:var(--orange);}
+.pill-blue{background:rgba(41,128,185,0.1);color:var(--blue-light);}
+.pill-gray{background:rgba(108,108,112,0.1);color:var(--gray-mid);}
+.pill-gold{background:rgba(201,168,76,0.1);color:#A07830;}
+
+.time-tag{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--charcoal);}
+.time-tag.late{color:var(--orange);}
+.time-tag.absent{color:var(--gray-mid);font-style:italic;}
+
+.hrs-bar-wrap{display:flex;align-items:center;gap:8px;}
+.hrs-bar-track{flex:1;height:6px;background:var(--gray-pale);border-radius:10px;overflow:hidden;min-width:60px;}
+.hrs-bar-fill{height:100%;border-radius:10px;}
+.hrs-val{font-size:12px;font-weight:600;font-family:'DM Mono',monospace;width:36px;text-align:right;flex-shrink:0;}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--gray-pale);}
+.page-info{font-size:12px;color:var(--gray-mid);}
+.page-btns{display:flex;gap:5px;}
+.page-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--gray-light);background:var(--gray-pale);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.page-btn:hover,.page-btn.act{background:var(--red-primary);border-color:var(--red-primary);color:#fff;}
+
+/* ── MONTHLY REVIEW MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,6,6,0.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:1000px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.25);animation:slideUp 0.3s ease;}
+.modal-header{background:linear-gradient(135deg,#1A0808,#2C0F0F,#3D1515);padding:22px 26px;display:flex;align-items:center;gap:16px;position:relative;}
+.modal-header::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.modal-emp-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,0.2);flex-shrink:0;}
+.modal-emp-info h2{font-family:'Playfair Display',serif;color:#fff;font-size:18px;margin-bottom:3px;}
+.modal-emp-info p{color:rgba(255,255,255,0.55);font-size:12.5px;}
+.modal-close{margin-left:auto;width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.modal-close:hover{background:rgba(192,57,43,0.4);}
+.modal-toolbar{display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid var(--gray-pale);background:var(--warm-white);}
+.month-nav{display:flex;align-items:center;gap:8px;}
+.mnav-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--gray-light);background:var(--gray-pale);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.mnav-btn:hover{background:var(--red-glow);border-color:var(--red-soft);}
+.month-label{font-size:14px;font-weight:700;min-width:150px;text-align:center;}
+.modal-body{padding:22px;overflow-y:auto;flex:1;}
+.summary-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
+.sum-box{background:var(--gray-pale);border-radius:11px;padding:13px;text-align:center;border:1px solid var(--gray-light);}
+.sum-val{font-size:22px;font-weight:700;line-height:1;margin-bottom:4px;}
+.sum-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray-mid);}
+
+/* ── CALENDAR GRID ── */
+.cal-wrap{margin-bottom:18px;}
+.cal-month-title{font-size:13px;font-weight:700;color:var(--charcoal);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day-header{text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-mid);padding:6px 0;}
+.cal-cell{border-radius:9px;padding:8px 6px;text-align:center;min-height:64px;border:1px solid transparent;position:relative;transition:all 0.15s;cursor:default;}
+.cal-cell:hover{transform:scale(1.03);}
+.cal-cell.empty{background:transparent;border:none;}
+.cal-cell.present{background:rgba(30,132,73,0.08);border-color:rgba(30,132,73,0.2);}
+.cal-cell.late{background:rgba(211,84,0,0.08);border-color:rgba(211,84,0,0.2);}
+.cal-cell.absent{background:rgba(192,57,43,0.07);border-color:rgba(192,57,43,0.18);}
+.cal-cell.leave{background:rgba(41,128,185,0.08);border-color:rgba(41,128,185,0.2);}
+.cal-cell.holiday{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.25);}
+.cal-cell.today-cell{box-shadow:0 0 0 2px var(--red-primary);}
+.cal-date{font-size:11px;font-weight:700;margin-bottom:4px;color:var(--charcoal);}
+.cal-time{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--gray-mid);line-height:1.4;}
+.cal-status{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-top:3px;}
+.cal-status.p{color:var(--green);}
+.cal-status.l{color:var(--orange);}
+.cal-status.a{color:var(--red-primary);}
+.cal-status.lv{color:var(--blue-light);}
+.cal-status.h{color:#A07830;}
+
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--gray-mid);}
+.legend-dot{width:10px;height:10px;border-radius:3px;}
+
+/* ── DETAIL TABLE (modal) ── */
+.detail-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.detail-table th{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-mid);padding:7px 10px;text-align:left;background:var(--gray-pale);}
+.detail-table th:first-child{border-radius:8px 0 0 8px;}
+.detail-table th:last-child{border-radius:0 8px 8px 0;}
+.detail-table td{padding:9px 10px;border-bottom:1px solid var(--gray-pale);vertical-align:middle;}
+.detail-table tr:last-child td{border-bottom:none;}
+
+/* ── RIGHT PANEL ── */
+.live-list{display:flex;flex-direction:column;gap:8px;}
+.live-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--gray-pale);border:1px solid var(--gray-light);transition:all 0.2s;}
+.live-item:hover{background:var(--red-glow);border-color:var(--red-soft);}
+.live-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.live-info{flex:1;}
+.live-name{font-size:12.5px;font-weight:600;}
+.live-meta{font-size:11px;color:var(--gray-mid);}
+.live-time{font-family:'DM Mono',monospace;font-size:11.5px;font-weight:600;}
+
+/* ── CHART BARS ── */
+.week-chart{display:flex;align-items:flex-end;gap:8px;height:100px;padding:8px 0 0;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.bar-track{flex:1;width:100%;background:var(--gray-pale);border-radius:6px 6px 0 0;position:relative;overflow:hidden;min-height:8px;}
+.bar-fill{position:absolute;bottom:0;left:0;right:0;border-radius:6px 6px 0 0;transition:height 1s cubic-bezier(0.34,1.56,0.64,1);}
+.bar-label{font-size:10px;font-weight:600;color:var(--gray-mid);}
+.bar-pct{font-size:10.5px;font-weight:700;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-icon">GDC</div>
+      <div class="brand-text"><h2>ManPower</h2><span>Monitoring System</span></div>
+    </div>
+    <div class="hq-badge">⭐ HQ — HR Admin</div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item"><span class="icon">📊</span>HQ Dashboard</div>
+    <div class="nav-item"><span class="icon">🏢</span>Branch Overview<span class="nbadge">8</span></div>
+    <div class="nav-item"><span class="icon">📈</span>Analytics & Reports</div>
+    <div class="nav-label" style="margin-top:8px">Workforce</div>
+    <div class="nav-item"><span class="icon">👥</span>All Employees<span class="nbadge gold">248</span></div>
+    <div class="nav-item active"><span class="icon">📅</span>Attendance Monitor</div>
+    <div class="nav-item"><span class="icon">🗓️</span>Schedules</div>
+    <div class="nav-item"><span class="icon">🚀</span>Deployments</div>
+    <div class="nav-label" style="margin-top:8px">Management</div>
+    <div class="nav-item"><span class="icon">📋</span>Leave Requests<span class="nbadge">12</span></div>
+    <div class="nav-item"><span class="icon">⚠️</span>Incidents<span class="nbadge">3</span></div>
+    <div class="nav-item"><span class="icon">💰</span>Payroll Summary</div>
+    <div class="nav-item"><span class="icon">📝</span>Performance Reviews</div>
+    <div class="nav-label" style="margin-top:8px">System</div>
+    <div class="nav-item"><span class="icon">⚙️</span>Settings</div>
+    <div class="nav-item"><span class="icon">📤</span>Export / Sync</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="s-avatar">BA</div>
+    <div class="s-avatar-info"><strong>HR Administrator</strong><small>HQ — Super Admin</small></div>
+    <span style="color:rgba(255,255,255,0.3);font-size:16px;margin-left:auto">⋯</span>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-title">
+      <h1>📅 Attendance Monitor</h1>
+      <p>Real-time employee attendance tracking across all branches — Feb 19, 2026</p>
+    </div>
+    <div class="topbar-right">
+      <div class="date-chip">📅 Thursday, Feb 19, 2026</div>
+      <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+      <button class="btn-primary">📤 Export Report</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+      <div class="kpi-card c-green">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-label">Present Today</div>
+        <div class="kpi-value" style="color:var(--green)">211</div>
+        <div class="kpi-sub">out of 248 employees</div>
+        <div class="kpi-trend t-up">▲ 85.1% rate</div>
+      </div>
+      <div class="kpi-card c-orange">
+        <div class="kpi-icon">⏰</div>
+        <div class="kpi-label">Late Arrivals</div>
+        <div class="kpi-value" style="color:var(--orange)">18</div>
+        <div class="kpi-sub">checked in after 8:00 AM</div>
+        <div class="kpi-trend t-dn">▲ +4 vs yesterday</div>
+      </div>
+      <div class="kpi-card c-red">
+        <div class="kpi-icon">❌</div>
+        <div class="kpi-label">Absent Today</div>
+        <div class="kpi-value" style="color:var(--red-primary)">13</div>
+        <div class="kpi-sub">unexcused absences</div>
+        <div class="kpi-trend t-dn">▲ +2 vs yesterday</div>
+      </div>
+      <div class="kpi-card c-blue">
+        <div class="kpi-icon">🏖️</div>
+        <div class="kpi-label">On Approved Leave</div>
+        <div class="kpi-value" style="color:var(--blue-light)">24</div>
+        <div class="kpi-sub">with approved requests</div>
+        <div class="kpi-trend t-neu">→ No change</div>
+      </div>
+      <div class="kpi-card c-gold">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-label">Avg. Hours Today</div>
+        <div class="kpi-value" style="color:#A07830">7.4<span style="font-size:14px">h</span></div>
+        <div class="kpi-sub">target: 8.0 hrs/day</div>
+        <div class="kpi-trend t-dn">▼ −0.4h vs target</div>
+      </div>
+    </div>
+
+    <!-- MAIN TABLE + RIGHT PANEL -->
+    <div class="row-2">
+
+      <!-- ATTENDANCE TABLE CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="cicon red">📋</div>
+            Today's Attendance Log
+            <span class="pill pill-green" style="margin-left:4px">● Live</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="tbtn green-btn" onclick="exportCSV()">⬇ Export CSV</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input class="search-input" id="searchInput" type="text" placeholder="Search name, ID, branch…" oninput="filterTable()">
+          </div>
+          <select class="sel" id="branchFilter" onchange="filterTable()">
+            <option value="">All Branches</option>
+            <option>North Branch NCR</option>
+            <option>South Branch NCR</option>
+            <option>Cebu Main</option>
+            <option>Davao Branch</option>
+            <option>Iloilo Branch</option>
+            <option>Batangas Branch</option>
+          </select>
+          <select class="sel" id="statusFilter" onchange="filterTable()">
+            <option value="">All Status</option>
+            <option>Present</option>
+            <option>Late</option>
+            <option>Absent</option>
+            <option>On Leave</option>
+          </select>
+          <button class="tbtn act" id="filterToday">Today</button>
+          <button class="tbtn" id="filterWeek">This Week</button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="att-table" id="attTable">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Branch</th>
+                <th>Schedule</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Hours</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="attBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div class="page-info" id="pageInfo">Showing 1–10 of 38 employees</div>
+          <div class="page-btns" id="pageBtns"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- WEEKLY ATTENDANCE TREND -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="cicon blue">📊</div>This Week's Trend</div>
+          </div>
+          <div class="card-body">
+            <div class="week-chart" id="weekChart"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:10px;color:var(--gray-mid)">Mon Feb 16</span>
+              <span style="font-size:10px;color:var(--gray-mid)">Fri Feb 20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE ACTIVITY FEED -->
+        <div class="card" style="flex:1;">
+          <div class="card-header">
+            <div class="card-title"><div class="cicon green">⚡</div>Recent Check-Ins</div>
+            <span class="card-action">View All</span>
+          </div>
+          <div class="card-body">
+            <div class="live-list" id="liveList"></div>
+          </div>
+        </div>
+
+        <!-- BRANCH ATTENDANCE RATE -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><div class="cicon gold">🏢</div>Branch Rates Today</div>
+          </div>
+          <div class="card-body" id="branchRates"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ MONTHLY REVIEW MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-emp-av" id="modalAvatar"></div>
+      <div class="modal-emp-info">
+        <h2 id="modalName"></h2>
+        <p id="modalMeta"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div class="month-nav">
+        <button class="mnav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="month-label" id="monthLabel">February 2026</div>
+        <button class="mnav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="tbtn green-btn" onclick="exportMonthly()">⬇ Export Monthly</button>
+        <button class="tbtn" onclick="printModal()">🖨️ Print</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <!-- SUMMARY -->
+      <div class="summary-row" id="modalSummary"></div>
+      <!-- CALENDAR -->
+      <div class="cal-wrap">
+        <div class="cal-month-title">📆 <span id="calTitle">February 2026 — Attendance Calendar</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(30,132,73,0.3);border:1px solid rgba(30,132,73,0.4)"></div>Present</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(211,84,0,0.3);border:1px solid rgba(211,84,0,0.4)"></div>Late</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(192,57,43,0.2);border:1px solid rgba(192,57,43,0.35)"></div>Absent</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(41,128,185,0.2);border:1px solid rgba(41,128,185,0.35)"></div>On Leave</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.35)"></div>Holiday</div>
+        </div>
+      </div>
+      <!-- DETAIL TABLE -->
+      <div class="cal-month-title" style="margin-bottom:10px;">📋 Daily Attendance Detail</div>
+      <div style="overflow-x:auto;">
+        <table class="detail-table" id="detailTable"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const employees = [
+  {id:'EMP-001',name:'Maria Santos',branch:'North Branch NCR',pos:'Cashier',color:'#C0392B',initials:'MS',sched:'8:00 AM',timeIn:'07:52',timeOut:'05:01 PM',hrs:8.2,status:'Present'},
+  {id:'EMP-002',name:'Juan Dela Cruz',branch:'North Branch NCR',pos:'Floor Staff',color:'#8B1A1A',initials:'JD',sched:'8:00 AM',timeIn:'08:17',timeOut:'04:58 PM',hrs:7.7,status:'Late'},
+  {id:'EMP-003',name:'Ana Reyes',branch:'South Branch NCR',pos:'Supervisor',color:'#1A5276',initials:'AR',sched:'7:00 AM',timeIn:'06:55',timeOut:'04:02 PM',hrs:8.1,status:'Present'},
+  {id:'EMP-004',name:'Carlos Bautista',branch:'Cebu Main',pos:'Security',color:'#1E8449',initials:'CB',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'Absent'},
+  {id:'EMP-005',name:'Liza Ocampo',branch:'Davao Branch',pos:'HR Staff',color:'#6C3483',initials:'LO',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'On Leave'},
+  {id:'EMP-006',name:'Ramon Villanueva',branch:'Iloilo Branch',pos:'Technician',color:'#D35400',initials:'RV',sched:'8:00 AM',timeIn:'07:59',timeOut:'05:00 PM',hrs:8.0,status:'Present'},
+  {id:'EMP-007',name:'Grace Villanueva',branch:'North Branch NCR',pos:'HR Assistant',color:'#C0392B',initials:'GV',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'On Leave'},
+  {id:'EMP-008',name:'Pedro Gonzales',branch:'Batangas Branch',pos:'Driver',color:'#2980B9',initials:'PG',sched:'6:00 AM',timeIn:'06:10',timeOut:'02:15 PM',hrs:8.1,status:'Present'},
+  {id:'EMP-009',name:'Nena Cruz',branch:'Cebu Main',pos:'Admin',color:'#C9A84C',initials:'NC',sched:'8:00 AM',timeIn:'08:22',timeOut:'05:05 PM',hrs:7.7,status:'Late'},
+  {id:'EMP-010',name:'Roberto Mendoza',branch:'Davao Branch',pos:'Security Guard',color:'#1A5276',initials:'RM',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'Absent'},
+  {id:'EMP-011',name:'Jasmine Tan',branch:'South Branch NCR',pos:'Sales Staff',color:'#8E44AD',initials:'JT',sched:'9:00 AM',timeIn:'08:57',timeOut:'06:00 PM',hrs:8.1,status:'Present'},
+  {id:'EMP-012',name:'Felix Morales',branch:'Iloilo Branch',pos:'Maintenance',color:'#16A085',initials:'FM',sched:'8:00 AM',timeIn:'08:01',timeOut:'05:03 PM',hrs:8.0,status:'Present'},
+  {id:'EMP-013',name:'Cristina Lim',branch:'Batangas Branch',pos:'Cashier',color:'#C0392B',initials:'CL',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'Absent'},
+  {id:'EMP-014',name:'Dante Aquino',branch:'North Branch NCR',pos:'Janitor',color:'#27AE60',initials:'DA',sched:'7:00 AM',timeIn:'06:58',timeOut:'04:00 PM',hrs:8.0,status:'Present'},
+  {id:'EMP-015',name:'Marilou Ramos',branch:'Cebu Main',pos:'Supervisor',color:'#D35400',initials:'MR',sched:'8:00 AM',timeIn:'08:35',timeOut:'05:08 PM',hrs:7.5,status:'Late'},
+  {id:'EMP-016',name:'Eduardo Flores',branch:'Davao Branch',pos:'Floor Staff',color:'#1E8449',initials:'EF',sched:'8:00 AM',timeIn:'07:50',timeOut:'05:00 PM',hrs:8.2,status:'Present'},
+  {id:'EMP-017',name:'Rowena Pascual',branch:'South Branch NCR',pos:'Accounting',color:'#6C3483',initials:'RP',sched:'8:00 AM',timeIn:'—',timeOut:'—',hrs:0,status:'On Leave'},
+  {id:'EMP-018',name:'Vincent Castro',branch:'North Branch NCR',pos:'IT Support',color:'#2980B9',initials:'VC',sched:'8:00 AM',timeIn:'07:45',timeOut:'04:50 PM',hrs:8.1,status:'Present'},
+];
+
+// Monthly attendance data generator
+function genMonthData(seed) {
+  const statuses = ['Present','Present','Present','Present','Present','Late','Absent','On Leave','Holiday'];
+  const times = ['07:48','07:55','08:00','08:04','08:13','08:22','08:31','08:44'];
+  const result = {};
+  let r = seed;
+  function rand(){r=(r*1664525+1013904223)&0xffffffff;return Math.abs(r)/0xffffffff;}
+  for(let d=1;d<=28;d++){
+    const dow = (new Date(2026,1,d)).getDay();
+    if(dow===0||dow===6){result[d]={status:'Holiday',timeIn:'—',timeOut:'—',hrs:0};continue;}
+    const si=Math.floor(rand()*statuses.length);
+    const s=statuses[si];
+    let ti='—',to='—',hrs=0;
+    if(s==='Present'||s==='Late'){
+      ti=times[Math.floor(rand()*times.length)];
+      const h=7.5+rand()*1.2;
+      hrs=Math.round(h*10)/10;
+      to='05:0'+Math.floor(rand()*6)+' PM';
+    }
+    result[d]={status:s,timeIn:ti,timeOut:to,hrs};
+  }
+  return result;
+}
+
+let filtered = [...employees];
+let currentPage = 1;
+const perPage = 10;
+let currentEmp = null;
+let currentMonth = {year:2026, month:1}; // 0-indexed
+
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const br=document.getElementById('branchFilter').value;
+  const st=document.getElementById('statusFilter').value;
+  filtered=employees.filter(e=>{
+    const mq=!q||(e.name+e.id+e.branch+e.pos).toLowerCase().includes(q);
+    const mb=!br||e.branch===br;
+    const ms=!st||e.status===st;
+    return mq&&mb&&ms;
+  });
+  currentPage=1;
+  renderTable();
+}
+
+function renderTable(){
+  const body=document.getElementById('attBody');
+  const start=(currentPage-1)*perPage;
+  const page=filtered.slice(start,start+perPage);
+  body.innerHTML=page.map(e=>`
+    <tr onclick="openModal('${e.id}')">
+      <td>
+        <div class="emp-cell">
+          <div class="emp-av" style="background:${e.color}">${e.initials}</div>
+          <div><div class="emp-name">${e.name}</div><div class="emp-id">${e.id} · ${e.pos}</div></div>
+        </div>
+      </td>
+      <td style="font-size:12.5px">${e.branch}</td>
+      <td><span class="pill pill-gray">${e.sched}</span></td>
+      <td><span class="time-tag ${e.status==='Late'?'late':e.status==='Absent'||e.status==='On Leave'?'absent':''}">${e.timeIn}</span></td>
+      <td><span class="time-tag ${e.status==='Absent'||e.status==='On Leave'?'absent':''}">${e.timeOut}</span></td>
+      <td>
+        ${e.hrs>0?`
+        <div class="hrs-bar-wrap">
+          <div class="hrs-bar-track"><div class="hrs-bar-fill" style="width:${Math.min(e.hrs/9*100,100)}%;background:${e.hrs>=8?'linear-gradient(90deg,#1E8449,#27AE60)':e.hrs>=7?'linear-gradient(90deg,#D35400,#E67E22)':'linear-gradient(90deg,#C0392B,#E74C3C)'}"></div></div>
+          <span class="hrs-val" style="color:${e.hrs>=8?'var(--green)':e.hrs>=7?'var(--orange)':'var(--red-primary)'}">${e.hrs}h</span>
+        </div>`:'<span style="color:var(--gray-mid);font-size:12px">—</span>'}
+      </td>
+      <td>${statusPill(e.status)}</td>
+      <td>
+        <button onclick="event.stopPropagation();openModal('${e.id}')" style="border:1px solid var(--gray-light);background:var(--gray-pale);border-radius:7px;padding:5px 11px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--red-primary);" onmouseover="this.style.background='var(--red-glow)'" onmouseout="this.style.background='var(--gray-pale)'">📅 Monthly</button>
+      </td>
+    </tr>
+  `).join('');
+
+  document.getElementById('pageInfo').textContent=`Showing ${start+1}–${Math.min(start+perPage,filtered.length)} of ${filtered.length} employees`;
+  renderPagination();
+}
+
+function statusPill(s){
+  const map={
+    'Present':'<span class="pill pill-green">✓ Present</span>',
+    'Late':'<span class="pill pill-orange">⏰ Late</span>',
+    'Absent':'<span class="pill pill-red">✕ Absent</span>',
+    'On Leave':'<span class="pill pill-blue">🏖 On Leave</span>',
+    'Holiday':'<span class="pill pill-gold">🎌 Holiday</span>',
+  };
+  return map[s]||s;
+}
+
+function renderPagination(){
+  const total=Math.ceil(filtered.length/perPage);
+  const btns=document.getElementById('pageBtns');
+  let html='';
+  for(let i=1;i<=total;i++) html+=`<button class="page-btn ${i===currentPage?'act':''}" onclick="goPage(${i})">${i}</button>`;
+  btns.innerHTML=html;
+}
+function goPage(p){currentPage=p;renderTable();}
+
+// ── WEEKLY CHART ──
+function renderWeekChart(){
+  const data=[
+    {day:'Mon',pct:83,col:'#1E8449'},{day:'Tue',pct:88,col:'#1E8449'},
+    {day:'Wed',pct:81,col:'#1E8449'},{day:'Thu',pct:85,col:'#C0392B'},
+    {day:'Fri',pct:0,col:'#6C6C70'},
+  ];
+  document.getElementById('weekChart').innerHTML=data.map(d=>`
+    <div class="bar-col">
+      <div class="bar-pct" style="color:${d.col};font-weight:700">${d.pct?d.pct+'%':'-'}</div>
+      <div class="bar-track" style="height:72px">
+        <div class="bar-fill" style="height:${d.pct}%;background:${d.col==='#C0392B'?'linear-gradient(180deg,#E74C3C,#C0392B)':d.col==='#6C6C70'?'var(--gray-light)':'linear-gradient(180deg,#27AE60,#1E8449)'}"></div>
+      </div>
+      <div class="bar-label">${d.day}</div>
+    </div>
+  `).join('');
+}
+
+// ── LIVE FEED ──
+function renderLiveFeed(){
+  const recent=[
+    {name:'Maria Santos',time:'07:52 AM',branch:'NCR North',color:'#C0392B',initials:'MS',action:'Checked In'},
+    {name:'Ana Reyes',time:'06:55 AM',branch:'NCR South',color:'#1A5276',initials:'AR',action:'Checked In'},
+    {name:'Ramon Villanueva',time:'07:59 AM',branch:'Iloilo',color:'#D35400',initials:'RV',action:'Checked In'},
+    {name:'Pedro Gonzales',time:'06:10 AM',branch:'Batangas',color:'#2980B9',initials:'PG',action:'Checked In'},
+    {name:'Dante Aquino',time:'06:58 AM',branch:'NCR North',color:'#27AE60',initials:'DA',action:'Checked In'},
+    {name:'Juan Dela Cruz',time:'08:17 AM',branch:'NCR North',color:'#8B1A1A',initials:'JD',action:'Late Check-In'},
+  ];
+  document.getElementById('liveList').innerHTML=recent.map(r=>`
+    <div class="live-item">
+      <div class="live-av" style="background:${r.color}">${r.initials}</div>
+      <div class="live-info">
+        <div class="live-name">${r.name}</div>
+        <div class="live-meta">${r.action} · ${r.branch}</div>
+      </div>
+      <div class="live-time" style="color:${r.action.includes('Late')?'var(--orange)':'var(--green)'}">${r.time}</div>
+    </div>
+  `).join('');
+}
+
+// ── BRANCH RATES ──
+function renderBranchRates(){
+  const branches=[
+    {name:'NCR North',rate:85,n:41,total:48},{name:'NCR South',rate:86,n:30,total:35},
+    {name:'Cebu Main',rate:90,n:38,total:42},{name:'Davao',rate:84,n:26,total:31},
+    {name:'Iloilo',rate:93,n:26,total:28},{name:'Batangas',rate:61,n:11,total:18},
+  ];
+  document.getElementById('branchRates').innerHTML=branches.map(b=>`
+    <div style="margin-bottom:11px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+        <span style="font-size:12.5px;font-weight:500">${b.name}</span>
+        <span style="font-size:12px;color:${b.rate>=85?'var(--green)':b.rate>=70?'var(--orange)':'var(--red-primary)'};font-weight:700;font-family:'DM Mono',monospace">${b.n}/${b.total} · ${b.rate}%</span>
+      </div>
+      <div style="height:7px;background:var(--gray-pale);border-radius:10px;overflow:hidden;">
+        <div style="height:100%;width:${b.rate}%;background:${b.rate>=85?'linear-gradient(90deg,#1E8449,#27AE60)':b.rate>=70?'linear-gradient(90deg,#D35400,#E67E22)':'linear-gradient(90deg,#C0392B,#E74C3C)'};border-radius:10px;transition:width 1s ease;"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── MODAL ──
+function openModal(id){
+  currentEmp=employees.find(e=>e.id===id);
+  if(!currentEmp)return;
+  currentMonth={year:2026,month:1};
+  document.getElementById('modalAvatar').style.background=currentEmp.color;
+  document.getElementById('modalAvatar').textContent=currentEmp.initials;
+  document.getElementById('modalAvatar').style.fontSize='18px';
+  document.getElementById('modalAvatar').style.fontWeight='700';
+  document.getElementById('modalAvatar').style.color='#fff';
+  document.getElementById('modalName').textContent=currentEmp.name;
+  document.getElementById('modalMeta').textContent=`${currentEmp.id} · ${currentEmp.pos} · ${currentEmp.branch}`;
+  document.getElementById('modalOverlay').classList.add('open');
+  renderModal();
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+function changeMonth(d){
+  currentMonth.month+=d;
+  if(currentMonth.month>11){currentMonth.month=0;currentMonth.year++;}
+  if(currentMonth.month<0){currentMonth.month=11;currentMonth.year--;}
+  renderModal();
+}
+
+function renderModal(){
+  const {year,month}=currentMonth;
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const mname=months[month];
+  document.getElementById('monthLabel').textContent=`${mname} ${year}`;
+  document.getElementById('calTitle').textContent=`${mname} ${year} — Attendance Calendar`;
+
+  // seed per employee + month
+  const seed=currentEmp.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0)*1000+year*12+month;
+  const data=genMonthData(seed);
+
+  // summary
+  let present=0,late=0,absent=0,leave=0,holiday=0,totalHrs=0;
+  Object.values(data).forEach(d=>{
+    if(d.status==='Present')present++;
+    else if(d.status==='Late'){late++;present++;}
+    else if(d.status==='Absent')absent++;
+    else if(d.status==='On Leave')leave++;
+    else if(d.status==='Holiday')holiday++;
+    totalHrs+=d.hrs;
+  });
+  const workdays=Object.values(data).filter(d=>d.status!=='Holiday').length;
+  document.getElementById('modalSummary').innerHTML=[
+    {val:present,label:'Days Present',color:'var(--green)'},
+    {val:late,label:'Late Arrivals',color:'var(--orange)'},
+    {val:absent,label:'Absences',color:'var(--red-primary)'},
+    {val:leave,label:'Leave Days',color:'var(--blue-light)'},
+    {val:Math.round(totalHrs*10)/10+'h',label:'Total Hours',color:'var(--charcoal)'},
+  ].map(s=>`
+    <div class="sum-box">
+      <div class="sum-val" style="color:${s.color}">${s.val}</div>
+      <div class="sum-label">${s.label}</div>
+    </div>
+  `).join('');
+
+  // calendar
+  const firstDow=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const today=new Date();
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let cal=days.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+  for(let i=0;i<firstDow;i++) cal+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const entry=data[d];
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    const cls=`cal-cell ${entry.status==='Present'||entry.status==='Late'?(entry.status==='Late'?'late':'present'):entry.status==='Absent'?'absent':entry.status==='On Leave'?'leave':'holiday'} ${isToday?'today-cell':''}`;
+    const sc={Present:'p',Late:'l',Absent:'a','On Leave':'lv',Holiday:'h'};
+    const sl={Present:'Present',Late:'Late',Absent:'Absent','On Leave':'On Leave',Holiday:'Holiday'};
+    cal+=`<div class="${cls}">
+      <div class="cal-date">${d}</div>
+      ${entry.timeIn!=='—'?`<div class="cal-time">In: ${entry.timeIn}<br>Out: ${entry.timeOut}</div>`:''}
+      ${entry.hrs>0?`<div class="cal-time" style="font-weight:600">${entry.hrs}h</div>`:''}
+      <div class="cal-status ${sc[entry.status]}">${sl[entry.status]}</div>
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML=cal;
+
+  // detail table
+  let rows='<thead><tr><th>Date</th><th>Day</th><th>Time In</th><th>Time Out</th><th>Hours</th><th>Status</th><th>Remarks</th></tr></thead><tbody>';
+  const dowNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  for(let d=1;d<=daysInMonth;d++){
+    const entry=data[d];
+    const dow=new Date(year,month,d).getDay();
+    const isToday=today.getFullYear()===year&&today.getMonth()===month&&today.getDate()===d;
+    rows+=`<tr style="${isToday?'background:rgba(192,57,43,0.04);':''}${entry.status==='Absent'?'background:rgba(192,57,43,0.03);':''}">
+      <td style="font-weight:600;font-family:'DM Mono',monospace;font-size:12px">${String(month+1).padStart(2,'0')}/${String(d).padStart(2,'0')}/${year}</td>
+      <td style="font-size:12px;color:${dow===0||dow===6?'var(--gray-mid)':'var(--charcoal)'}">${dowNames[dow]}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:${entry.status==='Late'?'var(--orange)':'var(--charcoal)'}">${entry.timeIn}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${entry.timeOut}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:${entry.hrs>=8?'var(--green)':entry.hrs>0?'var(--orange)':'var(--gray-mid)'}">${entry.hrs?entry.hrs+'h':'—'}</td>
+      <td>${statusPill(entry.status)}</td>
+      <td style="font-size:11.5px;color:var(--gray-mid)">${entry.status==='Late'?'Arrived late for duty':entry.status==='Absent'?'No show — no notice filed':entry.status==='On Leave'?'Approved leave':entry.status==='Holiday'?'Regular/Special Holiday':'On time'}</td>
+    </tr>`;
+  }
+  rows+='</tbody>';
+  document.getElementById('detailTable').innerHTML=rows;
+}
+
+function exportCSV(){
+  const rows=[['ID','Name','Branch','Position','Schedule','Time In','Time Out','Hours','Status']];
+  employees.forEach(e=>rows.push([e.id,e.name,e.branch,e.pos,e.sched,e.timeIn,e.timeOut,e.hrs,e.status]));
+  download('attendance_'+new Date().toISOString().slice(0,10)+'.csv',rows.map(r=>r.join(',')).join('\n'));
+}
+
+function exportMonthly(){
+  if(!currentEmp)return;
+  const {year,month}=currentMonth;
+  const seed=currentEmp.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0)*1000+year*12+month;
+  const data=genMonthData(seed);
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const rows=[['Date','Day','Time In','Time Out','Hours','Status']];
+  const dowNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  for(let d=1;d<=daysInMonth;d++){
+    const e=data[d];
+    rows.push([`${month+1}/${d}/${year}`,dowNames[new Date(year,month,d).getDay()],e.timeIn,e.timeOut,e.hrs?e.hrs+'h':'—',e.status]);
+  }
+  download(`${currentEmp.name.replace(' ','_')}_${months[month]}_${year}.csv`,rows.map(r=>r.join(',')).join('\n'));
+}
+
+function download(filename,text){
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(text);
+  a.download=filename;
+  a.click();
+}
+
+function printModal(){window.print();}
+
+// ── INIT ──
+renderTable();
+renderWeekChart();
+renderLiveFeed();
+renderBranchRates();
+
+// sidebar nav
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',function(){
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Filter buttons
+document.getElementById('filterToday').addEventListener('click',function(){
+  this.classList.add('act');
+  document.getElementById('filterWeek').classList.remove('act');
+});
+document.getElementById('filterWeek').addEventListener('click',function(){
+  this.classList.add('act');
+  document.getElementById('filterToday').classList.remove('act');
+});
+</script>
+</body>
+</html>
