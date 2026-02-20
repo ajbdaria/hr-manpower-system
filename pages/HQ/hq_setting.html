@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — GDC ManPower System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red-deep:    #6B1212;
+  --red-primary: #C0392B;
+  --red-bright:  #E74C3C;
+  --red-soft:    #F5C6C2;
+  --red-glow:    rgba(192,57,43,0.12);
+  --cream:       #FDF8F6;
+  --warm-white:  #FFFAF9;
+  --charcoal:    #1C1C1E;
+  --gray-dark:   #3A3A3C;
+  --gray-mid:    #6C6C70;
+  --gray-light:  #E5E0DF;
+  --gray-pale:   #F2EEEC;
+  --gold:        #C9A84C;
+  --green:       #1E8449;
+  --green-light: #27AE60;
+  --blue:        #1A5276;
+  --blue-light:  #2980B9;
+  --orange:      #D35400;
+  --sidebar-w:   260px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:linear-gradient(170deg,#140606 0%,#2C0F0F 50%,#3D1515 100%);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:4px 0 30px rgba(0,0,0,0.35);}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.brand-logo{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.brand-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;box-shadow:0 4px 15px rgba(192,57,43,0.5);flex-shrink:0;letter-spacing:-1px;}
+.brand-text h2{font-family:'Playfair Display',serif;color:#fff;font-size:14px;letter-spacing:0.5px;line-height:1.2;}
+.brand-text span{color:var(--red-soft);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.hq-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),#A07830);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:7px;}
+.nav-section{padding:16px 0;flex:1;overflow-y:auto;}
+.nav-section::-webkit-scrollbar{width:3px;}.nav-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
+.nav-label{color:rgba(255,255,255,0.28);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 20px 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;font-size:13.5px;font-weight:500;text-decoration:none;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);border-left-color:var(--red-primary);}
+.nav-item.active{color:#fff;background:linear-gradient(90deg,rgba(192,57,43,0.28),transparent);border-left-color:var(--red-primary);}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;}
+.nbadge{margin-left:auto;background:var(--red-primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nbadge.gold{background:var(--gold);}
+.sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);}
+.s-avatar-info strong{color:#fff;font-size:12.5px;display:block;}
+.s-avatar-info small{color:rgba(255,255,255,0.38);font-size:10.5px;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 30px;height:62px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:50;box-shadow:0 1px 10px rgba(0,0,0,0.06);}
+.topbar-title{flex:1;}
+.topbar-title h1{font-family:'Playfair Display',serif;font-size:19px;color:var(--charcoal);display:flex;align-items:center;gap:9px;}
+.topbar-title p{font-size:11.5px;color:var(--gray-mid);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+
+.status-chip{background:rgba(30,132,73,0.1);border:1px solid rgba(30,132,73,0.25);padding:6px 13px;border-radius:20px;font-size:12px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:6px;}
+.status-chip::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;}
+
+.btn-outline{background:var(--warm-white);color:var(--gray-dark);border:1px solid var(--gray-light);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.btn-outline:hover{background:var(--gray-pale);border-color:var(--gray-mid);}
+.btn-primary{background:linear-gradient(135deg,var(--red-primary),var(--red-deep));color:#fff;border:none;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:0 3px 12px rgba(192,57,43,0.3);font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(192,57,43,0.4);}
+
+/* ── TABS ── */
+.tabs-bar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 30px;display:flex;gap:2px;}
+.tab-btn{padding:13px 20px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gray-mid);border-bottom:3px solid transparent;cursor:pointer;margin-bottom:-1px;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.tab-btn.active{color:var(--red-primary);border-bottom-color:var(--red-primary);}
+.tab-btn:hover:not(.active){color:var(--gray-dark);}
+
+/* ── CONTENT ── */
+.content{padding:26px 30px;flex:1;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── SETTINGS LAYOUT ── */
+.settings-layout{display:grid;grid-template-columns:210px 1fr;gap:20px;align-items:start;}
+
+/* Settings side nav */
+.snav{background:#fff;border-radius:14px;border:1px solid var(--gray-light);overflow:hidden;position:sticky;top:20px;}
+.snav-header{padding:13px 16px;border-bottom:1px solid var(--gray-pale);font-size:10px;font-weight:700;color:var(--gray-mid);letter-spacing:2px;text-transform:uppercase;}
+.snav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:500;color:var(--gray-dark);cursor:pointer;border-left:3px solid transparent;transition:all 0.15s;border-bottom:1px solid rgba(0,0,0,0.03);}
+.snav-item:last-child{border-bottom:none;}
+.snav-item:hover{background:var(--gray-pale);color:var(--charcoal);}
+.snav-item.active{background:var(--red-glow);color:var(--red-primary);border-left-color:var(--red-primary);font-weight:700;}
+.snav-icon{font-size:14px;width:18px;text-align:center;}
+
+/* ── CARDS ── */
+.settings-stack{display:flex;flex-direction:column;gap:16px;}
+
+.card{background:#fff;border-radius:15px;border:1px solid var(--gray-light);overflow:hidden;animation:fadeUp 0.4s ease both;}
+.card:nth-child(1){animation-delay:.05s}
+.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}
+.card:nth-child(5){animation-delay:.25s}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.card-header{padding:16px 22px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-pale);}
+.card-title{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:700;color:var(--charcoal);}
+.cicon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.cicon-red{background:rgba(192,57,43,0.1);}
+.cicon-green{background:rgba(30,132,73,0.1);}
+.cicon-blue{background:rgba(41,128,185,0.1);}
+.cicon-gold{background:rgba(201,168,76,0.1);}
+.card-sub{font-size:12px;color:var(--gray-mid);font-weight:400;margin-top:1px;}
+.card-body{padding:20px 22px;display:flex;flex-direction:column;gap:18px;}
+
+/* ── AVATAR UPLOAD ── */
+.avatar-upload{display:flex;align-items:center;gap:16px;}
+.big-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:22px;flex-shrink:0;border:3px solid var(--red-soft);}
+.avatar-info .au-name{font-size:15px;font-weight:700;color:var(--charcoal);}
+.avatar-info .au-role{font-size:12px;color:var(--gray-mid);margin-top:2px;}
+.avatar-info .au-actions{display:flex;gap:8px;margin-top:10px;}
+.au-btn{border:1px solid var(--gray-light);background:var(--gray-pale);border-radius:8px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--gray-dark);}
+.au-btn:hover{background:var(--red-glow);border-color:var(--red-soft);color:var(--red-primary);}
+.au-btn.danger{color:var(--red-primary);background:rgba(192,57,43,0.05);border-color:var(--red-soft);}
+
+/* Role badge */
+.role-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),#A07830);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:0.5px;}
+
+/* ── FORM ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-row.one{grid-template-columns:1fr;}
+.form-row.three{grid-template-columns:1fr 1fr 1fr;}
+
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:12px;font-weight:700;color:var(--gray-dark);letter-spacing:0.2px;}
+.form-hint{font-size:11px;color:var(--gray-mid);}
+
+.form-input{border:1.5px solid var(--gray-light);border-radius:9px;padding:9px 13px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--charcoal);background:#fff;transition:all 0.15s;outline:none;width:100%;}
+.form-input:focus{border-color:var(--red-primary);box-shadow:0 0 0 3px rgba(192,57,43,0.08);}
+.form-input:disabled{background:var(--gray-pale);color:var(--gray-mid);cursor:not-allowed;}
+select.form-input{cursor:pointer;}
+
+.prefix-wrap{display:flex;align-items:center;border:1.5px solid var(--gray-light);border-radius:9px;overflow:hidden;transition:all 0.15s;}
+.prefix-wrap:focus-within{border-color:var(--red-primary);box-shadow:0 0 0 3px rgba(192,57,43,0.08);}
+.prefix-tag{padding:9px 12px;background:var(--gray-pale);border-right:1.5px solid var(--gray-light);font-size:12px;font-weight:600;color:var(--gray-mid);white-space:nowrap;}
+.prefix-input{border:none;outline:none;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--charcoal);background:#fff;flex:1;min-width:0;}
+
+/* ── DIVIDER ── */
+.sc-divider{height:1px;background:var(--gray-pale);margin:0 -22px;width:calc(100% + 44px);}
+
+/* ── TOGGLES ── */
+.toggle-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--gray-pale);}
+.toggle-row:last-child{border-bottom:none;padding-bottom:0;}
+.toggle-row:first-child{padding-top:0;}
+.toggle-info{flex:1;}
+.toggle-title{font-size:13px;font-weight:700;color:var(--charcoal);}
+.toggle-desc{font-size:12px;color:var(--gray-mid);margin-top:3px;line-height:1.5;}
+.toggle-wrap{flex-shrink:0;padding-top:2px;}
+.toggle{position:relative;width:42px;height:24px;cursor:pointer;display:block;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;background:var(--gray-light);border-radius:24px;transition:background 0.2s;}
+.toggle input:checked+.toggle-track{background:var(--red-primary);}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);transition:transform 0.2s;}
+.toggle input:checked~.toggle-thumb{transform:translateX(18px);}
+
+/* ── NOTIF CHIPS ── */
+.notif-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.notif-chip{padding:7px 15px;border-radius:20px;border:2px solid var(--gray-light);background:#fff;color:var(--gray-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.notif-chip.active{background:var(--red-primary);color:#fff;border-color:var(--red-primary);}
+.notif-chip:hover:not(.active){border-color:var(--red-primary);color:var(--red-primary);}
+
+/* ── PERMISSIONS TABLE ── */
+.perm-table{width:100%;border-collapse:collapse;}
+.perm-table th{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-mid);padding:9px 12px;text-align:left;background:var(--gray-pale);}
+.perm-table th:first-child{border-radius:8px 0 0 8px;}
+.perm-table th:last-child{border-radius:0 8px 8px 0;}
+.perm-table th:not(:first-child){text-align:center;}
+.perm-table td{padding:12px 12px;font-size:13px;border-bottom:1px solid var(--gray-pale);vertical-align:middle;}
+.perm-table tr:last-child td{border-bottom:none;}
+.perm-table td:not(:first-child){text-align:center;}
+.perm-module{font-weight:600;color:var(--charcoal);}
+.perm-sub{font-size:11px;color:var(--gray-mid);margin-top:1px;}
+.perm-check{color:var(--green);font-size:16px;}
+.perm-cross{color:var(--gray-light);font-size:16px;}
+
+/* ── USER LIST ── */
+.user-list{display:flex;flex-direction:column;gap:0;}
+.user-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-pale);transition:background 0.15s;}
+.user-item:last-child{border-bottom:none;}
+.u-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.u-info{flex:1;}
+.u-name{font-size:13.5px;font-weight:600;color:var(--charcoal);display:flex;align-items:center;gap:8px;}
+.u-meta{font-size:11.5px;color:var(--gray-mid);margin-top:2px;}
+.u-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;}
+
+/* ── AUDIT LOG ── */
+.audit-list{display:flex;flex-direction:column;}
+.audit-item{display:flex;align-items:flex-start;gap:13px;padding:12px 0;border-bottom:1px solid var(--gray-pale);}
+.audit-item:last-child{border-bottom:none;}
+.a-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.a-info{flex:1;}
+.a-action{font-size:13px;font-weight:600;color:var(--charcoal);}
+.a-meta{font-size:11px;color:var(--gray-mid);margin-top:2px;}
+.a-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--gray-mid);white-space:nowrap;}
+
+/* ── DANGER ZONE ── */
+.danger-card{background:#fff;border-radius:15px;border:2px solid var(--red-soft);box-shadow:0 0 0 4px rgba(245,198,194,0.25);overflow:hidden;animation:fadeUp 0.4s .3s ease both;}
+.danger-header{padding:14px 22px;background:rgba(192,57,43,0.05);border-bottom:1px solid var(--red-soft);display:flex;align-items:center;gap:8px;}
+.danger-title{font-size:14px;font-weight:800;color:var(--red-primary);}
+.danger-body{padding:20px 22px;display:flex;flex-direction:column;gap:12px;}
+.danger-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;background:var(--gray-pale);border-radius:10px;border:1px solid var(--gray-light);}
+.dr-title{font-size:13px;font-weight:700;color:var(--charcoal);}
+.dr-desc{font-size:12px;color:var(--gray-mid);margin-top:2px;}
+.btn-danger{background:rgba(192,57,43,0.08);color:var(--red-primary);border:1px solid var(--red-soft);border-radius:9px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;}
+.btn-danger:hover{background:var(--red-primary);color:#fff;}
+
+/* ── SAVE BAR ── */
+.save-bar{display:none;position:fixed;bottom:24px;right:30px;background:var(--charcoal);color:#fff;border-radius:13px;padding:12px 20px;align-items:center;gap:14px;box-shadow:0 10px 40px rgba(0,0,0,0.25);z-index:200;font-size:13px;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.save-bar .sl{font-weight:600;}
+.save-bar .sb-save{background:var(--red-primary);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+.save-bar .sb-save:hover{background:var(--red-bright);}
+.save-bar .sb-discard{background:transparent;color:rgba(255,255,255,0.45);border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-icon">GDC</div>
+      <div class="brand-text"><h2>ManPower</h2><span>Monitoring System</span></div>
+    </div>
+    <div class="hq-badge">⭐ HQ — HR Admin</div>
+  </div>
+
+  <nav class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item" href="#"><span class="icon">📊</span>HQ Dashboard</a>
+    <a class="nav-item" href="#"><span class="icon">🏢</span>Branch Overview<span class="nbadge">8</span></a>
+    <a class="nav-item" href="#"><span class="icon">📈</span>Analytics & Reports</a>
+
+    <div class="nav-label" style="margin-top:8px">Workforce</div>
+    <a class="nav-item" href="#"><span class="icon">👥</span>All Employees<span class="nbadge gold">248</span></a>
+    <a class="nav-item" href="#"><span class="icon">📅</span>Attendance Monitor</a>
+    <a class="nav-item" href="#"><span class="icon">🗓️</span>Schedules</a>
+    <a class="nav-item" href="#"><span class="icon">🚀</span>Deployments</a>
+
+    <div class="nav-label" style="margin-top:8px">Management</div>
+    <a class="nav-item" href="#"><span class="icon">📋</span>Leave Requests<span class="nbadge">12</span></a>
+    <a class="nav-item" href="#"><span class="icon">⚠️</span>Incidents<span class="nbadge">3</span></a>
+    <a class="nav-item" href="#"><span class="icon">💰</span>Payroll Summary</a>
+    <a class="nav-item" href="#"><span class="icon">📝</span>Performance Reviews</a>
+
+    <div class="nav-label" style="margin-top:8px">System</div>
+    <a class="nav-item active" href="#"><span class="icon">⚙️</span>Settings</a>
+    <a class="nav-item" href="#"><span class="icon">📤</span>Export / Sync</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="s-avatar">BA</div>
+    <div class="s-avatar-info">
+      <strong>HR Administrator</strong>
+      <small>HQ — Super Admin</small>
+    </div>
+    <span style="color:rgba(255,255,255,0.3);font-size:16px;margin-left:auto">⋯</span>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-title">
+      <h1>⚙️ Settings</h1>
+      <p>Manage system preferences, account, notifications & access — Feb 20, 2026</p>
+    </div>
+    <div class="topbar-right">
+      <div class="status-chip">System Operational</div>
+      <button class="btn-outline">📤 Export Config</button>
+      <button class="btn-primary" onclick="showSaveBar()">💾 Save Changes</button>
+    </div>
+  </header>
+
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('general',this)">General</button>
+    <button class="tab-btn" onclick="switchTab('notifications',this)">🔔 Notifications</button>
+    <button class="tab-btn" onclick="switchTab('access',this)">🔐 Access & Roles</button>
+    <button class="tab-btn" onclick="switchTab('audit',this)">📋 Audit Log</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ── GENERAL TAB ── -->
+    <div class="tab-panel active" id="tab-general">
+      <div class="settings-layout">
+        <div class="snav">
+          <div class="snav-header">Sections</div>
+          <div class="snav-item active" onclick="scrollSec('profile',this)"><span class="snav-icon">👤</span>Profile</div>
+          <div class="snav-item" onclick="scrollSec('company',this)"><span class="snav-icon">🏢</span>Company Info</div>
+          <div class="snav-item" onclick="scrollSec('system',this)"><span class="snav-icon">🖥️</span>System</div>
+          <div class="snav-item" onclick="scrollSec('security',this)"><span class="snav-icon">🔒</span>Security</div>
+          <div class="snav-item" onclick="scrollSec('danger',this)"><span class="snav-icon" style="color:var(--red-primary)">⚠️</span><span style="color:var(--red-primary)">Danger Zone</span></div>
+        </div>
+
+        <div class="settings-stack">
+
+          <!-- PROFILE -->
+          <div class="card" id="sec-profile">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><div class="cicon cicon-red">👤</div>Admin Profile</div>
+                <div class="card-sub">Update your account name, contact details, and avatar.</div>
+              </div>
+              <span class="role-badge">⭐ Super Admin</span>
+            </div>
+            <div class="card-body">
+              <div class="avatar-upload">
+                <div class="big-avatar">BA</div>
+                <div class="avatar-info">
+                  <div class="au-name">HR Administrator</div>
+                  <div class="au-role">HQ — Super Admin · hr.admin@gdcmanpower.com</div>
+                  <div class="au-actions">
+                    <button class="au-btn">📷 Change Photo</button>
+                    <button class="au-btn danger">🗑️ Remove</button>
+                  </div>
+                </div>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" type="text" value="HR" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" type="text" value="Administrator" oninput="markDirty()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <input class="form-input" type="email" value="hr.admin@gdcmanpower.com" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mobile Number</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix-tag">+63</span>
+                    <input class="prefix-input" type="text" value="9xx xxx xxxx" oninput="markDirty()">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row one">
+                <div class="form-group">
+                  <label class="form-label">Job Title / Designation</label>
+                  <input class="form-input" type="text" value="HR Administrator — HQ" oninput="markDirty()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPANY -->
+          <div class="card" id="sec-company">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><div class="cicon cicon-gold">🏢</div>Company Information</div>
+                <div class="card-sub">Details displayed on reports, job postings, and the public careers page.</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Company Name</label>
+                  <input class="form-input" type="text" value="GDC ManPower Services" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Industry</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option selected>Manpower / Staffing</option>
+                    <option>Security Services</option>
+                    <option>Logistics</option>
+                    <option>General Services</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row one">
+                <div class="form-group">
+                  <label class="form-label">Public Careers Page URL</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix-tag">https://</span>
+                    <input class="prefix-input" type="text" value="gdcmanpower.com/careers" oninput="markDirty()">
+                  </div>
+                  <span class="form-hint">This URL is shown on all public job postings.</span>
+                </div>
+              </div>
+              <div class="form-row three">
+                <div class="form-group">
+                  <label class="form-label">Head Office City</label>
+                  <input class="form-input" type="text" value="Quezon City" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Province / Region</label>
+                  <input class="form-input" type="text" value="NCR" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Country</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option selected>Philippines</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SYSTEM PREFERENCES -->
+          <div class="card" id="sec-system">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><div class="cicon cicon-blue">🖥️</div>System Preferences</div>
+                <div class="card-sub">Configure display, timezone, and data behavior.</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-row three">
+                <div class="form-group">
+                  <label class="form-label">Timezone</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option selected>Asia/Manila (PHT, UTC+8)</option>
+                    <option>Asia/Singapore</option>
+                    <option>UTC</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date Format</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option selected>MMM DD, YYYY</option>
+                    <option>DD/MM/YYYY</option>
+                    <option>YYYY-MM-DD</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Language</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option selected>English (PH)</option>
+                    <option>Filipino</option>
+                  </select>
+                </div>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Auto-Refresh Dashboard</div>
+                  <div class="toggle-desc">Automatically refresh attendance and branch data every 5 minutes.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Show Manpower Gap Alerts</div>
+                  <div class="toggle-desc">Highlight branches where actual headcount is below required level.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Public Careers Page Active</div>
+                  <div class="toggle-desc">Makes job postings visible on the public landing page for applicants.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Allow Branch Managers to Edit Attendance</div>
+                  <div class="toggle-desc">Branch managers can correct attendance records without HQ approval.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECURITY -->
+          <div class="card" id="sec-security">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><div class="cicon cicon-red">🔒</div>Security Settings</div>
+                <div class="card-sub">Manage your password and login security.</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Current Password</label>
+                  <input class="form-input" type="password" placeholder="Enter current password" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input class="form-input" type="password" placeholder="Min. 8 characters" oninput="markDirty()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Confirm New Password</label>
+                  <input class="form-input" type="password" placeholder="Re-enter new password" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Session Timeout</label>
+                  <select class="form-input" onchange="markDirty()">
+                    <option>30 minutes</option>
+                    <option selected>1 hour</option>
+                    <option>4 hours</option>
+                    <option>8 hours</option>
+                    <option>Never</option>
+                  </select>
+                </div>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Two-Factor Authentication (2FA)</div>
+                  <div class="toggle-desc">Require a verification code on each login via email or authenticator app.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">Login Activity Alerts</div>
+                  <div class="toggle-desc">Send an email when a new device logs into your account.</div>
+                </div>
+                <div class="toggle-wrap">
+                  <label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DANGER ZONE -->
+          <div class="danger-card" id="sec-danger">
+            <div class="danger-header">
+              <span>⚠️</span>
+              <div class="danger-title">Danger Zone</div>
+            </div>
+            <div class="danger-body">
+              <div class="danger-row">
+                <div>
+                  <div class="dr-title">Reset All Branch Data</div>
+                  <div class="dr-desc">Clears all attendance logs and manpower records. This cannot be undone.</div>
+                </div>
+                <button class="btn-danger">🗑️ Reset Data</button>
+              </div>
+              <div class="danger-row">
+                <div>
+                  <div class="dr-title">Unpublish All Job Postings</div>
+                  <div class="dr-desc">Removes all active job postings from the public careers page immediately.</div>
+                </div>
+                <button class="btn-danger">📤 Unpublish All</button>
+              </div>
+              <div class="danger-row">
+                <div>
+                  <div class="dr-title">Delete Admin Account</div>
+                  <div class="dr-desc">Permanently deletes this account. You will be locked out of the system.</div>
+                </div>
+                <button class="btn-danger">🗑️ Delete Account</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOTIFICATIONS TAB ── -->
+    <div class="tab-panel" id="tab-notifications">
+      <div class="settings-layout">
+        <div class="snav">
+          <div class="snav-header">Sections</div>
+          <div class="snav-item active"><span class="snav-icon">📬</span>Delivery</div>
+          <div class="snav-item"><span class="snav-icon">🚨</span>Alerts</div>
+          <div class="snav-item"><span class="snav-icon">📊</span>Reports</div>
+        </div>
+        <div class="settings-stack">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title"><div class="cicon cicon-blue">📬</div>Notification Delivery</div>
+                <div class="card-sub">Choose how you receive alerts and system notifications.</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Notification Channels</label>
+                <div class="notif-chips">
+                  <button class="notif-chip active" onclick="this.classList.toggle('active')">📧 Email</button>
+                  <button class="notif-chip active" onclick="this.classList.toggle('active')">💬 SMS</button>
+                  <button class="notif-chip" onclick="this.classList.toggle('active')">🔔 In-App</button>
+                  <button class="notif-chip" onclick="this.classList.toggle('active')">📱 Push</button>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Notification Email</label>
+                  <input class="form-input" type="email" value="hr.admin@gdcmanpower.com" oninput="markDirty()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">SMS Number</label>
+                  <div class="prefix-wrap">
+                    <span class="prefix-tag">+63</span>
+                    <input class="prefix-input" type="text" value="9xx xxx xxxx" oninput="markDirty()">
+                  </div>
+                </div>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">🔴 Critical Branch Alert</div>
+                  <div class="toggle-desc">Notify immediately when a branch drops to Critical manpower status.</div>
+                </div>
+                <div class="toggle-wrap"><label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">⚠️ Manpower Gap Warning</div>
+                  <div class="toggle-desc">Alert when any branch is more than 20% below required headcount.</div>
+                </div>
+                <div class="toggle-wrap"><label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">📥 New Applicant Received</div>
+                  <div class="toggle-desc">Notify when a new job application is submitted via the careers page.</div>
+                </div>
+                <div class="toggle-wrap"><label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">📊 Daily Attendance Summary</div>
+                  <div class="toggle-desc">Receive a daily digest of attendance across all branches at 9:00 AM.</div>
+                </div>
+                <div class="toggle-wrap"><label class="toggle"><input type="checkbox" onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <div class="toggle-title">📋 Weekly Manpower Report</div>
+                  <div class="toggle-desc">Auto-generate and email a weekly branch manpower summary every Monday.</div>
+                </div>
+                <div class="toggle-wrap"><label class="toggle"><input type="checkbox" checked onchange="markDirty()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ACCESS & ROLES TAB ── -->
+    <div class="tab-panel" id="tab-access">
+      <div class="settings-stack">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><div class="cicon cicon-red">🔐</div>Role Permissions Matrix</div>
+              <div class="card-sub">View what each role can access across the system.</div>
+            </div>
+            <button class="btn-primary">+ Add Role</button>
+          </div>
+          <div class="card-body">
+            <table class="perm-table">
+              <thead>
+                <tr>
+                  <th style="width:38%">Module</th>
+                  <th>⭐ Super Admin</th>
+                  <th>🏢 Branch Manager</th>
+                  <th>👤 HR Staff</th>
+                  <th>👁️ Viewer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><div class="perm-module">Branch Overview</div><div class="perm-sub">View & manage all branches</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-check">✅</span></td><td><span class="perm-check">✅</span></td><td><span class="perm-check">✅</span></td></tr>
+                <tr><td><div class="perm-module">Attendance Monitor</div><div class="perm-sub">Edit & correct attendance records</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-cross">—</span></td></tr>
+                <tr><td><div class="perm-module">Job Postings</div><div class="perm-sub">Create, edit & publish postings</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td></tr>
+                <tr><td><div class="perm-module">Applications</div><div class="perm-sub">View & process applicants</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td></tr>
+                <tr><td><div class="perm-module">Analytics & Reports</div><div class="perm-sub">Generate & export reports</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-cross">—</span></td></tr>
+                <tr><td><div class="perm-module">Settings</div><div class="perm-sub">Modify system configuration</div></td><td><span class="perm-check">✅</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-cross">—</span></td><td><span class="perm-cross">—</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><div class="cicon cicon-green">👥</div>Admin Users</div>
+              <div class="card-sub">Users with system access across all branches.</div>
+            </div>
+            <button class="btn-primary">+ Invite User</button>
+          </div>
+          <div class="card-body">
+            <div class="user-list">
+              <div class="user-item">
+                <div class="u-av" style="background:linear-gradient(135deg,var(--red-primary),var(--red-deep))">BA</div>
+                <div class="u-info">
+                  <div class="u-name">HR Administrator <span class="u-badge" style="background:linear-gradient(135deg,var(--gold),#A07830);color:#fff">⭐ Super Admin</span></div>
+                  <div class="u-meta">hr.admin@gdcmanpower.com · Last active: Today</div>
+                </div>
+                <button class="au-btn">Edit</button>
+              </div>
+              <div class="user-item">
+                <div class="u-av" style="background:var(--blue)">AR</div>
+                <div class="u-info">
+                  <div class="u-name">Ana Reyes <span class="u-badge" style="background:rgba(41,128,185,0.12);color:var(--blue-light);border:1px solid rgba(41,128,185,0.25)">🏢 Branch Manager</span></div>
+                  <div class="u-meta">ncr.north@gdcmanpower.com · Last active: Yesterday</div>
+                </div>
+                <button class="au-btn">Edit</button>
+              </div>
+              <div class="user-item">
+                <div class="u-av" style="background:var(--orange)">BS</div>
+                <div class="u-info">
+                  <div class="u-name">Ben Santos <span class="u-badge" style="background:rgba(41,128,185,0.12);color:var(--blue-light);border:1px solid rgba(41,128,185,0.25)">🏢 Branch Manager</span></div>
+                  <div class="u-meta">ncr.south@gdcmanpower.com · Last active: Feb 19</div>
+                </div>
+                <button class="au-btn">Edit</button>
+              </div>
+              <div class="user-item">
+                <div class="u-av" style="background:var(--green)">CL</div>
+                <div class="u-info">
+                  <div class="u-name">Clara Lim <span class="u-badge" style="background:rgba(41,128,185,0.12);color:var(--blue-light);border:1px solid rgba(41,128,185,0.25)">🏢 Branch Manager</span></div>
+                  <div class="u-meta">cebu.main@gdcmanpower.com · Last active: Today</div>
+                </div>
+                <button class="au-btn">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AUDIT LOG TAB ── -->
+    <div class="tab-panel" id="tab-audit">
+      <div class="settings-stack">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><div class="cicon cicon-gold">📋</div>System Audit Log</div>
+              <div class="card-sub">All admin actions and system events are recorded here.</div>
+            </div>
+            <button class="btn-outline">📤 Export Log</button>
+          </div>
+          <div class="card-body">
+            <div class="audit-list" id="auditList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="saveBar">
+  <span class="sl">⚠️ You have unsaved changes</span>
+  <button class="sb-discard" onclick="hideSaveBar()">Discard</button>
+  <button class="sb-save" onclick="saveChanges()">💾 Save Changes</button>
+</div>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function scrollSec(id, el) {
+  document.querySelectorAll('.snav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+let dirty = false;
+function markDirty() { if (!dirty) { dirty = true; showSaveBar(); } }
+function showSaveBar() { document.getElementById('saveBar').style.display = 'flex'; }
+function hideSaveBar() { document.getElementById('saveBar').style.display = 'none'; dirty = false; }
+function saveChanges() {
+  const btn = document.querySelector('.sb-save');
+  btn.textContent = '✅ Saved!';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { hideSaveBar(); btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 1500);
+  dirty = false;
+}
+
+// Audit log
+const events = [
+  { dot:'#27AE60', action:'Job posting created: Technician × 5 — Batangas', meta:'HR Administrator · hr.admin@gdcmanpower.com', time:'Today, 10:42 AM' },
+  { dot:'#C0392B', action:'Branch status changed to Critical: Batangas', meta:'System auto-generated alert', time:'Today, 09:15 AM' },
+  { dot:'#2980B9', action:'Attendance record updated: Davao — Dan Cruz', meta:'HR Administrator · hr.admin@gdcmanpower.com', time:'Today, 08:55 AM' },
+  { dot:'#D35400', action:'Job posting edited: Security Guard × 4 — Batangas', meta:'HR Administrator · hr.admin@gdcmanpower.com', time:'Yesterday, 4:30 PM' },
+  { dot:'#27AE60', action:'New applicant received: Driver — Davao Branch', meta:'System auto-generated (careers page)', time:'Yesterday, 2:11 PM' },
+  { dot:'#2980B9', action:'User login: HR Administrator from 192.168.1.1', meta:'Auth · Chrome, Windows 11', time:'Yesterday, 8:03 AM' },
+  { dot:'#27AE60', action:'Weekly manpower report generated and emailed', meta:'System auto-generated · hr.admin@gdcmanpower.com', time:'Feb 17, 9:00 AM' },
+  { dot:'#D35400', action:'Branch Overview exported as PDF', meta:'HR Administrator · hr.admin@gdcmanpower.com', time:'Feb 16, 3:45 PM' },
+  { dot:'#C0392B', action:'Failed login attempt detected', meta:'Auth · Unknown device · 103.44.21.88', time:'Feb 15, 11:22 PM' },
+  { dot:'#2980B9', action:'System settings updated: Auto-refresh enabled', meta:'HR Administrator · hr.admin@gdcmanpower.com', time:'Feb 15, 10:10 AM' },
+];
+
+document.getElementById('auditList').innerHTML = events.map(e => `
+  <div class="audit-item">
+    <div class="a-dot" style="background:${e.dot}"></div>
+    <div class="a-info">
+      <div class="a-action">${e.action}</div>
+      <div class="a-meta">${e.meta}</div>
+    </div>
+    <div class="a-time">${e.time}</div>
+  </div>
+`).join('');
+
+// Sidebar active state
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

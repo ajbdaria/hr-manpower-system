@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incidents — GDC ManPower System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red-deep:#6B1212;--red-primary:#C0392B;--red-bright:#E74C3C;--red-soft:#F5C6C2;--red-glow:rgba(192,57,43,0.1);
+  --cream:#FDF8F6;--warm-white:#FFFAF9;--charcoal:#1C1C1E;--gray-dark:#3A3A3C;--gray-mid:#6C6C70;--gray-light:#E5E0DF;--gray-pale:#F2EEEC;
+  --gold:#C9A84C;--gold-bg:rgba(201,168,76,0.1);
+  --green:#1E8449;--green-light:#27AE60;--green-bg:rgba(30,132,73,0.08);
+  --blue:#1A5276;--blue-light:#2980B9;--blue-bg:rgba(41,128,185,0.08);
+  --orange:#D35400;--orange-bg:rgba(211,84,0,0.08);
+  --purple:#6C3483;--purple-bg:rgba(108,52,131,0.08);
+  --sidebar-w:260px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:linear-gradient(170deg,#140606 0%,#2C0F0F 50%,#3D1515 100%);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:4px 0 30px rgba(0,0,0,0.35);}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.brand-logo{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.brand-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;box-shadow:0 4px 15px rgba(192,57,43,0.5);flex-shrink:0;}
+.brand-text h2{font-family:'Playfair Display',serif;color:#fff;font-size:14px;line-height:1.2;}
+.brand-text span{color:var(--red-soft);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.hq-badge{display:inline-flex;align-items:center;background:linear-gradient(135deg,var(--gold),#A07830);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:7px;}
+.nav-section{padding:16px 0;flex:1;overflow-y:auto;}
+.nav-section::-webkit-scrollbar{width:3px;}.nav-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
+.nav-label{color:rgba(255,255,255,0.28);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 20px 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;font-size:13.5px;font-weight:500;text-decoration:none;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);border-left-color:var(--red-primary);}
+.nav-item.active{color:#fff;background:linear-gradient(90deg,rgba(192,57,43,0.28),transparent);border-left-color:var(--red-primary);}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;}
+.nbadge{margin-left:auto;background:var(--red-primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nbadge.gold{background:var(--gold);}
+.sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);}
+.s-avatar-info strong{color:#fff;font-size:12.5px;display:block;}
+.s-avatar-info small{color:rgba(255,255,255,0.38);font-size:10.5px;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 28px;height:62px;display:flex;align-items:center;gap:14px;flex-shrink:0;box-shadow:0 1px 10px rgba(0,0,0,0.06);}
+.topbar h1{font-family:'Playfair Display',serif;font-size:19px;color:var(--charcoal);display:flex;align-items:center;gap:9px;}
+.topbar p{font-size:11.5px;color:var(--gray-mid);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:9px;margin-left:auto;}
+.btn-sm{border:1px solid var(--gray-light);background:var(--warm-white);color:var(--gray-dark);padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.btn-sm:hover{background:var(--gray-pale);}
+.btn-red{background:linear-gradient(135deg,var(--red-primary),var(--red-deep));color:#fff;border:none;padding:8px 15px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;box-shadow:0 3px 10px rgba(192,57,43,0.28);display:flex;align-items:center;gap:6px;}
+.btn-red:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(192,57,43,0.38);}
+
+/* ── KPI ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 28px 0;flex-shrink:0;}
+.kpi-card{background:var(--warm-white);border-radius:13px;padding:15px;border:1px solid var(--gray-light);position:relative;overflow:hidden;animation:fadeUp 0.4s ease both;display:flex;align-items:flex-start;justify-content:space-between;transition:all 0.2s;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.07);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi-card.c-red::before{background:linear-gradient(90deg,var(--red-primary),var(--red-bright));}
+.kpi-card.c-orange::before{background:linear-gradient(90deg,var(--orange),#E67E22);}
+.kpi-card.c-blue::before{background:linear-gradient(90deg,var(--blue),var(--blue-light));}
+.kpi-card.c-green::before{background:linear-gradient(90deg,var(--green),var(--green-light));}
+.kpi-card:nth-child(1){animation-delay:.05s}.kpi-card:nth-child(2){animation-delay:.1s}.kpi-card:nth-child(3){animation-delay:.15s}.kpi-card:nth-child(4){animation-delay:.2s}
+.kpi-icon{font-size:22px;opacity:0.4;}
+.kpi-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:5px;}
+.kpi-value{font-size:28px;font-weight:700;line-height:1.1;margin-bottom:3px;}
+.kpi-sub{font-size:11px;color:var(--gray-mid);}
+
+/* ── TABS ── */
+.tabs-bar{display:flex;gap:2px;padding:14px 28px 0;border-bottom:1px solid var(--gray-light);flex-shrink:0;}
+.tab-btn{padding:10px 20px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gray-mid);border-bottom:3px solid transparent;cursor:pointer;margin-bottom:-1px;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.tab-btn.active{color:var(--red-primary);border-bottom-color:var(--red-primary);}
+.tab-btn:hover:not(.active){color:var(--gray-dark);}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:20px 28px;}
+.content::-webkit-scrollbar{width:5px;}.content::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+.tab-panel{display:none;}.tab-panel.active{display:block;animation:fadeUp 0.3s ease;}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:0.35;pointer-events:none;}
+.search-input{width:100%;border:1.5px solid var(--gray-light);border-radius:9px;padding:8px 12px 8px 34px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--gray-pale);outline:none;transition:all 0.15s;}
+.search-input:focus{border-color:var(--red-primary);background:#fff;}
+.sel{border:1.5px solid var(--gray-light);background:var(--gray-pale);border-radius:9px;padding:8px 12px;font-size:12.5px;font-family:'DM Sans',sans-serif;color:var(--charcoal);outline:none;cursor:pointer;}
+.sel:focus{border-color:var(--red-primary);}
+
+/* ── INCIDENT CARDS GRID ── */
+.inc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px;}
+
+.inc-card{background:var(--warm-white);border-radius:14px;border:1px solid var(--gray-light);border-left-width:4px;padding:18px 20px;cursor:pointer;transition:all 0.2s;animation:fadeUp 0.35s ease both;}
+.inc-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.09);transform:translateY(-2px);}
+.inc-card.sev-critical{border-left-color:var(--red-primary);}
+.inc-card.sev-high{border-left-color:var(--orange);}
+.inc-card.sev-medium{border-left-color:var(--gold);}
+.inc-card.sev-low{border-left-color:var(--green);}
+
+.ic-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.ic-left{flex:1;}
+.ic-id{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--gray-mid);margin-bottom:3px;}
+.ic-title{font-size:14.5px;font-weight:700;color:var(--charcoal);line-height:1.3;}
+.ic-meta{font-size:12px;color:var(--gray-mid);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.ic-badges{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.pill-critical{background:rgba(192,57,43,0.1);color:var(--red-primary);border:1px solid rgba(192,57,43,0.2);}
+.pill-high{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(211,84,0,0.2);}
+.pill-medium{background:var(--gold-bg);color:#A07830;border:1px solid rgba(201,168,76,0.2);}
+.pill-low{background:var(--green-bg);color:var(--green);border:1px solid rgba(30,132,73,0.2);}
+.pill-open{background:rgba(192,57,43,0.08);color:var(--red-primary);border:1px solid rgba(192,57,43,0.15);}
+.pill-investigating{background:var(--blue-bg);color:var(--blue-light);border:1px solid rgba(41,128,185,0.2);}
+.pill-resolved{background:var(--green-bg);color:var(--green);border:1px solid rgba(30,132,73,0.2);}
+.pill-closed{background:var(--gray-pale);color:var(--gray-mid);border:1px solid var(--gray-light);}
+
+.ic-desc{font-size:12.5px;color:var(--gray-dark);line-height:1.6;margin-bottom:12px;}
+.ic-footer{display:flex;align-items:center;justify-content:space-between;}
+.ic-people{display:flex;align-items:center;gap:6px;}
+.ic-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:2px solid #fff;margin-left:-6px;}
+.ic-av:first-child{margin-left:0;}
+.ic-people-label{font-size:11.5px;color:var(--gray-mid);margin-left:6px;}
+.ic-date{font-size:11px;color:var(--gray-mid);font-family:'DM Mono',monospace;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,6,6,0.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:780px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.25);animation:slideUp 0.3s ease;}
+
+.modal-header{background:linear-gradient(135deg,#140606,#2C0F0F,#3D1515);padding:22px 26px;position:relative;flex-shrink:0;}
+.modal-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.mh-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.mh-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid rgba(255,255,255,0.12);}
+.mh-info{flex:1;}
+.mh-id{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;}
+.mh-title{font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3;margin-bottom:4px;}
+.mh-meta{color:rgba(255,255,255,0.5);font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.mh-actions{display:flex;gap:8px;flex-shrink:0;}
+.mh-btn{border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:#fff;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.mh-btn:hover{background:rgba(255,255,255,0.16);}
+.mh-close{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;transition:all 0.2s;flex-shrink:0;}
+.mh-close:hover{background:rgba(192,57,43,0.4);}
+
+.mh-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.mhs-box{background:rgba(255,255,255,0.07);border-radius:10px;padding:10px 13px;border:1px solid rgba(255,255,255,0.08);}
+.mhs-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:4px;}
+.mhs-val{font-size:13.5px;font-weight:700;color:#fff;}
+
+.modal-body{flex:1;overflow-y:auto;padding:22px 26px;}
+.modal-body::-webkit-scrollbar{width:4px;}.modal-body::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+
+.sec-title{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title span{flex:1;height:1px;background:var(--gray-pale);}
+
+/* Detail sections */
+.detail-card{background:var(--warm-white);border-radius:12px;border:1px solid var(--gray-light);padding:16px 18px;margin-bottom:16px;}
+.detail-card p{font-size:13px;color:var(--gray-dark);line-height:1.7;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.info-box{background:var(--warm-white);border-radius:11px;border:1px solid var(--gray-light);padding:13px 15px;}
+.info-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:5px;}
+.info-val{font-size:13px;font-weight:600;color:var(--charcoal);}
+.info-val.mono{font-family:'DM Mono',monospace;}
+
+/* People involved */
+.people-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.person-row{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--warm-white);border-radius:10px;border:1px solid var(--gray-light);}
+.p-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.p-info{flex:1;}
+.p-name{font-size:13px;font-weight:700;color:var(--charcoal);}
+.p-role-txt{font-size:11.5px;color:var(--gray-mid);margin-top:1px;}
+.p-type{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.p-type.victim{background:var(--blue-bg);color:var(--blue-light);}
+.p-type.respondent{background:rgba(192,57,43,0.08);color:var(--red-primary);}
+.p-type.witness{background:var(--gold-bg);color:#A07830;}
+.p-type.investigator{background:var(--green-bg);color:var(--green);}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin-bottom:16px;position:relative;}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:var(--gray-pale);}
+.tl-item{display:flex;gap:14px;padding-bottom:18px;position:relative;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;position:relative;z-index:1;border:2px solid #fff;box-shadow:0 0 0 2px var(--gray-light);}
+.tl-content{flex:1;padding-top:4px;}
+.tl-label{font-size:13px;font-weight:700;color:var(--charcoal);}
+.tl-by{font-size:12px;color:var(--gray-mid);margin-top:1px;}
+.tl-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--gray-mid);margin-top:2px;}
+.tl-note{font-size:12.5px;color:var(--gray-dark);margin-top:5px;padding:9px 12px;background:var(--gray-pale);border-radius:8px;line-height:1.6;}
+
+/* Actions */
+.action-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px;}
+.action-btn{border-radius:10px;padding:11px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid;}
+.ab-investigate{background:var(--blue-bg);color:var(--blue-light);border-color:rgba(41,128,185,0.25);}
+.ab-investigate:hover{background:var(--blue-light);color:#fff;}
+.ab-resolve{background:var(--green-bg);color:var(--green);border-color:rgba(30,132,73,0.25);}
+.ab-resolve:hover{background:var(--green);color:#fff;}
+.ab-escalate{background:rgba(192,57,43,0.08);color:var(--red-primary);border-color:rgba(192,57,43,0.2);}
+.ab-escalate:hover{background:var(--red-primary);color:#fff;}
+
+/* Report form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:12px;font-weight:700;color:var(--gray-dark);}
+.form-input,.form-select,.form-textarea{border:1.5px solid var(--gray-light);border-radius:9px;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--charcoal);background:#fff;outline:none;transition:all 0.15s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--red-primary);box-shadow:0 0 0 3px rgba(192,57,43,0.08);}
+.form-textarea{resize:vertical;min-height:90px;line-height:1.6;}
+.form-select{cursor:pointer;}
+
+/* Empty */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:60px 20px;color:var(--gray-mid);}
+.empty-icon{font-size:48px;opacity:0.25;}
+.empty-title{font-size:15px;font-weight:700;color:var(--gray-dark);}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.inc-card:nth-child(1){animation-delay:.04s}.inc-card:nth-child(2){animation-delay:.08s}.inc-card:nth-child(3){animation-delay:.12s}.inc-card:nth-child(4){animation-delay:.16s}.inc-card:nth-child(5){animation-delay:.2s}.inc-card:nth-child(6){animation-delay:.24s}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-icon">GDC</div>
+      <div class="brand-text"><h2>ManPower</h2><span>Monitoring System</span></div>
+    </div>
+    <div class="hq-badge">⭐ HQ — HR Admin</div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item" href="#"><span class="icon">📊</span>HQ Dashboard</a>
+    <a class="nav-item" href="#"><span class="icon">🏢</span>Branch Overview</a>
+    <a class="nav-item" href="#"><span class="icon">📈</span>Analytics & Reports</a>
+    <div class="nav-label" style="margin-top:8px">Workforce</div>
+    <a class="nav-item" href="#"><span class="icon">👥</span>All Employees<span class="nbadge gold">248</span></a>
+    <a class="nav-item" href="#"><span class="icon">📅</span>Attendance Monitor</a>
+    <a class="nav-item" href="#"><span class="icon">🗓️</span>Schedules</a>
+    <a class="nav-item" href="#"><span class="icon">🚀</span>Deployments</a>
+    <div class="nav-label" style="margin-top:8px">Management</div>
+    <a class="nav-item" href="#"><span class="icon">💰</span>Payroll Summary</a>
+    <a class="nav-item" href="#"><span class="icon">📋</span>Leave Requests<span class="nbadge">12</span></a>
+    <a class="nav-item active" href="#"><span class="icon">⚠️</span>Incidents<span class="nbadge">3</span></a>
+    <a class="nav-item" href="#"><span class="icon">📝</span>Performance Reviews</a>
+    <div class="nav-label" style="margin-top:8px">Hiring</div>
+    <a class="nav-item" href="#"><span class="icon">📋</span>Job Postings<span class="nbadge">10</span></a>
+    <a class="nav-item" href="#"><span class="icon">📥</span>Applications</a>
+    <div class="nav-label" style="margin-top:8px">System</div>
+    <a class="nav-item" href="#"><span class="icon">⚙️</span>Settings</a>
+    <a class="nav-item" href="#"><span class="icon">📤</span>Export / Sync</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="s-avatar">BA</div>
+    <div class="s-avatar-info"><strong>HR Administrator</strong><small>HQ — Super Admin</small></div>
+    <span style="color:rgba(255,255,255,0.3);font-size:16px;margin-left:auto">⋯</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div>
+      <h1>⚠️ Incident Reports</h1>
+      <p>Log, track, and resolve workplace incidents across all branches</p>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-sm">📤 Export All</button>
+      <button class="btn-red" onclick="openReportModal()">+ File Incident Report</button>
+    </div>
+  </header>
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi-card c-red"><div><div class="kpi-label">Open Incidents</div><div class="kpi-value" style="color:var(--red-primary)" id="kpiOpen">3</div><div class="kpi-sub">Needs immediate action</div></div><div class="kpi-icon">🔴</div></div>
+    <div class="kpi-card c-orange"><div><div class="kpi-label">Under Investigation</div><div class="kpi-value" style="color:var(--orange)" id="kpiInv">5</div><div class="kpi-sub">Currently being reviewed</div></div><div class="kpi-icon">🔍</div></div>
+    <div class="kpi-card c-blue"><div><div class="kpi-label">Total This Month</div><div class="kpi-value" style="color:var(--blue-light)" id="kpiTotal">11</div><div class="kpi-sub">February 2026</div></div><div class="kpi-icon">📋</div></div>
+    <div class="kpi-card c-green"><div><div class="kpi-label">Resolved</div><div class="kpi-value" style="color:var(--green)" id="kpiResolved">3</div><div class="kpi-sub">This month</div></div><div class="kpi-icon">✅</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('all',this)">All Incidents</button>
+    <button class="tab-btn" onclick="switchTab('open',this)">🔴 Open</button>
+    <button class="tab-btn" onclick="switchTab('investigating',this)">🔍 Investigating</button>
+    <button class="tab-btn" onclick="switchTab('resolved',this)">✅ Resolved</button>
+    <button class="tab-btn" onclick="switchTab('closed',this)">🔒 Closed</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="tab-panel active" id="tab-all">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" type="text" placeholder="Search incident, employee, branch…" oninput="filterIncidents(this.value)">
+        </div>
+        <select class="sel" onchange="filterBranch(this.value)">
+          <option value="">All Branches</option>
+          <option>NCR North</option><option>NCR South</option><option>Cebu Main</option>
+          <option>Davao</option><option>Iloilo</option><option>Batangas</option>
+        </select>
+        <select class="sel" onchange="filterType(this.value)">
+          <option value="">All Types</option>
+          <option>Safety Hazard</option><option>Misconduct</option><option>Theft</option>
+          <option>Harassment</option><option>Negligence</option><option>Policy Violation</option><option>Physical Altercation</option>
+        </select>
+        <select class="sel" onchange="filterSeverity(this.value)">
+          <option value="">All Severity</option>
+          <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+        </select>
+      </div>
+      <div class="inc-grid" id="incGrid"></div>
+    </div>
+    <div class="tab-panel" id="tab-open"></div>
+    <div class="tab-panel" id="tab-investigating"></div>
+    <div class="tab-panel" id="tab-resolved"></div>
+    <div class="tab-panel" id="tab-closed"></div>
+  </div>
+</main>
+
+<!-- INCIDENT DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="closeOnOutside(event,'detailModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="mh-top">
+        <div class="mh-icon" id="mhIcon"></div>
+        <div class="mh-info">
+          <div class="mh-id" id="mhId"></div>
+          <div class="mh-title" id="mhTitle"></div>
+          <div class="mh-meta" id="mhMeta"></div>
+        </div>
+        <div class="mh-actions" id="mhActions"></div>
+        <button class="mh-close" onclick="closeModal('detailModal')">✕</button>
+      </div>
+      <div class="mh-summary" id="mhSummary"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FILE REPORT MODAL -->
+<div class="modal-overlay" id="reportModal" onclick="closeOnOutside(event,'reportModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="mh-top">
+        <div class="mh-icon" style="background:rgba(192,57,43,0.2);font-size:24px">⚠️</div>
+        <div class="mh-info">
+          <div class="mh-id">NEW INCIDENT</div>
+          <div class="mh-title">File an Incident Report</div>
+          <div class="mh-meta">All fields marked * are required</div>
+        </div>
+        <button class="mh-close" onclick="closeModal('reportModal')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Incident Type *</label>
+          <select class="form-select"><option>-- Select Type --</option><option>Safety Hazard</option><option>Misconduct</option><option>Theft</option><option>Harassment</option><option>Negligence</option><option>Policy Violation</option><option>Physical Altercation</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Severity *</label>
+          <select class="form-select"><option>-- Select Severity --</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Branch *</label>
+          <select class="form-select"><option>-- Select Branch --</option><option>NCR North</option><option>NCR South</option><option>Cebu Main</option><option>Davao</option><option>Iloilo</option><option>Batangas</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Date & Time of Incident *</label>
+          <input class="form-input" type="datetime-local">
+        </div>
+        <div class="form-group"><label class="form-label">Location / Area</label>
+          <input class="form-input" type="text" placeholder="e.g. Warehouse Floor B, Counter 3">
+        </div>
+        <div class="form-group"><label class="form-label">Reported By *</label>
+          <input class="form-input" type="text" placeholder="Name of reporting person">
+        </div>
+        <div class="form-group full"><label class="form-label">Incident Title *</label>
+          <input class="form-input" type="text" placeholder="Brief title summarizing the incident">
+        </div>
+        <div class="form-group full"><label class="form-label">Detailed Description *</label>
+          <textarea class="form-textarea" placeholder="Describe what happened, when, where, and any immediate actions taken…"></textarea>
+        </div>
+        <div class="form-group full"><label class="form-label">Employees Involved</label>
+          <input class="form-input" type="text" placeholder="Names / IDs (comma separated)">
+        </div>
+        <div class="form-group full"><label class="form-label">Witnesses</label>
+          <input class="form-input" type="text" placeholder="Names of witnesses (if any)">
+        </div>
+        <div class="form-group full"><label class="form-label">Immediate Action Taken</label>
+          <textarea class="form-textarea" placeholder="What steps were immediately taken to address the incident?" style="min-height:70px"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--gray-pale)">
+        <button class="btn-sm" onclick="closeModal('reportModal')">Cancel</button>
+        <button class="btn-red" onclick="submitReport()">📋 Submit Incident Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const typeIcons = {
+  'Safety Hazard':'🦺','Misconduct':'🚫','Theft':'💼','Harassment':'🛑',
+  'Negligence':'⚠️','Policy Violation':'📜','Physical Altercation':'👊'
+};
+const typeBg = {
+  'Safety Hazard':'rgba(211,84,0,0.18)','Misconduct':'rgba(192,57,43,0.18)',
+  'Theft':'rgba(108,52,131,0.18)','Harassment':'rgba(192,57,43,0.22)',
+  'Negligence':'rgba(201,168,76,0.18)','Policy Violation':'rgba(41,128,185,0.18)',
+  'Physical Altercation':'rgba(192,57,43,0.25)'
+};
+
+const incidents = [
+  {
+    id:'INC-2026-031', type:'Physical Altercation', severity:'Critical', status:'Open',
+    title:'Physical altercation between two employees on the warehouse floor',
+    branch:'Batangas', location:'Warehouse Floor A', date:'Feb 20, 2026', time:'10:14 AM',
+    reportedBy:'Fred Mendez',
+    desc:'Two employees, Pedro Gonzales and an unnamed colleague, engaged in a physical altercation during shift change. The dispute reportedly arose over a scheduling disagreement. Both were immediately separated by a supervisor.',
+    people:[
+      {name:'Pedro Gonzales',id:'EMP-008',role:'Driver',color:'#2980B9',initials:'PG',type:'respondent'},
+      {name:'Felix Cruz',id:'EMP-031',role:'Warehouse Staff',color:'#C0392B',initials:'FC',type:'respondent'},
+      {name:'Fred Mendez',id:'MGR-BAT',role:'Branch Manager',color:'#1E8449',initials:'FM',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.15)',icon:'⚠️',label:'Incident Reported',by:'Fred Mendez',time:'Feb 20, 2026 · 10:22 AM',note:'Both employees separated. Medical assistance offered. HR notified.'},
+      {dot:'#D35400',bg:'rgba(211,84,0,0.15)',icon:'📋',label:'Incident Logged by HR',by:'HR Administrator',time:'Feb 20, 2026 · 10:45 AM',note:'Formal incident report filed. Case assigned #INC-2026-031.'},
+    ]
+  },
+  {
+    id:'INC-2026-028', type:'Theft', severity:'High', status:'Investigating',
+    title:'Missing petty cash funds from branch cashbox — NCR South',
+    branch:'NCR South', location:'Admin Office', date:'Feb 18, 2026', time:'02:00 PM',
+    reportedBy:'Ana Reyes',
+    desc:'₱8,500 reported missing from the branch petty cash box. Discrepancy was discovered during routine end-of-day reconciliation by the branch accountant.',
+    people:[
+      {name:'Rowena Pascual',id:'EMP-017',role:'Accounting',color:'#6C3483',initials:'RP',type:'respondent'},
+      {name:'Jasmine Tan',id:'EMP-011',role:'Sales Staff',color:'#8E44AD',initials:'JT',type:'witness'},
+      {name:'Ana Reyes',id:'EMP-003',role:'Supervisor',color:'#1A5276',initials:'AR',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#6C3483',bg:'rgba(108,52,131,0.15)',icon:'💼',label:'Cash Shortage Discovered',by:'Rowena Pascual',time:'Feb 18, 2026 · 6:05 PM',note:'₱8,500 missing from petty cash during EOD reconciliation.'},
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.15)',icon:'📋',label:'Reported to Branch Manager',by:'Rowena Pascual',time:'Feb 18, 2026 · 6:20 PM',note:'Ana Reyes notified immediately. CCTV footage requested.'},
+      {dot:'#2980B9',bg:'rgba(41,128,185,0.15)',icon:'🔍',label:'Investigation Started',by:'HR Administrator',time:'Feb 19, 2026 · 9:00 AM',note:'CCTV footage being reviewed. Admin office access logs pulled. Interviews scheduled.'},
+    ]
+  },
+  {
+    id:'INC-2026-025', type:'Safety Hazard', severity:'High', status:'Investigating',
+    title:'Slip and fall incident — wet floor without warning signs posted',
+    branch:'Cebu Main', location:'Ground Floor Corridor', date:'Feb 17, 2026', time:'11:30 AM',
+    reportedBy:'Clara Lim',
+    desc:'Employee Nena Cruz slipped on a wet floor in the main corridor after the area was mopped without proper warning signs being placed. She sustained a minor wrist sprain and was assisted to the clinic.',
+    people:[
+      {name:'Nena Cruz',id:'EMP-009',role:'Admin',color:'#C9A84C',initials:'NC',type:'victim'},
+      {name:'Maintenance Staff',id:'EMP-044',role:'Janitorial',color:'#6C6C70',initials:'MS',type:'respondent'},
+      {name:'Clara Lim',id:'MGR-CEB',role:'Branch Manager',color:'#1E8449',initials:'CL',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.12)',icon:'🦺',label:'Incident Occurred',by:'Ground Floor Corridor',time:'Feb 17, 2026 · 11:30 AM',note:'Nena Cruz slipped on wet floor. Immediate first aid administered.'},
+      {dot:'#2980B9',bg:'rgba(41,128,185,0.12)',icon:'🏥',label:'Medical Assistance Provided',by:'Branch Clinic',time:'Feb 17, 2026 · 11:45 AM',note:'Minor wrist sprain confirmed. Employee advised rest for 2 days.'},
+      {dot:'#D35400',bg:'rgba(211,84,0,0.12)',icon:'📋',label:'HR Notified & Case Filed',by:'Clara Lim',time:'Feb 17, 2026 · 12:10 PM',note:'Safety protocol review initiated. Janitorial SOPs to be reviewed.'},
+    ]
+  },
+  {
+    id:'INC-2026-022', type:'Harassment', severity:'Critical', status:'Open',
+    title:'Verbal harassment complaint filed against a senior supervisor',
+    branch:'NCR North', location:'Break Room', date:'Feb 15, 2026', time:'01:00 PM',
+    reportedBy:'Grace Villanueva',
+    desc:'Two employees reported verbal harassment and intimidation by a senior supervisor during a team meeting. Witnesses confirm the supervisor used threatening language and personal insults.',
+    people:[
+      {name:'Grace Villanueva',id:'EMP-007',role:'HR Assistant',color:'#6C3483',initials:'GV',type:'victim'},
+      {name:'Dante Aquino',id:'EMP-014',role:'Janitor',color:'#27AE60',initials:'DA',type:'victim'},
+      {name:'Senior Supervisor',id:'EMP-019',role:'Supervisor',color:'#C0392B',initials:'SS',type:'respondent'},
+      {name:'Vincent Castro',id:'EMP-018',role:'IT Support',color:'#2980B9',initials:'VC',type:'witness'},
+    ],
+    timeline:[
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.15)',icon:'🛑',label:'Complaint Filed',by:'Grace Villanueva',time:'Feb 15, 2026 · 3:20 PM',note:'Formal complaint submitted to HR via written statement. Two victims identified.'},
+      {dot:'#D35400',bg:'rgba(211,84,0,0.12)',icon:'🔍',label:'HR Acknowledgement',by:'HR Administrator',time:'Feb 16, 2026 · 9:00 AM',note:'Complaint acknowledged. Case escalated to Critical due to nature of allegations.'},
+    ]
+  },
+  {
+    id:'INC-2026-018', type:'Negligence', severity:'Medium', status:'Resolved',
+    title:'Employee failed to follow proper equipment shutdown procedure',
+    branch:'Davao', location:'Operations Room', date:'Feb 12, 2026', time:'07:00 PM',
+    reportedBy:'Dan Cruz',
+    desc:'Eduardo Flores left company equipment running overnight without following standard shutdown procedures, resulting in minor system overheating. No data loss occurred but equipment required maintenance.',
+    people:[
+      {name:'Eduardo Flores',id:'EMP-016',role:'Floor Staff',color:'#1E8449',initials:'EF',type:'respondent'},
+      {name:'Dan Cruz',id:'MGR-DAV',role:'Branch Manager',color:'#2980B9',initials:'DC',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#D35400',bg:'rgba(211,84,0,0.12)',icon:'⚠️',label:'Negligence Discovered',by:'Opening Staff',time:'Feb 13, 2026 · 6:02 AM',note:'Equipment found running since previous day. Overheating detected.'},
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.12)',icon:'📋',label:'Formal Warning Issued',by:'Dan Cruz',time:'Feb 13, 2026 · 10:00 AM',note:'Eduardo Flores issued a written warning. Refresher on SOP required.'},
+      {dot:'#1E8449',bg:'rgba(30,132,73,0.12)',icon:'✅',label:'Case Resolved',by:'HR Administrator',time:'Feb 14, 2026 · 2:00 PM',note:'SOP retraining completed. Employee acknowledged with signature. Case closed for review.'},
+    ]
+  },
+  {
+    id:'INC-2026-015', type:'Policy Violation', severity:'Medium', status:'Investigating',
+    title:'Unauthorized use of company vehicle for personal errand',
+    branch:'Iloilo', location:'Branch Parking / City Roads', date:'Feb 10, 2026', time:'12:00 PM',
+    reportedBy:'Eva Flores',
+    desc:'Ramon Villanueva was reported using a company service vehicle for personal errands during his lunch break without authorization. GPS logs confirm the vehicle was driven outside of approved routes.',
+    people:[
+      {name:'Ramon Villanueva',id:'EMP-006',role:'Technician',color:'#D35400',initials:'RV',type:'respondent'},
+      {name:'Eva Flores',id:'MGR-ILO',role:'Branch Manager',color:'#6C3483',initials:'EF',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#6C3483',bg:'rgba(108,52,131,0.12)',icon:'📜',label:'Policy Violation Flagged',by:'GPS Monitoring System',time:'Feb 10, 2026 · 2:45 PM',note:'Automated GPS alert — vehicle detected outside approved delivery routes.'},
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.12)',icon:'📋',label:'Branch Manager Notified',by:'Eva Flores',time:'Feb 10, 2026 · 3:30 PM',note:'Employee summoned for explanation. Initial interview conducted.'},
+      {dot:'#2980B9',bg:'rgba(41,128,185,0.12)',icon:'🔍',label:'Full Review Ongoing',by:'HR Administrator',time:'Feb 11, 2026 · 9:00 AM',note:'GPS logs and fuel usage report being reviewed. Second interview scheduled.'},
+    ]
+  },
+  {
+    id:'INC-2026-010', type:'Misconduct', severity:'Low', status:'Closed',
+    title:'Employee repeatedly using mobile phone during work hours',
+    branch:'NCR North', location:'Cashier Counter', date:'Feb 7, 2026', time:'03:00 PM',
+    reportedBy:'Maria Santos',
+    desc:'Juan Dela Cruz was observed using his personal mobile phone repeatedly during active work hours at the cashier counter. This is the second recorded instance this month.',
+    people:[
+      {name:'Juan Dela Cruz',id:'EMP-002',role:'Floor Staff',color:'#8B1A1A',initials:'JD',type:'respondent'},
+      {name:'Maria Santos',id:'EMP-001',role:'Cashier',color:'#C0392B',initials:'MS',type:'witness'},
+    ],
+    timeline:[
+      {dot:'#D35400',bg:'rgba(211,84,0,0.12)',icon:'🚫',label:'Violation Observed & Reported',by:'Maria Santos',time:'Feb 7, 2026 · 3:00 PM',note:'Second instance this month. Supervisor verbally warned employee.'},
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.12)',icon:'📋',label:'Written Warning Issued',by:'HR Administrator',time:'Feb 8, 2026 · 10:00 AM',note:'Written warning issued. Employee signed acknowledgment.'},
+      {dot:'#1E8449',bg:'rgba(30,132,73,0.12)',icon:'✅',label:'Case Closed',by:'HR Administrator',time:'Feb 10, 2026 · 11:00 AM',note:'No further violations observed. Case closed. On file for 6 months.'},
+    ]
+  },
+  {
+    id:'INC-2026-008', type:'Safety Hazard', severity:'High', status:'Open',
+    title:'Exposed electrical wiring found in storage room — fire risk',
+    branch:'Batangas', location:'Storage Room 2', date:'Feb 6, 2026', time:'08:45 AM',
+    reportedBy:'Cristina Lim',
+    desc:'Exposed and fraying electrical wiring was discovered in Storage Room 2 during a routine inspection. The wiring is in close proximity to flammable supplies. Immediate maintenance required.',
+    people:[
+      {name:'Cristina Lim',id:'EMP-013',role:'Cashier',color:'#C0392B',initials:'CL',type:'witness'},
+      {name:'Fred Mendez',id:'MGR-BAT',role:'Branch Manager',color:'#C9A84C',initials:'FM',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.18)',icon:'🦺',label:'Hazard Discovered',by:'Cristina Lim',time:'Feb 6, 2026 · 8:45 AM',note:'Exposed wiring found near flammable storage. Area cordoned off immediately.'},
+      {dot:'#D35400',bg:'rgba(211,84,0,0.15)',icon:'📋',label:'Maintenance Requested',by:'Fred Mendez',time:'Feb 6, 2026 · 9:00 AM',note:'Urgent maintenance ticket filed. Electrician scheduled. Storage room access restricted.'},
+    ]
+  },
+  {
+    id:'INC-2026-005', type:'Misconduct', severity:'Low', status:'Resolved',
+    title:'Employee was absent without filing a leave request',
+    branch:'NCR South', location:'N/A', date:'Feb 3, 2026', time:'All Day',
+    reportedBy:'System Auto-Flag',
+    desc:'Jasmine Tan was absent for a full day without filing a leave request and did not notify her supervisor or HR. This is her first recorded unauthorized absence.',
+    people:[
+      {name:'Jasmine Tan',id:'EMP-011',role:'Sales Staff',color:'#8E44AD',initials:'JT',type:'respondent'},
+      {name:'Ana Reyes',id:'EMP-003',role:'Supervisor',color:'#1A5276',initials:'AR',type:'investigator'},
+    ],
+    timeline:[
+      {dot:'#C0392B',bg:'rgba(192,57,43,0.12)',icon:'⚠️',label:'Absence Flagged by System',by:'Attendance Monitor',time:'Feb 3, 2026 · 9:00 AM',note:'Employee marked absent. No leave request on file. Supervisor notified.'},
+      {dot:'#2980B9',bg:'rgba(41,128,185,0.12)',icon:'📋',label:'Employee Interview',by:'Ana Reyes',time:'Feb 4, 2026 · 10:00 AM',note:'Employee explained personal emergency. Supporting document requested.'},
+      {dot:'#1E8449',bg:'rgba(30,132,73,0.12)',icon:'✅',label:'Resolved — Converted to Emergency Leave',by:'HR Administrator',time:'Feb 5, 2026 · 11:30 AM',note:'Medical certificate submitted. Absence converted to emergency leave. Case resolved.'},
+    ]
+  },
+];
+
+let filtered = [...incidents];
+let activeTab = 'all';
+let filterQ = '', filterBr = '', filterTy = '', filterSev = '';
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  activeTab = tab;
+  renderTab(tab);
+}
+
+function filterIncidents(q){filterQ=q.toLowerCase();renderTab(activeTab);}
+function filterBranch(v){filterBr=v;renderTab(activeTab);}
+function filterType(v){filterTy=v;renderTab(activeTab);}
+function filterSeverity(v){filterSev=v;renderTab(activeTab);}
+
+function applyFilters(list){
+  return list.filter(i=>{
+    const mq = !filterQ || i.title.toLowerCase().includes(filterQ) || i.branch.toLowerCase().includes(filterQ) || i.id.toLowerCase().includes(filterQ) || i.type.toLowerCase().includes(filterQ);
+    const mb = !filterBr || i.branch===filterBr;
+    const mt = !filterTy || i.type===filterTy;
+    const ms = !filterSev || i.severity===filterSev;
+    return mq&&mb&&mt&&ms;
+  });
+}
+
+function renderTab(tab) {
+  let list = tab==='all' ? incidents : incidents.filter(i=>i.status.toLowerCase()===tab);
+  list = applyFilters(list);
+  const target = document.getElementById('tab-'+tab);
+  if(!target) return;
+  const grid = target.querySelector('.inc-grid') || document.createElement('div');
+  if(!target.querySelector('.inc-grid')){grid.className='inc-grid';target.innerHTML='';target.appendChild(grid);}
+  if(list.length===0){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📋</div><div class="empty-title">No incidents found</div><div style="font-size:13px;color:var(--gray-mid)">Try adjusting your filters</div></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(inc=>`
+    <div class="inc-card sev-${inc.severity.toLowerCase()}" onclick="openDetail('${inc.id}')">
+      <div class="ic-top">
+        <div class="ic-left">
+          <div class="ic-id">${inc.id} · ${inc.branch}</div>
+          <div class="ic-title">${inc.title}</div>
+          <div class="ic-meta">
+            <span>${typeIcons[inc.type]||'⚠️'} ${inc.type}</span>
+            <span style="color:var(--gray-light)">·</span>
+            <span>📍 ${inc.location}</span>
+            <span style="color:var(--gray-light)">·</span>
+            <span>📅 ${inc.date}</span>
+          </div>
+        </div>
+        <div class="ic-badges">
+          <span class="pill pill-${inc.severity.toLowerCase()}">${inc.severity}</span>
+          <span class="pill pill-${inc.status.toLowerCase()}">${inc.status}</span>
+        </div>
+      </div>
+      <div class="ic-desc">${inc.desc.length>130?inc.desc.slice(0,130)+'…':inc.desc}</div>
+      <div class="ic-footer">
+        <div class="ic-people">
+          ${inc.people.slice(0,3).map(p=>`<div class="ic-av" style="background:${p.color}">${p.initials}</div>`).join('')}
+          <span class="ic-people-label">${inc.people.length} person${inc.people.length!==1?'s':''} involved</span>
+        </div>
+        <div class="ic-date">⏱ ${inc.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function openDetail(id){
+  const inc = incidents.find(i=>i.id===id);
+  if(!inc)return;
+  const sev = inc.severity.toLowerCase();
+const sevColors = {
+  critical: getComputedStyle(document.documentElement).getPropertyValue('--red-primary') || '#C0392B',
+  high: getComputedStyle(document.documentElement).getPropertyValue('--orange') || '#D35400',
+  medium: getComputedStyle(document.documentElement).getPropertyValue('--gold') || '#C9A84C',
+  low: getComputedStyle(document.documentElement).getPropertyValue('--green') || '#1E8449'
+};
+
+const sc = {critical:'#C0392B',high:'#D35400',medium:'#C9A84C',low:'#1E8449'}[sev]||'#C0392B';
+
+  document.getElementById('mhIcon').style.cssText=`background:${typeBg[inc.type]||'rgba(192,57,43,0.18)'};font-size:24px;`;
+  document.getElementById('mhIcon').textContent = typeIcons[inc.type]||'⚠️';
+  document.getElementById('mhId').textContent = `${inc.id} · ${inc.type}`;
+  document.getElementById('mhTitle').textContent = inc.title;
+  document.getElementById('mhMeta').innerHTML = `<span>📍 ${inc.branch} — ${inc.location}</span><span style="color:rgba(255,255,255,0.2)">·</span><span>📅 ${inc.date} at ${inc.time}</span><span style="color:rgba(255,255,255,0.2)">·</span><span>Reported by: ${inc.reportedBy}</span>`;
+
+  document.getElementById('mhActions').innerHTML=`
+    <button class="mh-btn" onclick="window.print()">🖨️ Print</button>
+    <button class="mh-btn">📤 Export</button>`;
+
+  document.getElementById('mhSummary').innerHTML=[
+    {l:'Severity',v:`<span style="color:${sc}">${inc.severity}</span>`},
+    {l:'Status',v:inc.status},
+    {l:'People Involved',v:inc.people.length},
+    {l:'Timeline Events',v:inc.timeline.length},
+  ].map(s=>`<div class="mhs-box"><div class="mhs-label">${s.l}</div><div class="mhs-val">${s.v}</div></div>`).join('');
+
+  // Body
+  document.getElementById('modalBody').innerHTML=`
+    <div class="sec-title">📝 Incident Description <span></span></div>
+    <div class="detail-card" style="margin-bottom:16px"><p>${inc.desc}</p></div>
+
+    <div class="info-grid">
+      <div class="info-box"><div class="info-label">Branch</div><div class="info-val">🏢 ${inc.branch}</div></div>
+      <div class="info-box"><div class="info-label">Location</div><div class="info-val">📍 ${inc.location}</div></div>
+      <div class="info-box"><div class="info-label">Date & Time</div><div class="info-val mono">${inc.date} · ${inc.time}</div></div>
+      <div class="info-box"><div class="info-label">Reported By</div><div class="info-val">${inc.reportedBy}</div></div>
+    </div>
+
+    <div class="sec-title">👥 People Involved <span></span></div>
+    <div class="people-list">
+      ${inc.people.map(p=>`
+        <div class="person-row">
+          <div class="p-av" style="background:${p.color}">${p.initials}</div>
+          <div class="p-info"><div class="p-name">${p.name}</div><div class="p-role-txt">${p.id} · ${p.role}</div></div>
+          <span class="p-type ${p.type}">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</span>
+        </div>`).join('')}
+    </div>
+
+    <div class="sec-title">📅 Investigation Timeline <span></span></div>
+    <div class="timeline">
+      ${inc.timeline.map(t=>`
+        <div class="tl-item">
+          <div class="tl-dot" style="background:${t.bg}">${t.icon}</div>
+          <div class="tl-content">
+            <div class="tl-label">${t.label}</div>
+            <div class="tl-by">By: ${t.by}</div>
+            <div class="tl-time">🕐 ${t.time}</div>
+            <div class="tl-note">${t.note}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    ${inc.status!=='Closed'?`
+    <div class="sec-title">⚡ Quick Actions <span></span></div>
+    <div class="action-bar">
+      <button class="action-btn ab-investigate" onclick="updateStatus('${inc.id}','Investigating')">🔍 Mark as Investigating</button>
+      <button class="action-btn ab-resolve" onclick="updateStatus('${inc.id}','Resolved')">✅ Mark as Resolved</button>
+      <button class="action-btn ab-escalate" onclick="updateStatus('${inc.id}','Open')">🚨 Escalate / Re-Open</button>
+    </div>`:'<div style="text-align:center;padding:16px;color:var(--gray-mid);font-size:13px">🔒 This incident has been closed.</div>'}
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function updateStatus(id, newStatus){
+  const inc = incidents.find(i=>i.id===id);
+  if(!inc)return;
+  inc.status = newStatus;
+  inc.timeline.push({
+    dot:newStatus==='Resolved'?'#1E8449':newStatus==='Investigating'?'#2980B9':'#C0392B',
+    bg:newStatus==='Resolved'?'rgba(30,132,73,0.12)':newStatus==='Investigating'?'rgba(41,128,185,0.12)':'rgba(192,57,43,0.12)',
+    icon:newStatus==='Resolved'?'✅':newStatus==='Investigating'?'🔍':'🚨',
+    label:`Status updated to: ${newStatus}`,
+    by:'HR Administrator',
+    time:`${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} · ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`,
+    note:`Case status manually updated by HR Admin.`
+  });
+  updateKPIs();
+  renderTab('all');
+  closeModal('detailModal');
+}
+
+function updateKPIs(){
+  document.getElementById('kpiOpen').textContent = incidents.filter(i=>i.status==='Open').length;
+  document.getElementById('kpiInv').textContent = incidents.filter(i=>i.status==='Investigating').length;
+  document.getElementById('kpiTotal').textContent = incidents.length;
+  document.getElementById('kpiResolved').textContent = incidents.filter(i=>i.status==='Resolved'||i.status==='Closed').length;
+  document.querySelector('.nbadge:last-child') && (document.querySelectorAll('.nbadge')[0].textContent = incidents.filter(i=>i.status==='Open').length);
+}
+
+function openReportModal(){document.getElementById('reportModal').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function closeOnOutside(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+function submitReport(){
+  alert('Incident report submitted successfully!');
+  closeModal('reportModal');
+}
+
+// Helper for CSS vars in JS
+function cssVar(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
+function var_(name, fallback){return fallback;}
+
+// Init
+renderTab('all');
+updateKPIs();
+
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',function(){
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll — GDC ManPower System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red-deep:    #6B1212;
+  --red-primary: #C0392B;
+  --red-bright:  #E74C3C;
+  --red-soft:    #F5C6C2;
+  --red-glow:    rgba(192,57,43,0.12);
+  --cream:       #FDF8F6;
+  --warm-white:  #FFFAF9;
+  --charcoal:    #1C1C1E;
+  --gray-dark:   #3A3A3C;
+  --gray-mid:    #6C6C70;
+  --gray-light:  #E5E0DF;
+  --gray-pale:   #F2EEEC;
+  --gold:        #C9A84C;
+  --green:       #1E8449;
+  --green-light: #27AE60;
+  --blue:        #1A5276;
+  --blue-light:  #2980B9;
+  --orange:      #D35400;
+  --amber:       #d97706;
+  --sidebar-w:   260px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);display:flex;min-height:100vh;overflow-x:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:linear-gradient(170deg,#140606 0%,#2C0F0F 50%,#3D1515 100%);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:4px 0 30px rgba(0,0,0,0.35);}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.brand-logo{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.brand-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;box-shadow:0 4px 15px rgba(192,57,43,0.5);flex-shrink:0;letter-spacing:-1px;}
+.brand-text h2{font-family:'Playfair Display',serif;color:#fff;font-size:14px;letter-spacing:0.5px;line-height:1.2;}
+.brand-text span{color:var(--red-soft);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;}
+.hq-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),#A07830);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-top:7px;}
+.nav-section{padding:16px 0;flex:1;overflow-y:auto;}
+.nav-section::-webkit-scrollbar{width:3px;}.nav-section::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
+.nav-label{color:rgba(255,255,255,0.28);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:7px 20px 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;font-size:13.5px;font-weight:500;text-decoration:none;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);border-left-color:var(--red-primary);}
+.nav-item.active{color:#fff;background:linear-gradient(90deg,rgba(192,57,43,0.28),transparent);border-left-color:var(--red-primary);}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;}
+.nbadge{margin-left:auto;background:var(--red-primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nbadge.gold{background:var(--gold);}
+.sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:11px;}
+.s-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red-primary),var(--red-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);}
+.s-avatar-info strong{color:#fff;font-size:12.5px;display:block;}
+.s-avatar-info small{color:rgba(255,255,255,0.38);font-size:10.5px;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 30px;height:62px;display:flex;align-items:center;gap:18px;flex-shrink:0;box-shadow:0 1px 10px rgba(0,0,0,0.06);}
+.topbar-title{flex:1;}
+.topbar-title h1{font-family:'Playfair Display',serif;font-size:19px;color:var(--charcoal);display:flex;align-items:center;gap:9px;}
+.topbar-title p{font-size:11.5px;color:var(--gray-mid);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.btn-outline{background:var(--warm-white);color:var(--gray-dark);border:1px solid var(--gray-light);padding:8px 15px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.btn-outline:hover{background:var(--gray-pale);}
+.btn-primary{background:linear-gradient(135deg,var(--red-primary),var(--red-deep));color:#fff;border:none;padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;box-shadow:0 3px 12px rgba(192,57,43,0.3);font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(192,57,43,0.4);}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* ── PERIOD BAR ── */
+.period-bar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:12px 30px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.period-label{font-size:12px;font-weight:700;color:var(--gray-mid);letter-spacing:1px;text-transform:uppercase;}
+.period-chips{display:flex;gap:6px;}
+.pchip{padding:5px 14px;border-radius:20px;border:2px solid var(--gray-light);background:var(--warm-white);color:var(--gray-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.pchip.active{background:var(--red-primary);color:#fff;border-color:var(--red-primary);}
+.pchip:hover:not(.active){border-color:var(--red-primary);color:var(--red-primary);}
+.period-dates{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.date-range{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--charcoal);background:var(--gray-pale);padding:6px 13px;border-radius:8px;border:1px solid var(--gray-light);}
+
+/* ── THREE-PANEL LAYOUT ── */
+.panels{flex:1;display:grid;grid-template-columns:260px 280px 1fr;overflow:hidden;}
+
+/* ── PANEL SHARED ── */
+.panel{display:flex;flex-direction:column;border-right:1px solid var(--gray-light);overflow:hidden;}
+.panel:last-child{border-right:none;}
+
+.panel-header{padding:14px 18px;border-bottom:1px solid var(--gray-light);background:var(--warm-white);flex-shrink:0;}
+.panel-title{font-size:13px;font-weight:700;color:var(--charcoal);display:flex;align-items:center;gap:8px;}
+.panel-sub{font-size:11px;color:var(--gray-mid);margin-top:3px;}
+.panel-body{flex:1;overflow-y:auto;}
+.panel-body::-webkit-scrollbar{width:4px;}.panel-body::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+
+/* ── BRANCH LIST ── */
+.branch-item{display:flex;align-items:center;gap:12px;padding:13px 18px;cursor:pointer;border-bottom:1px solid var(--gray-pale);transition:all 0.15s;border-left:3px solid transparent;}
+.branch-item:hover{background:var(--red-glow);border-left-color:var(--red-primary);}
+.branch-item.active{background:var(--red-glow);border-left-color:var(--red-primary);}
+.branch-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.b-info{flex:1;min-width:0;}
+.b-name{font-size:13px;font-weight:700;color:var(--charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.b-meta{font-size:11px;color:var(--gray-mid);margin-top:2px;}
+.b-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.badge-good{background:rgba(30,132,73,0.1);color:var(--green);}
+.badge-warn{background:rgba(217,119,6,0.1);color:var(--amber);}
+.badge-crit{background:rgba(192,57,43,0.1);color:var(--red-primary);}
+
+/* ── EMPLOYEE LIST ── */
+.emp-item{display:flex;align-items:center;gap:11px;padding:12px 18px;cursor:pointer;border-bottom:1px solid var(--gray-pale);transition:all 0.15s;border-left:3px solid transparent;}
+.emp-item:hover{background:var(--red-glow);border-left-color:var(--red-primary);}
+.emp-item.active{background:var(--red-glow);border-left-color:var(--red-primary);}
+.emp-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.emp-info{flex:1;min-width:0;}
+.emp-name{font-size:13px;font-weight:600;color:var(--charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.emp-pos{font-size:11px;color:var(--gray-mid);margin-top:2px;}
+.emp-hrs{font-family:'DM Mono',monospace;font-size:11.5px;font-weight:600;text-align:right;flex-shrink:0;}
+
+/* ── EMPTY STATE ── */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--gray-mid);}
+.empty-icon{font-size:36px;opacity:0.4;}
+.empty-title{font-size:13px;font-weight:700;color:var(--gray-mid);}
+.empty-sub{font-size:12px;text-align:center;line-height:1.5;}
+
+/* ── DETAIL PANEL ── */
+.detail-panel{background:var(--cream);display:flex;flex-direction:column;overflow:hidden;}
+
+/* Employee header */
+.emp-detail-header{background:linear-gradient(135deg,#1A0808,#2C0F0F,#3D1515);padding:22px 26px;display:flex;align-items:center;gap:16px;flex-shrink:0;position:relative;}
+.emp-detail-header::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red-primary),var(--gold),var(--red-primary));}
+.edh-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,0.2);flex-shrink:0;}
+.edh-info h2{font-family:'Playfair Display',serif;color:#fff;font-size:17px;margin-bottom:3px;}
+.edh-info p{color:rgba(255,255,255,0.55);font-size:12px;}
+.edh-actions{margin-left:auto;display:flex;gap:8px;}
+.edh-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);color:#fff;border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.edh-btn:hover{background:rgba(255,255,255,0.18);}
+.edh-btn.primary{background:var(--red-primary);border-color:var(--red-primary);}
+.edh-btn.primary:hover{background:var(--red-bright);}
+
+/* Summary row */
+.summary-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid var(--gray-light);flex-shrink:0;background:var(--warm-white);}
+.sum-box{padding:14px 10px;text-align:center;border-right:1px solid var(--gray-light);}
+.sum-box:last-child{border-right:none;}
+.sum-val{font-size:20px;font-weight:700;line-height:1;margin-bottom:4px;font-family:'DM Mono',monospace;}
+.sum-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray-mid);}
+
+/* Scrollable detail body */
+.detail-body{flex:1;overflow-y:auto;padding:20px 26px;}
+.detail-body::-webkit-scrollbar{width:5px;}.detail-body::-webkit-scrollbar-thumb{background:var(--gray-light);border-radius:3px;}
+
+/* Pay summary card */
+.pay-summary{background:var(--warm-white);border-radius:13px;border:1px solid var(--gray-light);padding:18px 20px;margin-bottom:18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.pay-box{padding:0 20px;border-right:1px solid var(--gray-pale);}
+.pay-box:first-child{padding-left:0;}
+.pay-box:last-child{border-right:none;}
+.pay-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px;}
+.pay-val{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--charcoal);}
+.pay-val.green{color:var(--green);}
+.pay-val.red{color:var(--red-primary);}
+.pay-sub{font-size:11px;color:var(--gray-mid);margin-top:3px;}
+
+/* Section title */
+.sec-title{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--gray-light);}
+
+/* Attendance table */
+.att-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.att-table th{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gray-mid);padding:9px 12px;text-align:left;background:var(--gray-pale);}
+.att-table th:first-child{border-radius:8px 0 0 8px;}
+.att-table th:last-child{border-radius:0 8px 8px 0;text-align:right;}
+.att-table td{padding:10px 12px;font-size:12.5px;border-bottom:1px solid var(--gray-pale);vertical-align:middle;}
+.att-table tr:last-child td{border-bottom:none;}
+.att-table tbody tr{transition:background 0.12s;cursor:default;}
+.att-table tbody tr:hover td{background:rgba(192,57,43,0.03);}
+.att-table td:last-child{text-align:right;}
+
+.time-mono{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.time-late{color:var(--orange);}
+.time-absent{color:var(--gray-mid);font-style:italic;}
+
+.pill{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.pill-green{background:rgba(30,132,73,0.1);color:var(--green);}
+.pill-orange{background:rgba(211,84,0,0.1);color:var(--orange);}
+.pill-red{background:rgba(192,57,43,0.1);color:var(--red-primary);}
+.pill-blue{background:rgba(41,128,185,0.1);color:var(--blue-light);}
+.pill-gold{background:rgba(201,168,76,0.1);color:#A07830;}
+.pill-gray{background:rgba(108,108,112,0.1);color:var(--gray-mid);}
+
+.hrs-bar-wrap{display:flex;align-items:center;gap:8px;justify-content:flex-end;}
+.hrs-bar-track{width:60px;height:5px;background:var(--gray-pale);border-radius:10px;overflow:hidden;}
+.hrs-bar-fill{height:100%;border-radius:10px;}
+.hrs-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;width:30px;text-align:right;}
+
+/* Deductions / Earnings table */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.comp-card{background:var(--warm-white);border-radius:12px;border:1px solid var(--gray-light);overflow:hidden;}
+.comp-card-header{padding:11px 16px;border-bottom:1px solid var(--gray-pale);font-size:12px;font-weight:700;color:var(--charcoal);display:flex;align-items:center;gap:7px;}
+.comp-row{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--gray-pale);font-size:12.5px;}
+.comp-row:last-child{border-bottom:none;}
+.comp-label{color:var(--gray-dark);}
+.comp-val{font-family:'DM Mono',monospace;font-weight:700;}
+.comp-total{background:var(--gray-pale);padding:10px 16px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp 0.3s ease both;}
+
+/* Breadcrumb */
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-mid);padding:12px 26px;border-bottom:1px solid var(--gray-light);background:var(--warm-white);flex-shrink:0;}
+.breadcrumb span{cursor:pointer;transition:color 0.15s;}
+.breadcrumb span:hover{color:var(--red-primary);}
+.breadcrumb .sep{color:var(--gray-light);}
+.breadcrumb .current{color:var(--charcoal);font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-icon">GDC</div>
+      <div class="brand-text"><h2>ManPower</h2><span>Monitoring System</span></div>
+    </div>
+    <div class="hq-badge">⭐ HQ — HR Admin</div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item" href="#"><span class="icon">📊</span>HQ Dashboard</a>
+    <a class="nav-item" href="#"><span class="icon">🏢</span>Branch Overview</a>
+    <a class="nav-item" href="#"><span class="icon">📈</span>Analytics & Reports</a>
+    <div class="nav-label" style="margin-top:8px">Workforce</div>
+    <a class="nav-item" href="#"><span class="icon">👥</span>All Employees<span class="nbadge gold">248</span></a>
+    <a class="nav-item" href="#"><span class="icon">📅</span>Attendance Monitor</a>
+    <a class="nav-item" href="#"><span class="icon">🗓️</span>Schedules</a>
+    <a class="nav-item" href="#"><span class="icon">🚀</span>Deployments</a>
+    <div class="nav-label" style="margin-top:8px">Management</div>
+    <a class="nav-item" href="#"><span class="icon">📋</span>Leave Requests<span class="nbadge">12</span></a>
+    <a class="nav-item" href="#"><span class="icon">⚠️</span>Incidents<span class="nbadge">3</span></a>
+    <a class="nav-item active" href="#"><span class="icon">💰</span>Payroll Summary</a>
+    <div class="nav-label" style="margin-top:8px">System</div>
+    <a class="nav-item" href="#"><span class="icon">⚙️</span>Settings</a>
+    <a class="nav-item" href="#"><span class="icon">📤</span>Export / Sync</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="s-avatar">BA</div>
+    <div class="s-avatar-info"><strong>HR Administrator</strong><small>HQ — Super Admin</small></div>
+    <span style="color:rgba(255,255,255,0.3);font-size:16px;margin-left:auto">⋯</span>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-title">
+      <h1>💰 Payroll Summary</h1>
+      <p>Branch payroll computation with attendance-based hours — Feb 2026</p>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-outline">📊 Payroll Report</button>
+      <button class="btn-primary">📤 Export All</button>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Period bar -->
+    <div class="period-bar">
+      <span class="period-label">Period:</span>
+      <div class="period-chips">
+        <button class="pchip" onclick="setPeriod('1-15',this)">1–15</button>
+        <button class="pchip active" onclick="setPeriod('16-28',this)">16–28</button>
+        <button class="pchip" onclick="setPeriod('monthly',this)">Monthly</button>
+      </div>
+      <div class="period-dates">
+        <div class="date-range" id="dateRangeLabel">Feb 16–28, 2026</div>
+        <button class="btn-outline" style="padding:6px 12px;font-size:12px">◀ Prev</button>
+        <button class="btn-outline" style="padding:6px 12px;font-size:12px">Next ▶</button>
+      </div>
+    </div>
+
+    <!-- Three-panel -->
+    <div class="panels">
+
+      <!-- PANEL 1: BRANCHES -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">🏢 Branches</div>
+          <div class="panel-sub">Select a branch to view employees</div>
+        </div>
+        <div class="panel-body" id="branchPanel"></div>
+      </div>
+
+      <!-- PANEL 2: EMPLOYEES -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">👥 Employees</div>
+          <div class="panel-sub" id="empPanelSub">Select a branch first</div>
+        </div>
+        <div class="panel-body" id="empPanel">
+          <div class="empty-state">
+            <div class="empty-icon">🏢</div>
+            <div class="empty-title">No branch selected</div>
+            <div class="empty-sub">Click a branch on the left to view its employees.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: DETAIL -->
+      <div class="panel detail-panel" id="detailPanel">
+        <div class="empty-state" style="flex:1;justify-content:center;">
+          <div class="empty-icon">👤</div>
+          <div class="empty-title">No employee selected</div>
+          <div class="empty-sub">Select a branch, then click an employee<br>to view their payroll breakdown.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+// ── DATA ──
+const branches = [
+  { id:'ncr-north', name:'NCR North', location:'Quezon City', status:'warning', icon:'🏙️', employees: [
+    { id:'E001', name:'Maria Santos',   initials:'MS', color:'#C0392B', pos:'Cashier',       rate:570, timeIn:'07:52', timeOut:'17:01' },
+    { id:'E002', name:'Juan Dela Cruz', initials:'JD', color:'#8B1A1A', pos:'Floor Staff',   rate:535, timeIn:'08:17', timeOut:'16:58' },
+    { id:'E003', name:'Grace Villanueva',initials:'GV',color:'#7B241C', pos:'HR Assistant',  rate:610, timeIn:'07:45', timeOut:'17:10' },
+    { id:'E004', name:'Dante Aquino',   initials:'DA', color:'#27AE60', pos:'Janitor',       rate:500, timeIn:'06:58', timeOut:'16:00' },
+    { id:'E005', name:'Vincent Castro', initials:'VC', color:'#2980B9', pos:'IT Support',    rate:680, timeIn:'07:45', timeOut:'16:50' },
+  ]},
+  { id:'ncr-south', name:'NCR South', location:'Parañaque City', status:'warning', icon:'🌆', employees: [
+    { id:'E006', name:'Ana Reyes',      initials:'AR', color:'#1A5276', pos:'Supervisor',    rate:750, timeIn:'06:55', timeOut:'16:02' },
+    { id:'E007', name:'Jasmine Tan',    initials:'JT', color:'#8E44AD', pos:'Sales Staff',   rate:550, timeIn:'08:57', timeOut:'18:00' },
+    { id:'E008', name:'Rowena Pascual', initials:'RP', color:'#6C3483', pos:'Accounting',    rate:620, timeIn:'08:00', timeOut:'17:00' },
+  ]},
+  { id:'cebu-main', name:'Cebu Main', location:'Cebu City', status:'good', icon:'🌴', employees: [
+    { id:'E009', name:'Carlos Bautista',initials:'CB', color:'#1E8449', pos:'Security',      rate:540, timeIn:'07:55', timeOut:'15:55' },
+    { id:'E010', name:'Nena Cruz',      initials:'NC', color:'#C9A84C', pos:'Admin',         rate:580, timeIn:'08:22', timeOut:'17:05' },
+    { id:'E011', name:'Marilou Ramos',  initials:'MR', color:'#D35400', pos:'Supervisor',    rate:720, timeIn:'08:35', timeOut:'17:08' },
+  ]},
+  { id:'davao', name:'Davao', location:'Davao City', status:'critical', icon:'🌿', employees: [
+    { id:'E012', name:'Liza Ocampo',    initials:'LO', color:'#6C3483', pos:'HR Staff',      rate:580, timeIn:'08:00', timeOut:'17:00' },
+    { id:'E013', name:'Roberto Mendoza',initials:'RM', color:'#1A5276', pos:'Security Guard',rate:520, timeIn:'08:00', timeOut:'16:00' },
+    { id:'E014', name:'Eduardo Flores', initials:'EF', color:'#1E8449', pos:'Floor Staff',   rate:510, timeIn:'07:50', timeOut:'17:00' },
+  ]},
+  { id:'iloilo', name:'Iloilo', location:'Iloilo City', status:'good', icon:'🌊', employees: [
+    { id:'E015', name:'Ramon Villanueva',initials:'RV',color:'#D35400', pos:'Technician',    rate:650, timeIn:'07:59', timeOut:'17:00' },
+    { id:'E016', name:'Felix Morales',  initials:'FM', color:'#16A085', pos:'Maintenance',   rate:530, timeIn:'08:01', timeOut:'17:03' },
+  ]},
+  { id:'batangas', name:'Batangas', location:'Batangas City', status:'critical', icon:'⚓', employees: [
+    { id:'E017', name:'Pedro Gonzales', initials:'PG', color:'#2980B9', pos:'Driver',        rate:560, timeIn:'06:10', timeOut:'14:15' },
+    { id:'E018', name:'Cristina Lim',   initials:'CL', color:'#C0392B', pos:'Cashier',      rate:545, timeIn:'08:00', timeOut:'17:00' },
+  ]},
+];
+
+// Generate 13-day attendance data for Feb 16-28
+function genAttendance(emp, seed) {
+  const days = [];
+  let r = seed;
+  function rand(){ r=(r*1664525+1013904223)&0xffffffff; return Math.abs(r)/0xffffffff; }
+
+  const dayData = [
+    {date:'Feb 16',dow:'Mon'},{date:'Feb 17',dow:'Tue'},{date:'Feb 18',dow:'Wed'},
+    {date:'Feb 19',dow:'Thu'},{date:'Feb 20',dow:'Fri'},{date:'Feb 21',dow:'Sat'},
+    {date:'Feb 22',dow:'Sun'},{date:'Feb 23',dow:'Mon'},{date:'Feb 24',dow:'Tue'},
+    {date:'Feb 25',dow:'Wed'},{date:'Feb 26',dow:'Thu'},{date:'Feb 27',dow:'Fri'},
+    {date:'Feb 28',dow:'Sat'},
+  ];
+
+  const baseIn  = emp.timeIn.split(':').map(Number);
+  const baseOut = emp.timeOut.split(':').map(Number);
+
+  dayData.forEach(d => {
+    if (d.dow === 'Sun') {
+      days.push({ ...d, status:'Rest Day', timeIn:'—', timeOut:'—', regular:0, ot:0, late:0 });
+      return;
+    }
+    const roll = rand();
+    let status, timeIn, timeOut, regular, ot, lateMin;
+
+    if (roll < 0.70) { // Present on time
+      status = 'Present';
+      const inOff = Math.floor(rand()*10)-5;
+      const outOff = Math.floor(rand()*20)-5;
+      const inH = baseIn[0], inM = Math.max(0,baseIn[1]+inOff);
+      const outH = baseOut[0], outM = Math.max(0,baseOut[1]+outOff);
+      timeIn  = `${String(inH).padStart(2,'0')}:${String(inM%60).padStart(2,'0')}`;
+      timeOut = `${String(outH+(Math.floor((baseOut[1]+outOff)/60))).padStart(2,'0')}:${String(outM%60).padStart(2,'0')}`;
+      const totalMins = (outH*60+(outM%60)) - (inH*60+inM);
+      regular = Math.min(8, Math.max(0, totalMins/60));
+      ot = Math.max(0, totalMins/60 - 8);
+      lateMin = 0;
+    } else if (roll < 0.85) { // Late
+      status = 'Late';
+      const lateAdd = 15 + Math.floor(rand()*45);
+      const inH = baseIn[0], inM = baseIn[1] + lateAdd;
+      const outH = baseOut[0], outM = baseOut[1];
+      timeIn  = `${String(inH+Math.floor(inM/60)).padStart(2,'0')}:${String(inM%60).padStart(2,'0')}`;
+      timeOut = `${String(outH).padStart(2,'0')}:${String(outM).padStart(2,'0')}`;
+      const totalMins = (outH*60+outM) - (inH*60+inM%60);
+      regular = Math.min(8, Math.max(0, totalMins/60));
+      ot = 0;
+      lateMin = lateAdd;
+    } else if (roll < 0.92) { // Absent
+      status = 'Absent'; timeIn='—'; timeOut='—'; regular=0; ot=0; lateMin=0;
+    } else { // On Leave
+      status = 'On Leave'; timeIn='—'; timeOut='—'; regular=8; ot=0; lateMin=0;
+    }
+
+    // Saturday — halftime unless absent
+    if (d.dow === 'Sat' && status !== 'Absent') {
+      regular = Math.min(regular, 4);
+      ot = 0;
+    }
+
+    days.push({
+      ...d, status,
+      timeIn, timeOut,
+      regular: Math.round(regular*10)/10,
+      ot: Math.round(ot*10)/10,
+      lateMin,
+    });
+  });
+  return days;
+}
+
+// ── STATE ──
+let activeBranchId = null;
+let activeEmpId    = null;
+let currentPeriod  = '16-28';
+
+// ── RENDER BRANCHES ──
+function renderBranches() {
+  const statusMap = { good:'badge-good', warning:'badge-warn', critical:'badge-crit' };
+  const statusLabel = { good:'✅ Good', warning:'⚠️ Warning', critical:'🔴 Critical' };
+  document.getElementById('branchPanel').innerHTML = branches.map(b => `
+    <div class="branch-item ${activeBranchId===b.id?'active':''}" onclick="selectBranch('${b.id}')">
+      <div class="branch-icon">${b.icon}</div>
+      <div class="b-info">
+        <div class="b-name">${b.name}</div>
+        <div class="b-meta">📍 ${b.location} · ${b.employees.length} emp.</div>
+      </div>
+      <span class="b-badge ${statusMap[b.status]}">${statusLabel[b.status]}</span>
+    </div>
+  `).join('');
+}
+
+// ── SELECT BRANCH ──
+function selectBranch(id) {
+  activeBranchId = id;
+  activeEmpId = null;
+  renderBranches();
+  const branch = branches.find(b => b.id === id);
+  document.getElementById('empPanelSub').textContent = `${branch.employees.length} employees · ${branch.name}`;
+
+  document.getElementById('empPanel').innerHTML = branch.employees.map(e => {
+    const att = genAttendance(e, e.id.charCodeAt(1)*1000);
+    const totalReg = att.reduce((s,d)=>s+d.regular,0);
+    const totalOT  = att.reduce((s,d)=>s+d.ot,0);
+    const totalHrs = totalReg + totalOT;
+    const hrColor  = totalHrs >= 80 ? 'var(--green)' : totalHrs >= 60 ? 'var(--amber)' : 'var(--red-primary)';
+    return `
+      <div class="emp-item ${activeEmpId===e.id?'active':''}" id="emp-${e.id}" onclick="selectEmployee('${id}','${e.id}')">
+        <div class="emp-av" style="background:${e.color}">${e.initials}</div>
+        <div class="emp-info">
+          <div class="emp-name">${e.name}</div>
+          <div class="emp-pos">${e.pos} · ₱${e.rate.toLocaleString()}/day</div>
+        </div>
+        <div class="emp-hrs" style="color:${hrColor}">${Math.round(totalHrs*10)/10}h</div>
+      </div>`;
+  }).join('');
+
+  // reset detail panel
+  document.getElementById('detailPanel').innerHTML = `
+    <div class="empty-state" style="flex:1;justify-content:center;">
+      <div class="empty-icon">👤</div>
+      <div class="empty-title">No employee selected</div>
+      <div class="empty-sub">Click an employee to view their payroll breakdown.</div>
+    </div>`;
+}
+
+// ── SELECT EMPLOYEE ──
+function selectEmployee(branchId, empId) {
+  activeBranchId = branchId;
+  activeEmpId    = empId;
+
+  // highlight
+  document.querySelectorAll('.emp-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('emp-'+empId);
+  if(el) el.classList.add('active');
+
+  const branch = branches.find(b=>b.id===branchId);
+  const emp    = branch.employees.find(e=>e.id===empId);
+  const seed   = emp.id.charCodeAt(1)*1000;
+  const att    = genAttendance(emp, seed);
+
+  // Compute totals
+  const worked   = att.filter(d=>d.status==='Present'||d.status==='Late');
+  const onLeave  = att.filter(d=>d.status==='On Leave');
+  const absent   = att.filter(d=>d.status==='Absent');
+  const totalReg = Math.round(att.reduce((s,d)=>s+d.regular,0)*10)/10;
+  const totalOT  = Math.round(att.reduce((s,d)=>s+d.ot,0)*10)/10;
+  const totalLate= att.reduce((s,d)=>s+d.lateMin,0);
+  const daysPresent = worked.length;
+  const daysAbsent  = absent.length;
+  const daysLeave   = onLeave.length;
+
+  // Pay computation
+  const regularPay = Math.round(daysPresent * emp.rate);
+  const otRate     = emp.rate / 8 * 1.25;
+  const otPay      = Math.round(totalOT * otRate);
+  const leavePay   = Math.round(daysLeave * emp.rate);
+  const grossPay   = regularPay + otPay + leavePay;
+
+  const sss        = Math.round(grossPay * 0.045);
+  const philhealth = Math.round(grossPay * 0.02);
+  const pagibig    = 100;
+  const lateDeduct = Math.round(totalLate * (emp.rate / 8 / 60));
+  const totalDeduct= sss + philhealth + pagibig + lateDeduct;
+  const netPay     = grossPay - totalDeduct;
+
+  const dp = document.getElementById('detailPanel');
+  dp.innerHTML = `
+    <!-- Employee Header -->
+    <div class="emp-detail-header fade-in">
+      <div class="edh-avatar" style="background:${emp.color}">${emp.initials}</div>
+      <div class="edh-info">
+        <h2>${emp.name}</h2>
+        <p>${emp.id} · ${emp.pos} · ${branch.name} · ₱${emp.rate.toLocaleString()}/day</p>
+      </div>
+      <div class="edh-actions">
+        <button class="edh-btn">🖨️ Print Slip</button>
+        <button class="edh-btn primary">📤 Export</button>
+      </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-row fade-in">
+      <div class="sum-box">
+        <div class="sum-val" style="color:var(--green)">${daysPresent}</div>
+        <div class="sum-label">Days Present</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-val" style="color:var(--orange)">${att.filter(d=>d.status==='Late').length}</div>
+        <div class="sum-label">Late Days</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-val" style="color:var(--red-primary)">${daysAbsent}</div>
+        <div class="sum-label">Absences</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-val" style="color:var(--blue-light)">${daysLeave}</div>
+        <div class="sum-label">Leave Days</div>
+      </div>
+      <div class="sum-box">
+        <div class="sum-val" style="color:var(--charcoal)">${totalReg+totalOT}h</div>
+        <div class="sum-label">Total Hours</div>
+      </div>
+    </div>
+
+    <!-- Scrollable body -->
+    <div class="detail-body fade-in">
+
+      <!-- Pay Summary Card -->
+      <div class="pay-summary">
+        <div class="pay-box">
+          <div class="pay-label">Gross Pay</div>
+          <div class="pay-val">₱${grossPay.toLocaleString()}</div>
+          <div class="pay-sub">${daysPresent} days × ₱${emp.rate.toLocaleString()} + OT + Leave</div>
+        </div>
+        <div class="pay-box">
+          <div class="pay-label">Total Deductions</div>
+          <div class="pay-val red">−₱${totalDeduct.toLocaleString()}</div>
+          <div class="pay-sub">SSS · PhilHealth · Pag-IBIG · Late</div>
+        </div>
+        <div class="pay-box">
+          <div class="pay-label">Net Pay</div>
+          <div class="pay-val green">₱${netPay.toLocaleString()}</div>
+          <div class="pay-sub">Take-home for Feb 16–28, 2026</div>
+        </div>
+      </div>
+
+      <!-- Earnings & Deductions -->
+      <div class="sec-title">Earnings & Deductions</div>
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-card-header">✅ Earnings</div>
+          <div class="comp-row"><span class="comp-label">Regular Pay (${daysPresent} days)</span><span class="comp-val" style="color:var(--green)">+₱${regularPay.toLocaleString()}</span></div>
+          <div class="comp-row"><span class="comp-label">Overtime Pay (${totalOT}h)</span><span class="comp-val" style="color:var(--green)">+₱${otPay.toLocaleString()}</span></div>
+          <div class="comp-row"><span class="comp-label">Leave Pay (${daysLeave} days)</span><span class="comp-val" style="color:var(--blue-light)">+₱${leavePay.toLocaleString()}</span></div>
+          <div class="comp-total"><span>Gross Pay</span><span style="color:var(--green)">₱${grossPay.toLocaleString()}</span></div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-card-header">❌ Deductions</div>
+          <div class="comp-row"><span class="comp-label">SSS (4.5%)</span><span class="comp-val" style="color:var(--red-primary)">−₱${sss.toLocaleString()}</span></div>
+          <div class="comp-row"><span class="comp-label">PhilHealth (2%)</span><span class="comp-val" style="color:var(--red-primary)">−₱${philhealth.toLocaleString()}</span></div>
+          <div class="comp-row"><span class="comp-label">Pag-IBIG</span><span class="comp-val" style="color:var(--red-primary)">−₱${pagibig.toLocaleString()}</span></div>
+          <div class="comp-row"><span class="comp-label">Late Deduction (${totalLate} mins)</span><span class="comp-val" style="color:var(--red-primary)">−₱${lateDeduct.toLocaleString()}</span></div>
+          <div class="comp-total"><span>Total Deductions</span><span style="color:var(--red-primary)">₱${totalDeduct.toLocaleString()}</span></div>
+        </div>
+      </div>
+
+      <!-- Attendance Log -->
+      <div class="sec-title">Daily Attendance Log</div>
+      <table class="att-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Status</th>
+            <th>Regular Hrs</th>
+            <th>OT Hrs</th>
+            <th style="text-align:right">Total Hrs</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${att.map(d => {
+            const isLate   = d.status==='Late';
+            const isAbsent = d.status==='Absent';
+            const isRest   = d.status==='Rest Day';
+            const total    = Math.round((d.regular+d.ot)*10)/10;
+            const pillMap  = {
+              'Present':'<span class="pill pill-green">✓ Present</span>',
+              'Late':'<span class="pill pill-orange">⏰ Late</span>',
+              'Absent':'<span class="pill pill-red">✕ Absent</span>',
+              'On Leave':'<span class="pill pill-blue">🏖 Leave</span>',
+              'Rest Day':'<span class="pill pill-gray">— Rest</span>',
+            };
+            const hrBar = total > 0 ? `
+              <div class="hrs-bar-wrap">
+                <div class="hrs-bar-track"><div class="hrs-bar-fill" style="width:${Math.min(total/10*100,100)}%;background:${total>=8?'linear-gradient(90deg,var(--green),var(--green-light))':total>=6?'linear-gradient(90deg,var(--orange),#E67E22)':'linear-gradient(90deg,var(--red-primary),var(--red-bright))'}"></div></div>
+                <span class="hrs-val" style="color:${total>=8?'var(--green)':total>=6?'var(--orange)':'var(--red-primary)'}">${total}h</span>
+              </div>` : '<span style="color:var(--gray-mid);font-size:12px;font-family:DM Mono,monospace">—</span>';
+            const otVal = d.ot > 0 ? `<span style="color:var(--green);font-family:DM Mono,monospace;font-size:12px;font-weight:700">+${d.ot}h</span>` : '<span style="color:var(--gray-mid);font-family:DM Mono,monospace;font-size:12px">—</span>';
+            const lateNote = isLate && d.lateMin>0 ? ` <span style="font-size:10px;color:var(--orange)">(${d.lateMin}m late)</span>` : '';
+            return `<tr style="${isRest?'opacity:0.45':''}${isAbsent?'background:rgba(192,57,43,0.025)':''}">
+              <td style="font-weight:600;font-family:DM Mono,monospace;font-size:12px">${d.date}</td>
+              <td style="color:var(--gray-mid);font-size:12px">${d.dow}</td>
+              <td><span class="time-mono ${isLate?'time-late':isAbsent||isRest?'time-absent':''}">${d.timeIn}${lateNote}</span></td>
+              <td><span class="time-mono ${isAbsent||isRest?'time-absent':''}">${d.timeOut}</span></td>
+              <td>${pillMap[d.status]||d.status}</td>
+              <td style="font-family:DM Mono,monospace;font-size:12.5px;font-weight:600;color:${d.regular>0?'var(--charcoal)':'var(--gray-mid)'}">${d.regular>0?d.regular+'h':'—'}</td>
+              <td>${otVal}</td>
+              <td>${hrBar}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function setPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.pchip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  const labels = {'1-15':'Feb 1–15, 2026','16-28':'Feb 16–28, 2026','monthly':'February 2026'};
+  document.getElementById('dateRangeLabel').textContent = labels[p];
+}
+
+// Sidebar click
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',function(){
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+renderBranches();
+</script>
+</body>
+</html>
