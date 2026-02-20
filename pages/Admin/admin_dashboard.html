@@ -3,1189 +3,774 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GDC ManPower — Executive Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>GDC ManPower — VP Executive Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --red-deep:    #6B1212;
-  --red-primary: #C0392B;
-  --red-bright:  #E74C3C;
-  --red-soft:    #F5C6C2;
-  --red-glow:    rgba(192,57,43,0.10);
-  --cream:       #FDF8F6;
-  --warm-white:  #FFFAF9;
-  --charcoal:    #1C1C1E;
-  --gray-dark:   #3A3A3C;
-  --gray-mid:    #6C6C70;
-  --gray-light:  #E5E0DF;
-  --gray-pale:   #F2EEEC;
-  --gold:        #C9A84C;
-  --gold-dark:   #A07830;
-  --green:       #1E8449;
-  --green-light: #27AE60;
-  --blue:        #1A5276;
-  --blue-light:  #2980B9;
-  --orange:      #D35400;
-  --orange-light:#E67E22;
-  --sidebar-w:   240px;
+  --red:         #C0392B;
+  --red-deep:    #7B1E1E;
+  --red-muted:   rgba(192,57,43,0.09);
+  --red-border:  rgba(192,57,43,0.22);
+  --gold:        #B8942A;
+  --green:       #1A7A41;
+  --green-lt:    #25A35A;
+  --green-muted: rgba(26,122,65,0.10);
+  --orange:      #C05621;
+  --orange-muted:rgba(192,86,33,0.09);
+  --blue:        #1B5FA8;
+  --blue-muted:  rgba(27,95,168,0.09);
+  --ink:         #111318;
+  --ink-2:       #3C4049;
+  --ink-3:       #6B7280;
+  --rule:        #E4E7EB;
+  --surface:     #F8F9FA;
+  --canvas:      #F0F2F5;
+  --white:       #FFFFFF;
+  --sidebar:     220px;
+  --font:        'IBM Plex Sans', sans-serif;
+  --mono:        'IBM Plex Mono', monospace;
 }
-
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--font); background:var(--canvas); color:var(--ink); display:flex; min-height:100vh; font-size:14px; }
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--rule); border-radius:4px; }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--cream);
-  color: var(--charcoal);
-  display: flex;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── SIDEBAR ── */
+/* ══ SIDEBAR ══ */
 .sidebar {
-  width: var(--sidebar-w);
-  background: linear-gradient(170deg, #140606 0%, #2C0F0F 50%, #3D1515 100%);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 100;
-  box-shadow: 4px 0 30px rgba(0,0,0,0.35);
+  width:var(--sidebar); background:#610e03;
+  position:fixed; top:0; left:0; bottom:0; z-index:100;
+  display:flex; flex-direction:column;
+  border-right:1px solid rgba(255,255,255,0.05);
 }
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--red-primary), var(--gold), var(--red-primary));
+.sidebar::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--red),var(--gold),var(--red));
 }
+.sb-brand { padding:22px 18px 16px; border-bottom:1px solid rgba(255,255,255,0.06); }
+.sb-logo  { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.sb-icon  {
+  width:36px; height:36px; border-radius:8px;
+  background:linear-gradient(135deg,var(--red),var(--red-deep));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:12px; color:#fff; flex-shrink:0;
+}
+.sb-name { font-size:13px; font-weight:600; color:#fff; }
+.sb-sub  { font-size:10px; color:rgba(255,255,255,0.32); letter-spacing:1.4px; text-transform:uppercase; }
+.sb-tag  {
+  display:inline-block; background:rgba(184,148,42,0.14); border:1px solid rgba(184,148,42,0.28);
+  color:#C9A84C; font-size:9.5px; font-weight:600; letter-spacing:1.2px;
+  text-transform:uppercase; padding:3px 9px; border-radius:4px;
+}
+.sb-nav { flex:1; padding:12px 0; overflow-y:auto; }
+.sb-section {
+  font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(235, 217, 217, 0.18); padding:10px 18px 5px;
+}
+.sb-item {
+  display:flex; align-items:center; gap:9px; padding:9px 18px;
+  color:rgba(255,255,255,0.42); font-size:12.5px; font-weight:400;
+  cursor:pointer; border-left:2px solid transparent; transition:all 0.15s;
+}
+.sb-item:hover { color:rgba(255,255,255,0.75); background:rgba(255,255,255,0.04); }
+.sb-item.active { color:#fff; background:rgba(192,57,43,0.14); border-left-color:var(--red); }
+.sb-dot { width:5px; height:5px; border-radius:50%; background:currentColor; opacity:0.45; flex-shrink:0; }
+.sb-item.active .sb-dot { background:var(--red); opacity:1; }
+.sb-footer {
+  padding:13px 18px; border-top:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; gap:10px;
+}
+.sb-av {
+  width:32px; height:32px; border-radius:50%;
+  background:linear-gradient(135deg,var(--red),var(--red-deep));
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; color:#fff; flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,0.14);
+}
+.sb-user-name { font-size:12px; font-weight:600; color:#fff; }
+.sb-user-role { font-size:10px; color:rgba(255,255,255,0.28); }
+.sb-live { margin-left:auto; display:flex; align-items:center; gap:5px; font-size:9.5px; color:var(--green-lt); font-weight:600; }
+.sb-live-dot { width:6px; height:6px; border-radius:50%; background:var(--green-lt); animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
 
-.brand {
-  padding: 24px 22px 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.brand-logo {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin-bottom: 8px;
-}
-.brand-icon {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg, var(--red-primary), var(--red-deep));
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: #fff;
-  box-shadow: 0 4px 15px rgba(192,57,43,0.5);
-  flex-shrink: 0; letter-spacing: -0.5px;
-  font-family: 'DM Sans', sans-serif;
-}
-.brand-text h2 {
-  font-family: 'Playfair Display', serif;
-  color: #fff;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  line-height: 1.2;
-}
-.brand-text span {
-  color: var(--red-soft);
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-.exec-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: linear-gradient(135deg, var(--gold), #A07830);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-top: 8px;
-}
-
-.nav-section { padding: 16px 0; flex: 1; overflow-y: auto; }
-.nav-label {
-  color: rgba(255,255,255,0.25);
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 22px 5px;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 10px 22px;
-  color: rgba(255,255,255,0.52);
-  cursor: pointer;
-  transition: all 0.2s;
-  border-left: 3px solid transparent;
-  font-size: 13px;
-  font-weight: 500;
-}
-.nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); border-left-color: var(--red-primary); }
-.nav-item.active {
-  color: #fff;
-  background: linear-gradient(90deg, rgba(192,57,43,0.26), transparent);
-  border-left-color: var(--red-primary);
-}
-.nav-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.nav-dot.red   { background: var(--red-primary); }
-.nav-dot.green { background: var(--green-light); }
-.nav-dot.gold  { background: var(--gold); }
-.nav-dot.blue  { background: var(--blue-light); }
-.nav-dot.gray  { background: rgba(255,255,255,0.2); }
-
-.sidebar-footer {
-  padding: 14px 22px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-.s-avatar {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--red-primary), var(--red-deep));
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 12px;
-  flex-shrink: 0;
-  border: 2px solid rgba(255,255,255,0.15);
-}
-.s-info strong { color: #fff; font-size: 12.5px; display: block; }
-.s-info small  { color: rgba(255,255,255,0.38); font-size: 10.5px; }
-.s-status {
-  margin-left: auto;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--green-light);
-  box-shadow: 0 0 6px rgba(39,174,96,0.6);
-}
-
-/* ── MAIN ── */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ── TOPBAR ── */
+/* ══ MAIN ══ */
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; }
 .topbar {
-  background: var(--warm-white);
-  border-bottom: 1px solid var(--gray-light);
-  padding: 0 32px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+  background:var(--white); border-bottom:1px solid var(--rule);
+  height:58px; padding:0 28px;
+  display:flex; align-items:center; gap:16px;
+  position:sticky; top:0; z-index:50;
+  box-shadow:0 1px 6px rgba(0,0,0,0.05);
 }
-.topbar-title h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  color: var(--charcoal);
-  letter-spacing: 0.2px;
-}
-.topbar-title p { font-size: 11.5px; color: var(--gray-mid); margin-top: 2px; }
-.topbar-right { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.tb-title { font-size:15px; font-weight:600; color:var(--ink); }
+.tb-sub   { font-size:11.5px; color:var(--ink-3); margin-top:1px; }
+.tb-right { display:flex; align-items:center; gap:9px; margin-left:auto; }
+.chip { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:6px; font-size:11.5px; font-weight:500; border:1px solid; }
+.chip-live { background:var(--green-muted); border-color:rgba(26,122,65,0.22); color:var(--green); }
+.chip-live-dot { width:6px; height:6px; border-radius:50%; background:var(--green-lt); animation:blink 2s infinite; }
+.chip-date { background:var(--surface); border-color:var(--rule); color:var(--ink-2); }
+.chip-vp   { background:var(--red-muted); border-color:var(--red-border); color:var(--red); font-weight:600; font-size:10.5px; letter-spacing:0.5px; }
 
-.date-chip {
-  background: var(--gray-pale);
-  border: 1px solid var(--gray-light);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  color: var(--gray-dark);
-  font-weight: 500;
-}
-.live-indicator {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(30,132,73,0.08);
-  border: 1px solid rgba(30,132,73,0.22);
-  border-radius: 20px;
-  padding: 6px 13px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--green);
-}
-.live-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--green-light);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(39,174,96,0.4); }
-  50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(39,174,96,0); }
-}
+/* ══ PAGE VIEWS ══ */
+.page { display:none; }
+.page.active { display:block; }
+.content { padding:22px 28px; flex:1; }
 
-.vp-tag {
-  background: linear-gradient(135deg, var(--red-deep), #2C0F0F);
-  color: rgba(255,255,255,0.9);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 8px;
-}
+/* ── LAYER HEADERS ── */
+.layer-head { display:flex; align-items:center; gap:12px; margin-bottom:14px; margin-top:2px; }
+.layer-label { font-size:9.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ink-3); white-space:nowrap; }
+.layer-rule { flex:1; height:1px; background:var(--rule); }
+.lbadge { font-size:9.5px; font-weight:600; padding:2px 8px; border-radius:4px; white-space:nowrap; }
+.lb-red  { background:var(--red-muted); color:var(--red); border:1px solid var(--red-border); }
+.lb-warn { background:var(--orange-muted); color:var(--orange); border:1px solid rgba(192,86,33,0.2); }
+.lb-gray { background:var(--surface); color:var(--ink-3); border:1px solid var(--rule); }
+.lb-blue { background:var(--blue-muted); color:var(--blue); border:1px solid rgba(27,95,168,0.2); }
 
-/* ── CONTENT ── */
-.content { padding: 26px 32px; flex: 1; }
+/* ══ LAYER 1 SIGNALS ══ */
+.signal-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+.sig-card {
+  background:var(--white); border-radius:10px; border:1px solid var(--rule);
+  padding:18px 18px 15px; position:relative; overflow:hidden;
+  transition:box-shadow 0.2s; animation:fadeUp 0.4s ease both;
+}
+.sig-card:hover { box-shadow:0 5px 18px rgba(0,0,0,0.07); }
+.sig-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.sc-red::before    { background:var(--red); }
+.sc-orange::before { background:var(--orange); }
+.sc-green::before  { background:var(--green); }
+.sc-blue::before   { background:var(--blue); }
+.sig-card:nth-child(1){animation-delay:.04s} .sig-card:nth-child(2){animation-delay:.08s}
+.sig-card:nth-child(3){animation-delay:.12s} .sig-card:nth-child(4){animation-delay:.16s}
+.sig-label { font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
+.sig-value { font-size:34px; font-weight:700; line-height:1; margin-bottom:4px; font-family:var(--mono); }
+.sig-context { font-size:11.5px; color:var(--ink-3); margin-bottom:9px; }
+.sig-pill { display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:5px; }
+.sp-bad  { background:var(--red-muted); color:var(--red); }
+.sp-warn { background:var(--orange-muted); color:var(--orange); }
+.sp-ok   { background:var(--green-muted); color:var(--green); }
+.sp-neu  { background:var(--blue-muted); color:var(--blue); }
 
-/* ── SECTION LABEL ── */
-.section-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--gray-light);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-label::after {
-  content: '';
-  flex: 1;
-}
+/* ══ LAYER 2 MATRIX ══ */
+.matrix-row { display:grid; grid-template-columns:1.55fr 1fr; gap:14px; margin-bottom:22px; }
+.card { background:var(--white); border-radius:10px; border:1px solid var(--rule); overflow:hidden; animation:fadeUp 0.5s ease both; animation-delay:0.22s; }
+.card-head { padding:14px 18px 12px; border-bottom:1px solid var(--surface); display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.card-title { font-size:13px; font-weight:600; color:var(--ink); }
+.card-desc  { font-size:11px; color:var(--ink-3); margin-top:2px; }
+.card-body  { padding:16px 18px; }
 
-/* ── KPI GRID ── */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 26px;
-}
-.kpi-card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px 18px;
-  border: 1px solid var(--gray-light);
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-  animation: fadeUp 0.4s ease both;
-}
-.kpi-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
-.kpi-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-}
-.kpi-card.c-green::before  { background: linear-gradient(90deg, #1E8449, #27AE60); }
-.kpi-card.c-red::before    { background: linear-gradient(90deg, var(--red-primary), var(--red-bright)); }
-.kpi-card.c-orange::before { background: linear-gradient(90deg, var(--orange), var(--orange-light)); }
-.kpi-card.c-blue::before   { background: linear-gradient(90deg, var(--blue), var(--blue-light)); }
-.kpi-card.c-gold::before   { background: linear-gradient(90deg, var(--gold), #E5C16B); }
-.kpi-card:nth-child(1){animation-delay:.04s}
-.kpi-card:nth-child(2){animation-delay:.08s}
-.kpi-card:nth-child(3){animation-delay:.12s}
-.kpi-card:nth-child(4){animation-delay:.16s}
-.kpi-card:nth-child(5){animation-delay:.20s}
+.rtable { width:100%; border-collapse:collapse; }
+.rtable thead th { font-size:9.5px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-3); padding:8px 10px; text-align:left; background:var(--surface); }
+.rtable thead th:first-child { border-radius:6px 0 0 6px; }
+.rtable thead th:last-child  { border-radius:0 6px 6px 0; }
+.rtable tbody td { padding:11px 10px; border-bottom:1px solid var(--surface); font-size:12.5px; vertical-align:middle; }
+.rtable tbody tr:last-child td { border-bottom:none; }
+.rtable tbody tr:hover td { background:rgba(0,0,0,0.015); }
+.bname { font-weight:600; font-size:13px; }
+.bsub  { font-size:10.5px; color:var(--ink-3); margin-top:1px; }
+.risk-badge { display:inline-flex; align-items:center; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:20px; }
+.rb-crit { background:var(--red-muted); color:var(--red); border:1px solid var(--red-border); }
+.rb-warn { background:var(--orange-muted); color:var(--orange); border:1px solid rgba(192,86,33,0.2); }
+.rb-ok   { background:var(--green-muted); color:var(--green); border:1px solid rgba(26,122,65,0.2); }
+.rate-wrap { display:flex; align-items:center; gap:8px; }
+.rate-bar  { flex:1; height:5px; background:var(--canvas); border-radius:4px; overflow:hidden; min-width:55px; }
+.rate-fill { height:100%; border-radius:4px; }
+.rate-num  { font-family:var(--mono); font-size:12px; font-weight:600; width:38px; text-align:right; flex-shrink:0; }
+.delta { font-family:var(--mono); font-size:11px; font-weight:600; padding:2px 6px; border-radius:4px; }
+.d-dn  { color:var(--red); background:var(--red-muted); }
+.d-up  { color:var(--green); background:var(--green-muted); }
+.d-ne  { color:var(--ink-3); background:var(--surface); }
 
-.kpi-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-  margin-bottom: 12px;
-}
-.kpi-value {
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 5px;
-  font-family: 'Montserrat', serif;
-}
-.kpi-sub { font-size: 11px; color: var(--gray-mid); margin-bottom: 8px; }
-.kpi-trend {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
-.t-up  { color: var(--green-light); background: rgba(39,174,96,0.1); }
-.t-dn  { color: var(--red-primary); background: rgba(192,57,43,0.1); }
-.t-neu { color: var(--blue-light);  background: rgba(41,128,185,0.1); }
+.action-list { display:flex; flex-direction:column; gap:8px; }
+.ai { border-radius:8px; border-left:3px solid; padding:12px 14px; }
+.ai-crit { background:rgba(192,57,43,0.04); border-color:var(--red); }
+.ai-warn { background:rgba(192,86,33,0.04); border-color:var(--orange); }
+.ai-info { background:rgba(27,95,168,0.04); border-color:var(--blue); }
+.ai-lvl  { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.lvl-c   { color:var(--red); } .lvl-w { color:var(--orange); } .lvl-i { color:var(--blue); }
+.ai-title { font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:3px; }
+.ai-body  { font-size:11.5px; color:var(--ink-2); line-height:1.45; }
+.ai-foot  { display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:7px; border-top:1px solid rgba(0,0,0,0.05); }
+.ai-action { font-size:11px; font-weight:500; color:var(--ink-2); }
+.ai-action strong { color:var(--ink); }
+.ai-time   { font-family:var(--mono); font-size:10.5px; color:var(--ink-3); }
 
-/* ── LAYOUT ── */
-.row-main    { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
-.row-bottom  { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; margin-bottom: 18px; }
-.row-3       { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+/* ══ LAYER 3 TRENDS ══ */
+.trend-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:22px; }
+.wk-chart  { display:flex; align-items:flex-end; gap:7px; height:90px; }
+.wk-col    { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.wk-pct    { font-family:var(--mono); font-size:10.5px; font-weight:600; }
+.wk-track  { flex:1; width:100%; background:var(--canvas); border-radius:4px 4px 0 0; position:relative; overflow:hidden; }
+.wk-fill   { position:absolute; bottom:0; left:0; right:0; border-radius:4px 4px 0 0; transition:height 1.1s cubic-bezier(0.34,1.2,0.64,1); }
+.wk-day    { font-size:10px; font-weight:500; color:var(--ink-3); }
+.wk-stats  { margin-top:12px; padding-top:12px; border-top:1px solid var(--surface); display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.wkstat-val { font-family:var(--mono); font-size:15px; font-weight:700; }
+.wkstat-lbl { font-size:10px; color:var(--ink-3); margin-top:1px; }
+.pattern-list { display:flex; flex-direction:column; gap:6px; }
+.pitem { display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:7px; background:var(--surface); border:1px solid var(--rule); }
+.prank { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--ink-3); width:16px; flex-shrink:0; }
+.pinfo { flex:1; }
+.pname { font-size:12px; font-weight:600; }
+.psub  { font-size:10.5px; color:var(--ink-3); }
+.pcount { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--red); background:var(--red-muted); padding:2px 7px; border-radius:4px; }
+.fc-list { display:flex; flex-direction:column; gap:9px; }
+.fc-item { display:flex; gap:11px; align-items:flex-start; padding:10px 12px; border-radius:8px; background:var(--surface); border:1px solid var(--rule); }
+.fc-icon { width:26px; height:26px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; font-family:var(--mono); }
+.fci-r{background:var(--red);} .fci-o{background:var(--orange);} .fci-b{background:var(--blue);} .fci-g{background:var(--green);}
+.fc-text  { flex:1; }
+.fc-title { font-size:12px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.fc-body  { font-size:11px; color:var(--ink-3); line-height:1.4; }
+.fc-prob  { font-family:var(--mono); font-size:11px; font-weight:700; flex-shrink:0; align-self:center; }
 
-/* ── CARD ── */
-.card {
-  background: #fff;
-  border-radius: 15px;
-  border: 1px solid var(--gray-light);
-  overflow: hidden;
-  animation: fadeUp 0.5s ease both;
-  animation-delay: 0.25s;
-}
-.card-header {
-  padding: 16px 22px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--gray-pale);
-}
-.card-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--charcoal);
-  letter-spacing: 0.1px;
-}
-.card-subtitle {
-  font-size: 11px;
-  color: var(--gray-mid);
-  margin-top: 2px;
-}
-.card-badge {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-  background: var(--gray-pale);
-  border: 1px solid var(--gray-light);
-  padding: 3px 9px;
-  border-radius: 6px;
-}
-.card-body { padding: 18px 22px; }
+/* ══ LAYER 4 OPS ══ */
+.ops-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.dtable { width:100%; border-collapse:collapse; }
+.dtable thead th { font-size:9.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--ink-3); padding:8px 10px; text-align:left; background:var(--surface); }
+.dtable thead th:first-child { border-radius:6px 0 0 6px; }
+.dtable thead th:last-child  { border-radius:0 6px 6px 0; }
+.dtable tbody td { padding:10px 10px; border-bottom:1px solid var(--surface); font-size:12.5px; vertical-align:middle; }
+.dtable tbody tr:last-child td { border-bottom:none; }
+.h-dot { width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:5px; }
+.mtd-2col { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.mtd-box  { border-radius:8px; padding:14px; border:1px solid var(--rule); background:var(--surface); }
+.mtd-val  { font-family:var(--mono); font-size:22px; font-weight:700; line-height:1; margin-bottom:3px; }
+.mtd-lbl  { font-size:10px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--ink-3); }
+.mtd-sub  { font-size:11px; color:var(--ink-3); margin-top:4px; }
+.prog-wrap { margin-bottom:12px; }
+.prog-top  { display:flex; justify-content:space-between; margin-bottom:5px; }
+.prog-track { height:7px; background:var(--canvas); border-radius:6px; overflow:hidden; }
+.prog-fill  { height:100%; border-radius:6px; }
+.prog-lbl  { font-size:11px; font-weight:500; color:var(--ink-2); }
+.prog-val  { font-family:var(--mono); font-size:11.5px; font-weight:700; }
+.prog-note { font-size:10.5px; color:var(--ink-3); margin-top:3px; }
 
-/* ── BRANCH PERFORMANCE TABLE ── */
-.bp-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.bp-table th {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-  padding: 9px 12px;
-  text-align: left;
-  background: var(--gray-pale);
-}
-.bp-table th:first-child { border-radius: 8px 0 0 8px; }
-.bp-table th:last-child  { border-radius: 0 8px 8px 0; }
-.bp-table td {
-  padding: 13px 12px;
-  font-size: 13px;
-  border-bottom: 1px solid var(--gray-pale);
-  vertical-align: middle;
-}
-.bp-table tbody tr:last-child td { border-bottom: none; }
-.bp-table tbody tr:hover td { background: var(--gray-pale); }
+/* ══════════════════════════
+   ACCOUNT MANAGEMENT PAGE
+══════════════════════════ */
+.am-page { padding:22px 28px; }
 
-.branch-name {
-  font-weight: 600;
-  font-size: 13px;
+.am-hero {
+  background:linear-gradient(135deg,#0D1117,#1C2333);
+  border-radius:12px; padding:24px 28px; margin-bottom:22px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; overflow:hidden;
 }
-.branch-region {
-  font-size: 10.5px;
-  color: var(--gray-mid);
-  margin-top: 1px;
+.am-hero::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--red),var(--gold),var(--red));
 }
-.rate-bar-wrap {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.am-hero-text h2 { font-size:17px; font-weight:600; color:#fff; margin-bottom:4px; }
+.am-hero-text p  { font-size:12px; color:rgba(255,255,255,0.45); line-height:1.5; max-width:500px; }
+.am-hero-badge {
+  display:flex; flex-direction:column; align-items:flex-end; gap:6px;
 }
-.rate-bar-track {
-  flex: 1;
-  height: 6px;
-  background: var(--gray-pale);
-  border-radius: 10px;
-  overflow: hidden;
-  min-width: 80px;
+.am-priority-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(184,148,42,0.15); border:1px solid rgba(184,148,42,0.3);
+  color:#C9A84C; font-size:10px; font-weight:600; letter-spacing:1px;
+  text-transform:uppercase; padding:4px 11px; border-radius:5px;
 }
-.rate-bar-fill {
-  height: 100%;
-  border-radius: 10px;
-}
-.rate-val {
-  font-size: 12.5px;
-  font-weight: 700;
-  font-family: 'DM Mono', monospace;
-  width: 40px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.rank-num {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  font-family: 'DM Mono', monospace;
-}
-.rank-1 { background: rgba(201,168,76,0.15); color: var(--gold-dark); border: 1px solid rgba(201,168,76,0.3); }
-.rank-2 { background: rgba(108,108,112,0.1); color: var(--gray-mid); border: 1px solid var(--gray-light); }
-.rank-3 { background: rgba(211,84,0,0.08); color: var(--orange); border: 1px solid rgba(211,84,0,0.2); }
-.rank-n { background: var(--gray-pale); color: var(--gray-mid); border: 1px solid var(--gray-light); }
+.am-priority-tag small { opacity:0.6; font-weight:400; }
 
-.status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  display: inline-block;
+/* PRIORITY TIERS */
+.tier-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:26px; }
+.tier-card {
+  border-radius:10px; border:1px solid var(--rule); overflow:hidden;
+  background:var(--white); transition:box-shadow 0.2s; cursor:pointer;
+  animation:fadeUp 0.4s ease both;
 }
-.sd-green  { background: var(--green-light); }
-.sd-orange { background: var(--orange-light); }
-.sd-red    { background: var(--red-primary); }
+.tier-card:nth-child(1){animation-delay:.04s} .tier-card:nth-child(2){animation-delay:.1s} .tier-card:nth-child(3){animation-delay:.16s}
+.tier-card:hover { box-shadow:0 6px 22px rgba(0,0,0,0.09); }
+.tier-card.primary { border-color:rgba(192,57,43,0.3); }
+.tier-card.secondary { border-color:rgba(192,86,33,0.25); }
+.tier-card.tertiary { border-color:var(--rule); }
 
-/* ── ATTENDANCE STATUS SUMMARY ── */
-.status-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
+.tier-header { padding:16px 18px 13px; border-bottom:1px solid var(--surface); display:flex; align-items:flex-start; gap:12px; }
+.tier-num {
+  width:30px; height:30px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:#fff; flex-shrink:0;
+  font-family:var(--mono);
 }
-.status-box {
-  border-radius: 11px;
-  padding: 14px;
-  text-align: center;
-  border: 1px solid transparent;
+.tn-1 { background:var(--red); }
+.tn-2 { background:var(--orange); }
+.tn-3 { background:var(--blue); }
+.tier-info { flex:1; }
+.tier-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.tier-label { font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+.tl-1 { color:var(--red); } .tl-2 { color:var(--orange); } .tl-3 { color:var(--blue); }
+.tier-priority {
+  font-size:9.5px; font-weight:600; padding:2px 8px; border-radius:4px; white-space:nowrap; align-self:flex-start;
 }
-.sb-green  { background: rgba(30,132,73,0.07);  border-color: rgba(30,132,73,0.18); }
-.sb-orange { background: rgba(211,84,0,0.07);   border-color: rgba(211,84,0,0.18); }
-.sb-red    { background: rgba(192,57,43,0.07);  border-color: rgba(192,57,43,0.18); }
-.sb-blue   { background: rgba(41,128,185,0.07); border-color: rgba(41,128,185,0.18); }
-.sb-val {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 4px;
-  font-family: 'Playfair Display', serif;
-}
-.sb-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-}
+.tp-1 { background:var(--red-muted); color:var(--red); border:1px solid var(--red-border); }
+.tp-2 { background:var(--orange-muted); color:var(--orange); border:1px solid rgba(192,86,33,0.2); }
+.tp-3 { background:var(--blue-muted); color:var(--blue); border:1px solid rgba(27,95,168,0.2); }
 
-/* ── WEEKLY CHART ── */
-.week-chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 110px;
-  padding: 4px 0 0;
-}
-.bar-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-.bar-track {
-  flex: 1;
-  width: 100%;
-  background: var(--gray-pale);
-  border-radius: 6px 6px 0 0;
-  position: relative;
-  overflow: hidden;
-  min-height: 8px;
-}
-.bar-fill {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  border-radius: 6px 6px 0 0;
-}
-.bar-label { font-size: 10px; font-weight: 600; color: var(--gray-mid); }
-.bar-pct   { font-size: 11px; font-weight: 700; font-family: 'DM Mono', monospace; }
+.tier-body { padding:16px 18px; }
+.tier-desc { font-size:12px; color:var(--ink-3); line-height:1.5; margin-bottom:14px; }
+.tier-permissions { display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
+.perm-item { display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--ink-2); }
+.perm-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.pd-yes { background:var(--green); }
+.pd-no  { background:var(--ink-3); opacity:0.3; }
 
-/* ── TREND INDICATORS ── */
-.trend-row {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.tier-btn {
+  width:100%; padding:9px; border-radius:7px;
+  font-size:12.5px; font-weight:600; font-family:var(--font);
+  cursor:pointer; border:1px solid; transition:all 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:7px;
 }
-.trend-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--gray-pale);
-  border: 1px solid var(--gray-light);
-}
-.trend-label { flex: 1; font-size: 12.5px; font-weight: 500; }
-.trend-sub   { font-size: 10.5px; color: var(--gray-mid); margin-top: 1px; }
-.trend-val   { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
-.trend-arrow {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 5px;
-}
-.ta-up { color: var(--green); background: rgba(30,132,73,0.1); }
-.ta-dn { color: var(--red-primary); background: rgba(192,57,43,0.1); }
-.ta-ne { color: var(--blue-light); background: rgba(41,128,185,0.1); }
+.tb-1 { background:var(--red); border-color:var(--red); color:#fff; }
+.tb-1:hover { background:var(--red-deep); border-color:var(--red-deep); }
+.tb-2 { background:var(--white); border-color:var(--orange); color:var(--orange); }
+.tb-2:hover { background:var(--orange-muted); }
+.tb-3 { background:var(--white); border-color:var(--rule); color:var(--ink-2); }
+.tb-3:hover { background:var(--surface); }
+.tier-note { font-size:10.5px; color:var(--ink-3); text-align:center; margin-top:8px; line-height:1.4; }
 
-/* ── EXECUTIVE ALERTS ── */
-.alert-list { display: flex; flex-direction: column; gap: 8px; }
-.alert-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border-left: 3px solid;
-}
-.alert-critical { background: rgba(192,57,43,0.05); border-color: var(--red-primary); }
-.alert-warning  { background: rgba(211,84,0,0.05);  border-color: var(--orange); }
-.alert-info     { background: rgba(41,128,185,0.05);border-color: var(--blue-light); }
-.alert-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  margin-top: 5px;
-  flex-shrink: 0;
-}
-.ad-red    { background: var(--red-primary); }
-.ad-orange { background: var(--orange); }
-.ad-blue   { background: var(--blue-light); }
-.alert-text strong { font-size: 12.5px; font-weight: 600; display: block; margin-bottom: 2px; }
-.alert-text span   { font-size: 11px; color: var(--gray-mid); }
-.alert-time {
-  margin-left: auto;
-  font-size: 10.5px;
-  color: var(--gray-mid);
-  font-family: 'DM Mono', monospace;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
+/* EXISTING ACCOUNTS TABLE */
+.acct-table-wrap { margin-bottom:22px; }
+.acct-table { width:100%; border-collapse:collapse; }
+.acct-table thead th { font-size:9.5px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-3); padding:9px 12px; text-align:left; background:var(--surface); }
+.acct-table thead th:first-child { border-radius:6px 0 0 6px; }
+.acct-table thead th:last-child  { border-radius:0 6px 6px 0; }
+.acct-table tbody td { padding:12px 12px; border-bottom:1px solid var(--surface); font-size:12.5px; vertical-align:middle; }
+.acct-table tbody tr:last-child td { border-bottom:none; }
+.acct-table tbody tr:hover td { background:rgba(0,0,0,0.012); }
 
-/* ── TOP PERFORMERS ── */
-.perf-list { display: flex; flex-direction: column; gap: 8px; }
-.perf-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--gray-pale);
-  border: 1px solid var(--gray-light);
-  transition: background 0.15s;
-}
-.perf-item:hover { background: var(--red-glow); border-color: var(--red-soft); }
-.perf-av {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; color: #fff;
-  flex-shrink: 0;
-}
-.perf-name { font-size: 12.5px; font-weight: 600; }
-.perf-sub  { font-size: 10.5px; color: var(--gray-mid); margin-top: 1px; }
-.perf-stat {
-  margin-left: auto;
-  text-align: right;
-}
-.perf-pct { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
-.perf-days { font-size: 10.5px; color: var(--gray-mid); }
+.acct-av { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; }
+.acct-cell { display:flex; align-items:center; gap:9px; }
+.acct-name { font-weight:600; font-size:12.5px; }
+.acct-email { font-size:10.5px; color:var(--ink-3); }
+.role-badge { font-size:10px; font-weight:700; letter-spacing:0.4px; padding:3px 9px; border-radius:20px; }
+.rb-hq   { background:var(--red-muted); color:var(--red); border:1px solid var(--red-border); }
+.rb-br   { background:var(--orange-muted); color:var(--orange); border:1px solid rgba(192,86,33,0.2); }
+.rb-emp  { background:var(--blue-muted); color:var(--blue); border:1px solid rgba(27,95,168,0.2); }
+.status-pill { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; }
+.sp-active   { background:var(--green-muted); color:var(--green); }
+.sp-pending  { background:var(--orange-muted); color:var(--orange); }
 
-/* ── HQ SUMMARY ── */
-.hq-summary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+/* ══ CREATE ACCOUNT MODAL ══ */
+.modal-overlay { position:fixed; inset:0; background:rgba(10,12,18,0.65); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; animation:fadeIn 0.2s ease; }
+.modal { background:var(--white); border-radius:14px; width:100%; max-width:520px; box-shadow:0 24px 64px rgba(0,0,0,0.22); animation:slideUp 0.25s ease; overflow:hidden; }
+.modal-head {
+  background:linear-gradient(135deg,#0D1117,#1C2333); padding:20px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative;
 }
-.hq-box {
-  border-radius: 10px;
-  padding: 14px 16px;
-  background: var(--gray-pale);
-  border: 1px solid var(--gray-light);
-}
-.hq-box-val {
-  font-size: 20px;
-  font-weight: 700;
-  font-family: 'Playfair Display', serif;
-  margin-bottom: 3px;
-}
-.hq-box-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--gray-mid);
-}
-.hq-box-sub {
-  font-size: 11px;
-  color: var(--gray-mid);
-  margin-top: 4px;
-}
-.divider {
-  height: 1px;
-  background: var(--gray-light);
-  margin: 14px 0;
-}
+.modal-head::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--red),var(--gold)); }
+.modal-head-title { font-size:15px; font-weight:600; color:#fff; }
+.modal-head-sub   { font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; }
+.modal-close { width:30px; height:30px; border-radius:7px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:var(--font); transition:background 0.15s; }
+.modal-close:hover { background:rgba(192,57,43,0.4); }
+.modal-body { padding:22px 24px; }
 
-/* ── DONUT ── */
-.donut-wrap {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 4px 0;
+.form-row  { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-full { margin-bottom:14px; }
+.form-label { font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--ink-2); margin-bottom:5px; display:block; }
+.form-input, .form-select {
+  width:100%; border:1px solid var(--rule); border-radius:7px; padding:9px 12px;
+  font-size:13px; font-family:var(--font); color:var(--ink); background:var(--surface);
+  outline:none; transition:border-color 0.15s;
 }
-.donut-svg { flex-shrink: 0; }
-.donut-legend { display: flex; flex-direction: column; gap: 9px; }
-.donut-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-}
-.donut-color {
-  width: 10px; height: 10px;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-.donut-lbl { font-weight: 500; flex: 1; }
-.donut-n   { font-weight: 700; font-family: 'DM Mono', monospace; color: var(--charcoal); }
+.form-input:focus, .form-select:focus { border-color:var(--red); background:var(--white); }
+.form-note { font-size:10.5px; color:var(--ink-3); margin-top:4px; }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+.role-selector { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+.role-opt {
+  border:1px solid var(--rule); border-radius:8px; padding:10px 10px;
+  cursor:pointer; transition:all 0.15s; text-align:center; background:var(--surface);
+  position:relative;
 }
+.role-opt:hover { border-color:var(--red-border); background:var(--red-muted); }
+.role-opt.selected { border-color:var(--red); background:var(--red-muted); }
+.role-opt.disabled { opacity:0.4; cursor:not-allowed; }
+.role-opt.selected.rb-orange { border-color:var(--orange); background:var(--orange-muted); }
+.role-opt.selected.rb-blue-sel { border-color:var(--blue); background:var(--blue-muted); }
+.role-opt-label { font-size:11px; font-weight:700; letter-spacing:0.3px; display:block; margin-bottom:2px; }
+.role-opt-sub   { font-size:10px; color:var(--ink-3); }
+.role-opt-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:1px 6px; border-radius:3px; display:inline-block; margin-top:4px; }
+.rob-primary { background:var(--red-muted); color:var(--red); }
+.rob-second  { background:var(--orange-muted); color:var(--orange); }
+.rob-third   { background:var(--blue-muted); color:var(--blue); }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--gray-light); border-radius: 3px; }
+.modal-foot { display:flex; gap:10px; padding-top:4px; }
+.btn-cancel { flex:1; padding:10px; border-radius:7px; border:1px solid var(--rule); background:var(--surface); font-size:13px; font-weight:500; font-family:var(--font); color:var(--ink-2); cursor:pointer; transition:background 0.15s; }
+.btn-cancel:hover { background:var(--canvas); }
+.btn-create { flex:2; padding:10px; border-radius:7px; border:none; background:var(--red); font-size:13px; font-weight:600; font-family:var(--font); color:#fff; cursor:pointer; transition:background 0.15s; }
+.btn-create:hover { background:var(--red-deep); }
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp  { from{opacity:0;transform:translateY(10px);}  to{opacity:1;transform:translateY(0);} }
+@keyframes fadeIn  { from{opacity:0;} to{opacity:1;} }
+@keyframes slideUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
 </style>
 </head>
 <body>
 
 <!-- ══ SIDEBAR ══ -->
 <aside class="sidebar">
-  <div class="brand">
-    <div class="brand-logo">
-      <div class="brand-icon">GDC</div>
-      <div class="brand-text">
-        <h2>ManPower</h2>
-        <span>Monitoring System</span>
-      </div>
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <div class="sb-icon">GDC</div>
+      <div><div class="sb-name">ManPower</div><div class="sb-sub">Intelligence</div></div>
     </div>
-    <div class="exec-badge">Executive View</div>
+    <div class="sb-tag">VP Executive</div>
   </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Dashboard</div>
+    <div class="sb-item active" data-page="dashboard"><div class="sb-dot"></div>Decision Dashboard</div>
+    <div class="sb-item" data-page="dashboard"><div class="sb-dot"></div>Branch Intelligence</div>
 
-  <nav class="nav-section">
-    <div class="nav-label">Overview</div>
-    <div class="nav-item active"><div class="nav-dot red"></div>Executive Dashboard</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>HQ Summary</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Branch Overview</div>
-
-    <div class="nav-label" style="margin-top:10px">Workforce</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Attendance Overview</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Department Metrics</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Headcount Summary</div>
-
-    <div class="nav-label" style="margin-top:10px">Reports</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Weekly Trends</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Monthly Analytics</div>
-    <div class="nav-item"><div class="nav-dot gray"></div>Compliance Flags</div>
+    <div class="sb-section">Administration</div>
+    <div class="sb-item" data-page="accounts"><div class="sb-dot"></div>Account Management</div>
   </nav>
-
-  <div class="sidebar-footer">
-    <div class="s-avatar">VP</div>
-    <div class="s-info">
-      <strong>Vice President</strong>
-      <small>Read-only Access</small>
-    </div>
-    <div class="s-status"></div>
+  <div class="sb-footer">
+    <div class="sb-av">VP</div>
+    <div><div class="sb-user-name">Vice President</div><div class="sb-user-role">Read-only · HQ</div></div>
+    <div class="sb-live"><div class="sb-live-dot"></div>Live</div>
   </div>
 </aside>
 
 <!-- ══ MAIN ══ -->
 <main class="main">
   <header class="topbar">
-    <div class="topbar-title">
-      <h1>Executive Dashboard</h1>
-      <p>Organization-wide attendance monitoring — Thursday, February 19, 2026</p>
+    <div>
+      <div class="tb-title" id="topbarTitle">Manpower Decision Dashboard</div>
+      <div class="tb-sub">Thursday, February 19, 2026 &nbsp;·&nbsp; Refreshed 09:42 AM</div>
     </div>
-    <div class="topbar-right">
-      <div class="live-indicator"><div class="live-dot"></div>Live Data</div>
-      <div class="date-chip">Feb 19, 2026 &nbsp;·&nbsp; 09:42 AM</div>
-      <div class="vp-tag">VP View</div>
+    <div class="tb-right">
+      <div class="chip chip-live"><div class="chip-live-dot"></div>Live Data</div>
+      <div class="chip chip-date">Feb 19, 2026</div>
+      <div class="chip chip-vp">VP ACCESS</div>
     </div>
   </header>
 
-  <div class="content">
+  <!-- ══ DASHBOARD PAGE ══ -->
+  <div class="page active" id="page-dashboard">
+    <div class="content">
 
-    <!-- KPI ROW -->
-    <div class="section-label">Today's Key Metrics</div>
-    <div class="kpi-grid">
-      <div class="kpi-card c-green">
-        <div class="kpi-label">Present Today</div>
-        <div class="kpi-value" style="color:var(--green)">211</div>
-        <div class="kpi-sub">of 248 employees</div>
-        <div class="kpi-trend t-up">85.1% attendance rate</div>
+      <div class="layer-head">
+        <div class="layer-label">Layer 1 — Immediate Signals</div>
+        <div class="layer-rule"></div>
+        <div class="lbadge lb-red">Requires Attention</div>
       </div>
-      <div class="kpi-card c-orange">
-        <div class="kpi-label">Late Arrivals</div>
-        <div class="kpi-value" style="color:var(--orange)">18</div>
-        <div class="kpi-sub">after 8:00 AM cutoff</div>
-        <div class="kpi-trend t-dn">+4 vs. yesterday</div>
-      </div>
-      <div class="kpi-card c-red">
-        <div class="kpi-label">Unexcused Absences</div>
-        <div class="kpi-value" style="color:var(--red-primary)">13</div>
-        <div class="kpi-sub">no notice filed</div>
-        <div class="kpi-trend t-dn">+2 vs. yesterday</div>
-      </div>
-      <div class="kpi-card c-blue">
-        <div class="kpi-label">On Approved Leave</div>
-        <div class="kpi-value" style="color:var(--blue-light)">24</div>
-        <div class="kpi-sub">with approved requests</div>
-        <div class="kpi-trend t-neu">No change</div>
-      </div>
-      <div class="kpi-card c-gold">
-        <div class="kpi-label">Avg. Hours Worked</div>
-        <div class="kpi-value" style="color:var(--gold-dark)">7.4<span style="font-size:16px;font-weight:500">h</span></div>
-        <div class="kpi-sub">target: 8.0 hrs / day</div>
-        <div class="kpi-trend t-dn">0.6h below target</div>
-      </div>
-    </div>
-
-    <!-- ROW 1: Branch Performance + Weekly Trend -->
-    <div class="section-label">Branch & Weekly Performance</div>
-    <div class="row-main">
-
-      <!-- BRANCH PERFORMANCE TABLE -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Branch Attendance Performance</div>
-            <div class="card-subtitle">All 6 branches — ranked by attendance rate</div>
-          </div>
-          <div class="card-badge">Today</div>
+      <div class="signal-grid">
+        <div class="sig-card sc-red">
+          <div class="sig-label">Unexcused Absences</div>
+          <div class="sig-value" style="color:var(--red)">13</div>
+          <div class="sig-context">employees — no notice filed</div>
+          <div class="sig-pill sp-bad">Rising — +2 vs. yesterday</div>
         </div>
-        <div style="overflow-x:auto;">
-          <table class="bp-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Branch</th>
-                <th>Present / Total</th>
-                <th style="min-width:160px">Attendance Rate</th>
-                <th>Late</th>
-                <th>Absent</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="branchTable"></tbody>
-          </table>
+        <div class="sig-card sc-orange">
+          <div class="sig-label">Late Arrivals Today</div>
+          <div class="sig-value" style="color:var(--orange)">18</div>
+          <div class="sig-context">checked in after 8:00 AM cutoff</div>
+          <div class="sig-pill sp-warn">Spike — +4 vs. yesterday</div>
+        </div>
+        <div class="sig-card sc-green">
+          <div class="sig-label">Org Attendance Rate</div>
+          <div class="sig-value" style="color:var(--green)">85.1%</div>
+          <div class="sig-context">211 of 248 present today</div>
+          <div class="sig-pill sp-ok">Within acceptable range</div>
+        </div>
+        <div class="sig-card sc-blue">
+          <div class="sig-label">Avg. Hours Worked</div>
+          <div class="sig-value" style="color:var(--blue)">7.4h</div>
+          <div class="sig-context">target: 8.0 hrs per day</div>
+          <div class="sig-pill sp-warn">0.6h below target daily</div>
         </div>
       </div>
 
-      <!-- WEEKLY TREND -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Weekly Attendance Trend</div>
-            <div class="card-subtitle">Mon Feb 16 – Fri Feb 20, 2026</div>
+      <div class="layer-head">
+        <div class="layer-label">Layer 2 — Decision Matrix</div>
+        <div class="layer-rule"></div>
+        <div class="lbadge lb-warn">Act on These</div>
+      </div>
+      <div class="matrix-row">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Branch Risk Assessment</div><div class="card-desc">Sorted by risk — red branches need VP action today</div></div>
+            <div class="lbadge lb-gray">6 Branches</div>
           </div>
-          <div class="card-badge">This Week</div>
+          <div style="overflow-x:auto;">
+            <table class="rtable">
+              <thead><tr><th>Branch</th><th>Attendance Rate</th><th>Absent</th><th>Late</th><th>vs. Yesterday</th><th>Risk Level</th></tr></thead>
+              <tbody id="riskTable"></tbody>
+            </table>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="week-chart" id="weekChart"></div>
-          <div style="display:flex;justify-content:space-between;margin-top:8px;">
-            <span style="font-size:10px;color:var(--gray-mid)">Monday</span>
-            <span style="font-size:10px;color:var(--gray-mid)">Friday</span>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Priority Action Items</div><div class="card-desc">What the VP should address today</div></div>
+            <div class="lbadge lb-red">3 Open</div>
           </div>
-          <div class="divider"></div>
-          <div class="trend-row" id="trendRow"></div>
+          <div class="card-body"><div class="action-list" id="actionList"></div></div>
         </div>
       </div>
 
-    </div>
-
-    <!-- ROW 2: Status Distribution + Alerts + Top Performers -->
-    <div class="section-label">Distribution & Insights</div>
-    <div class="row-3">
-
-      <!-- STATUS DISTRIBUTION -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Workforce Status Distribution</div>
-            <div class="card-subtitle">Snapshot across all branches</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="donut-wrap" id="donutWrap">
-            <svg class="donut-svg" width="110" height="110" viewBox="0 0 110 110">
-              <circle cx="55" cy="55" r="40" fill="none" stroke="#F2EEEC" stroke-width="16"/>
-              <circle id="d1" cx="55" cy="55" r="40" fill="none" stroke="#1E8449" stroke-width="16" stroke-dasharray="0 252" stroke-linecap="butt" transform="rotate(-90 55 55)" style="transition:stroke-dasharray 1s ease"/>
-              <circle id="d2" cx="55" cy="55" r="40" fill="none" stroke="#D35400" stroke-width="16" stroke-dasharray="0 252" stroke-linecap="butt" transform="rotate(-90 55 55)" style="transition:stroke-dasharray 1s ease 0.1s"/>
-              <circle id="d3" cx="55" cy="55" r="40" fill="none" stroke="#C0392B" stroke-width="16" stroke-dasharray="0 252" stroke-linecap="butt" transform="rotate(-90 55 55)" style="transition:stroke-dasharray 1s ease 0.2s"/>
-              <circle id="d4" cx="55" cy="55" r="40" fill="none" stroke="#2980B9" stroke-width="16" stroke-dasharray="0 252" stroke-linecap="butt" transform="rotate(-90 55 55)" style="transition:stroke-dasharray 1s ease 0.3s"/>
-              <text x="55" y="51" text-anchor="middle" font-size="14" font-weight="700" fill="#1C1C1E" font-family="'Playfair Display',serif">85.1%</text>
-              <text x="55" y="63" text-anchor="middle" font-size="8" fill="#6C6C70" font-family="'DM Sans',sans-serif">Attendance</text>
-            </svg>
-            <div class="donut-legend">
-              <div class="donut-item">
-                <div class="donut-color" style="background:#1E8449"></div>
-                <span class="donut-lbl">Present</span>
-                <span class="donut-n">193</span>
-              </div>
-              <div class="donut-item">
-                <div class="donut-color" style="background:#D35400"></div>
-                <span class="donut-lbl">Late</span>
-                <span class="donut-n">18</span>
-              </div>
-              <div class="donut-item">
-                <div class="donut-color" style="background:#C0392B"></div>
-                <span class="donut-lbl">Absent</span>
-                <span class="donut-n">13</span>
-              </div>
-              <div class="donut-item">
-                <div class="donut-color" style="background:#2980B9"></div>
-                <span class="donut-lbl">On Leave</span>
-                <span class="donut-n">24</span>
-              </div>
-            </div>
-          </div>
-          <div class="divider"></div>
-          <div class="status-row" style="grid-template-columns:1fr 1fr;gap:8px;">
-            <div class="status-box sb-green" style="text-align:left;padding:12px 14px;">
-              <div class="sb-val" style="color:var(--green);font-size:20px">77.8%</div>
-              <div class="sb-label">On-time Rate</div>
-            </div>
-            <div class="status-box sb-orange" style="text-align:left;padding:12px 14px;">
-              <div class="sb-val" style="color:var(--orange);font-size:20px">7.3%</div>
-              <div class="sb-label">Late Rate</div>
-            </div>
-            <div class="status-box sb-red" style="text-align:left;padding:12px 14px;">
-              <div class="sb-val" style="color:var(--red-primary);font-size:20px">5.2%</div>
-              <div class="sb-label">Absence Rate</div>
-            </div>
-            <div class="status-box sb-blue" style="text-align:left;padding:12px 14px;">
-              <div class="sb-val" style="color:var(--blue-light);font-size:20px">9.7%</div>
-              <div class="sb-label">Leave Rate</div>
+      <div class="layer-head">
+        <div class="layer-label">Layer 3 — Trend Intelligence</div>
+        <div class="layer-rule"></div>
+        <div class="lbadge lb-gray">This Week + Forecast</div>
+      </div>
+      <div class="trend-row">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Weekly Attendance Trend</div><div class="card-desc">Daily rate Feb 16–20</div></div></div>
+          <div class="card-body">
+            <div class="wk-chart" id="weekChart"></div>
+            <div class="wk-stats">
+              <div><div class="wkstat-val" style="color:var(--ink)">84.3%</div><div class="wkstat-lbl">Week avg (Mon–Thu)</div></div>
+              <div><div class="wkstat-val" style="color:var(--red)">−1.8%</div><div class="wkstat-lbl">vs. last week avg</div></div>
+              <div><div class="wkstat-val" style="color:var(--orange)">54</div><div class="wkstat-lbl">Total late this week</div></div>
+              <div><div class="wkstat-val" style="color:var(--red)">38</div><div class="wkstat-lbl">Total absent this week</div></div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- EXECUTIVE ALERTS -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Compliance Flags</div>
-            <div class="card-subtitle">Requires executive attention</div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Repeat Absence Hotspots</div><div class="card-desc">Branches with recurring patterns — Feb MTD</div></div></div>
+          <div class="card-body">
+            <div class="pattern-list" id="patternList"></div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--surface);font-size:11px;color:var(--ink-3);line-height:1.5;">
+              <strong style="color:var(--ink)">Signal:</strong> Batangas absences cluster on Mondays — suggests schedule or morale issue. Warrants HR field visit.
+            </div>
           </div>
-          <div class="card-badge" style="background:rgba(192,57,43,0.08);border-color:rgba(192,57,43,0.2);color:var(--red-primary)">3 Active</div>
         </div>
-        <div class="card-body">
-          <div class="alert-list" id="alertList"></div>
-        </div>
-      </div>
-
-      <!-- TOP PERFORMING BRANCHES -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Branch Spotlight</div>
-            <div class="card-subtitle">Highest performers — month to date</div>
-          </div>
-          <div class="card-badge">Feb MTD</div>
-        </div>
-        <div class="card-body">
-          <div class="perf-list" id="perfList"></div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Predictive Risk Signals</div><div class="card-desc">Forward-looking flags for next 1–3 days</div></div></div>
+          <div class="card-body"><div class="fc-list" id="fcList"></div></div>
         </div>
       </div>
 
-    </div>
-
-    <!-- ROW 3: HQ Summary -->
-    <div class="section-label">Headquarters Summary</div>
-    <div class="row-bottom">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">HQ Department Breakdown</div>
-            <div class="card-subtitle">HQ department-level attendance summary — today</div>
-          </div>
-          <div class="card-badge">HQ Only</div>
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="bp-table" id="deptTable">
-            <thead>
-              <tr>
-                <th>Department</th>
-                <th>Head Count</th>
-                <th>Present</th>
-                <th>Late</th>
-                <th>Absent</th>
-                <th>Avg. Hours</th>
-                <th style="min-width:130px">Rate</th>
-              </tr>
-            </thead>
-            <tbody id="deptBody"></tbody>
-          </table>
-        </div>
+      <div class="layer-head">
+        <div class="layer-label">Layer 4 — Operational Health</div>
+        <div class="layer-rule"></div>
+        <div class="lbadge lb-gray">HQ Departments + MTD</div>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Organization Totals</div>
-            <div class="card-subtitle">Cross-branch consolidated figures</div>
+      <div class="ops-row">
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">HQ Department Health</div><div class="card-desc">Understaffed departments affect service delivery directly</div></div></div>
+          <div style="overflow-x:auto;">
+            <table class="dtable">
+              <thead><tr><th>Department</th><th>Headcount</th><th>Present</th><th>Absent</th><th>Avg Hrs</th><th>Rate</th><th>Health</th></tr></thead>
+              <tbody id="deptBody"></tbody>
+            </table>
           </div>
         </div>
-        <div class="card-body">
-          <div class="hq-summary-grid" id="orgTotals"></div>
-          <div class="divider"></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:10px;">Month-to-Date Attendance</div>
-          <div style="height:8px;background:var(--gray-pale);border-radius:10px;overflow:hidden;margin-bottom:6px;">
-            <div style="height:100%;width:87%;background:linear-gradient(90deg,#1E8449,#27AE60);border-radius:10px;"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;">
-            <span style="font-size:11px;color:var(--gray-mid)">Target: 90%</span>
-            <span style="font-size:12px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green)">87.2% achieved</span>
-          </div>
-          <div class="divider"></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-mid);margin-bottom:10px;">Late Incident Rate</div>
-          <div style="height:8px;background:var(--gray-pale);border-radius:10px;overflow:hidden;margin-bottom:6px;">
-            <div style="height:100%;width:73%;background:linear-gradient(90deg,var(--orange),var(--orange-light));border-radius:10px;"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;">
-            <span style="font-size:11px;color:var(--gray-mid)">Target: &lt;5%</span>
-            <span style="font-size:12px;font-weight:700;font-family:'DM Mono',monospace;color:var(--orange)">7.3% — above target</span>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Month-to-Date Scorecard</div><div class="card-desc">February 2026 — progress vs. targets</div></div></div>
+          <div class="card-body">
+            <div class="mtd-2col" id="mtdGrid"></div>
+            <div class="prog-wrap">
+              <div class="prog-top"><span class="prog-lbl">Attendance Target (90.0%)</span><span class="prog-val" style="color:var(--orange)">87.2%</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:87.2%;background:linear-gradient(90deg,var(--orange),#E5873A)"></div></div>
+              <div class="prog-note">2.8 pts below target — needs 1.2% daily improvement to close gap</div>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-top"><span class="prog-lbl">Late Rate Target (&lt;5.0%)</span><span class="prog-val" style="color:var(--red)">7.3%</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:73%;background:linear-gradient(90deg,var(--red),#E74C3C)"></div></div>
+              <div class="prog-note">2.3 pts above threshold — late policy enforcement needed</div>
+            </div>
+            <div class="prog-wrap" style="margin-bottom:0">
+              <div class="prog-top"><span class="prog-lbl">Avg Hours Target (8.0h)</span><span class="prog-val" style="color:var(--orange)">7.6h</span></div>
+              <div class="prog-track"><div class="prog-fill" style="width:95%;background:linear-gradient(90deg,var(--orange),#E5873A)"></div></div>
+              <div class="prog-note">0.4h deficit daily — ~48 hrs lost org-wide per month</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
+
 </main>
-
 <script>
-// ── BRANCH DATA ──
+// ── DATA ──
 const branches = [
-  {rank:1, name:'Iloilo Branch',     region:'Visayas',   present:26, total:28, late:1, absent:1, rate:93},
-  {rank:2, name:'Cebu Main',         region:'Visayas',   present:38, total:42, late:2, absent:2, rate:90},
-  {rank:3, name:'NCR South',         region:'Metro Manila', present:30, total:35, late:3, absent:2, rate:86},
-  {rank:4, name:'NCR North',         region:'Metro Manila', present:41, total:48, late:6, absent:4, rate:85},
-  {rank:5, name:'Davao Branch',      region:'Mindanao',  present:26, total:31, late:4, absent:3, rate:84},
-  {rank:6, name:'Batangas Branch',   region:'Luzon',     present:11, total:18, late:2, absent:5, rate:61},
+  {name:'Batangas Branch', region:'Luzon',        rate:61, absent:5, late:2, delta:-8, risk:'crit'},
+  {name:'Davao Branch',    region:'Mindanao',     rate:84, absent:3, late:4, delta:-2, risk:'warn'},
+  {name:'NCR North',       region:'Metro Manila', rate:85, absent:4, late:6, delta:+1, risk:'warn'},
+  {name:'NCR South',       region:'Metro Manila', rate:86, absent:2, late:3, delta:0,  risk:'ok'},
+  {name:'Cebu Main',       region:'Visayas',      rate:90, absent:2, late:2, delta:+2, risk:'ok'},
+  {name:'Iloilo Branch',   region:'Visayas',      rate:93, absent:1, late:1, delta:+1, risk:'ok'},
 ];
 
-function rankClass(r){
-  if(r===1)return'rank-1';
-  if(r===2)return'rank-2';
-  if(r===3)return'rank-3';
-  return'rank-n';
-}
-function rateColor(r){
-  if(r>=85)return'var(--green)';
-  if(r>=70)return'var(--orange)';
-  return'var(--red-primary)';
-}
-function rateGrad(r){
-  if(r>=85)return'linear-gradient(90deg,#1E8449,#27AE60)';
-  if(r>=70)return'linear-gradient(90deg,#D35400,#E67E22)';
-  return'linear-gradient(90deg,#C0392B,#E74C3C)';
-}
-function statusDot(r){
-  if(r>=85)return'<span class="status-dot sd-green"></span>';
-  if(r>=70)return'<span class="status-dot sd-orange"></span>';
-  return'<span class="status-dot sd-red"></span>';
-}
+function rateGrad(r){ return r>=85?'linear-gradient(90deg,#1A7A41,#25A35A)':r>=70?'linear-gradient(90deg,#C05621,#E5873A)':'linear-gradient(90deg,#C0392B,#E74C3C)'; }
+function rateColor(r){ return r>=85?'var(--green)':r>=70?'var(--orange)':'var(--red)'; }
 
-document.getElementById('branchTable').innerHTML = branches.map(b=>`
-  <tr>
-    <td><div class="${rankClass(b.rank)} rank-num">${b.rank}</div></td>
-    <td><div class="branch-name">${b.name}</div><div class="branch-region">${b.region}</div></td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;font-size:12.5px">${b.present} / ${b.total}</td>
-    <td>
-      <div class="rate-bar-wrap">
-        <div class="rate-bar-track">
-          <div class="rate-bar-fill" style="width:${b.rate}%;background:${rateGrad(b.rate)}"></div>
-        </div>
-        <span class="rate-val" style="color:${rateColor(b.rate)}">${b.rate}%</span>
-      </div>
-    </td>
-    <td style="font-family:'DM Mono',monospace;font-size:12.5px;font-weight:600;color:var(--orange)">${b.late}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:12.5px;font-weight:600;color:var(--red-primary)">${b.absent}</td>
-    <td>${statusDot(b.rate)} <span style="font-size:11.5px;color:${rateColor(b.rate)};font-weight:600;margin-left:4px">${b.rate>=85?'Good Standing':b.rate>=70?'Needs Attention':'Critical'}</span></td>
-  </tr>
-`).join('');
-
-// ── WEEKLY CHART ──
-const weekData = [
-  {day:'Mon', pct:83, col:'#1E8449'},
-  {day:'Tue', pct:88, col:'#1E8449'},
-  {day:'Wed', pct:81, col:'#1E8449'},
-  {day:'Thu', pct:85, col:'#C0392B'},
-  {day:'Fri', pct:null, col:'#6C6C70'},
-];
-document.getElementById('weekChart').innerHTML = weekData.map(d=>`
-  <div class="bar-col">
-    <div class="bar-pct" style="color:${d.col}">${d.pct ? d.pct+'%' : '—'}</div>
-    <div class="bar-track" style="height:88px">
-      <div class="bar-fill" style="height:${d.pct||0}%;background:${
-        d.col==='#C0392B'?'linear-gradient(180deg,#E74C3C,#C0392B)':
-        d.col==='#6C6C70'?'var(--gray-light)':'linear-gradient(180deg,#27AE60,#1E8449)'}"></div>
-    </div>
-    <div class="bar-label">${d.day}</div>
-  </div>
-`).join('');
-
-document.getElementById('trendRow').innerHTML = [
-  {label:'Week average', sub:'Mon–Thu', val:'84.3%', arrow:'ta-dn', arrowTxt:'▼ vs last week'},
-  {label:'Total late incidents', sub:'Week to date', val:'54', arrow:'ta-dn', arrowTxt:'▲ +9 this week'},
-  {label:'Total absences', sub:'Week to date', val:'38', arrow:'ta-ne', arrowTxt:'Stable'},
-].map(t=>`
-  <div class="trend-item">
-    <div><div class="trend-label">${t.label}</div><div class="trend-sub">${t.sub}</div></div>
-    <span class="trend-val">${t.val}</span>
-    <span class="trend-arrow ${t.arrow}">${t.arrowTxt}</span>
-  </div>
-`).join('');
-
-// ── ALERTS ──
-document.getElementById('alertList').innerHTML = [
-  {type:'critical', dot:'ad-red',    title:'Batangas Branch — Critical Attendance',   sub:'Attendance at 61%, 5 unexcused absences today. Immediate review recommended.', time:'08:15 AM'},
-  {type:'warning',  dot:'ad-orange', title:'Late Incident Spike — NCR North',         sub:'6 late arrivals today vs. 2-day average of 2.5. Pattern requires monitoring.', time:'08:42 AM'},
-  {type:'info',     dot:'ad-blue',   title:'Leave Approvals Pending',                 sub:'12 leave requests awaiting HR approval. May affect next week\'s headcount.', time:'09:00 AM'},
-].map(a=>`
-  <div class="alert-item alert-${a.type}">
-    <div class="alert-dot ${a.dot}" style="margin-top:4px"></div>
-    <div class="alert-text" style="flex:1">
-      <strong>${a.title}</strong>
-      <span>${a.sub}</span>
-    </div>
-    <div class="alert-time">${a.time}</div>
-  </div>
-`).join('');
-
-// ── TOP PERFORMERS ──
-const topBranches = [
-  {initials:'IB', color:'#1E8449', name:'Iloilo Branch',   sub:'93% rate · Visayas',       pct:'93%', streak:'18 days'},
-  {initials:'CM', color:'#2980B9', name:'Cebu Main',        sub:'90% rate · Visayas',       pct:'90%', streak:'12 days'},
-  {initials:'NS', color:'#6C3483', name:'NCR South',        sub:'86% rate · Metro Manila',  pct:'86%', streak:'5 days'},
-];
-document.getElementById('perfList').innerHTML = topBranches.map((p,i)=>`
-  <div class="perf-item">
-    <div class="perf-av" style="background:${p.color}">${p.initials}</div>
-    <div>
-      <div class="perf-name">${p.name}</div>
-      <div class="perf-sub">${p.sub}</div>
-    </div>
-    <div class="perf-stat">
-      <div class="perf-pct" style="color:${rateColor(parseInt(p.pct))}">${p.pct}</div>
-      <div class="perf-days">${p.streak} streak</div>
-    </div>
-  </div>
-`).join('');
-
-// ── DEPT TABLE ──
-const depts = [
-  {name:'Operations',      head:42, present:38, late:2, absent:2, hrs:7.9},
-  {name:'HR & Admin',      head:12, present:11, late:1, absent:0, hrs:8.1},
-  {name:'Finance',         head:8,  present:7,  late:0, absent:1, hrs:7.8},
-  {name:'IT & Systems',    head:6,  present:6,  late:0, absent:0, hrs:8.3},
-  {name:'Sales & Retail',  head:28, present:24, late:3, absent:1, hrs:7.5},
-  {name:'Security',        head:16, present:13, late:1, absent:2, hrs:8.0},
-];
-document.getElementById('deptBody').innerHTML = depts.map(d=>{
-  const rate = Math.round(d.present/d.head*100);
+// ── RISK TABLE ──
+document.getElementById('riskTable').innerHTML = branches.map(b=>{
+  const dCls = b.delta<0?'d-dn':b.delta>0?'d-up':'d-ne';
+  const dTxt = b.delta<0?'▼ '+Math.abs(b.delta)+'%':b.delta>0?'▲ +'+b.delta+'%':'→ Flat';
+  const rb = b.risk==='crit'?'<span class="risk-badge rb-crit">Critical</span>':
+             b.risk==='warn'?'<span class="risk-badge rb-warn">Needs Attention</span>':
+             '<span class="risk-badge rb-ok">Stable</span>';
   return `<tr>
-    <td><div class="branch-name">${d.name}</div></td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600">${d.head}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">${d.present}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--orange)">${d.late}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--red-primary)">${d.absent}</td>
-    <td style="font-family:'DM Mono',monospace;font-weight:600">${d.hrs}h</td>
-    <td>
-      <div class="rate-bar-wrap">
-        <div class="rate-bar-track">
-          <div class="rate-bar-fill" style="width:${rate}%;background:${rateGrad(rate)}"></div>
-        </div>
-        <span class="rate-val" style="color:${rateColor(rate)}">${rate}%</span>
-      </div>
-    </td>
+    <td><div class="bname">${b.name}</div><div class="bsub">${b.region}</div></td>
+    <td><div class="rate-wrap"><div class="rate-bar"><div class="rate-fill" style="width:${b.rate}%;background:${rateGrad(b.rate)}"></div></div><span class="rate-num" style="color:${rateColor(b.rate)}">${b.rate}%</span></div></td>
+    <td style="font-family:var(--mono);font-weight:600;color:var(--red)">${b.absent}</td>
+    <td style="font-family:var(--mono);font-weight:600;color:var(--orange)">${b.late}</td>
+    <td><span class="delta ${dCls}">${dTxt}</span></td>
+    <td>${rb}</td>
   </tr>`;
 }).join('');
 
-// ── ORG TOTALS ──
-document.getElementById('orgTotals').innerHTML = [
-  {val:'248',  label:'Total Workforce',   sub:'Across 6 branches',    color:'var(--charcoal)'},
-  {val:'211',  label:'Present Today',     sub:'Including late',        color:'var(--green)'},
-  {val:'31',   label:'Not Present',       sub:'Absent + on leave',     color:'var(--red-primary)'},
-  {val:'7.4h', label:'Avg. Hours Today',  sub:'vs 8.0h target',        color:'var(--gold-dark)'},
-].map(o=>`
-  <div class="hq-box">
-    <div class="hq-box-val" style="color:${o.color}">${o.val}</div>
-    <div class="hq-box-label">${o.label}</div>
-    <div class="hq-box-sub">${o.sub}</div>
+// ── ACTIONS ──
+document.getElementById('actionList').innerHTML = [
+  {cls:'ai-crit',lvlCls:'lvl-c',lvl:'Critical',
+   title:'Batangas Branch — Intervention Required Today',
+   body:'Attendance at 61%, 5 unexcused absences with no notices. Operations risk understaffing by afternoon.',
+   action:'Call branch manager, activate standby roster',time:'Since 08:00 AM'},
+  {cls:'ai-warn',lvlCls:'lvl-w',lvl:'Warning',
+   title:'Late Spike — NCR North (6 today vs. avg 2.5)',
+   body:'Pattern indicates schedule adherence breakdown. Left unaddressed, lates convert to absences within 2–3 days.',
+   action:'Issue attendance policy reminder to branch',time:'Since 08:42 AM'},
+  {cls:'ai-info',lvlCls:'lvl-i',lvl:'Watch',
+   title:'12 Leave Requests Awaiting HR Approval',
+   body:'Backlog creates uncertainty in next week\'s headcount. Early resolution allows scheduling adjustments.',
+   action:'HR to clear leave backlog today',time:'Since yesterday'},
+].map(a=>`
+  <div class="ai ${a.cls}">
+    <div class="ai-lvl ${a.lvlCls}">${a.lvl}</div>
+    <div class="ai-title">${a.title}</div>
+    <div class="ai-body">${a.body}</div>
+    <div class="ai-foot">
+      <div class="ai-action"><strong>Act:</strong> ${a.action}</div>
+      <div class="ai-time">${a.time}</div>
+    </div>
   </div>
 `).join('');
 
-// ── DONUT CHART ──
-setTimeout(()=>{
-  const circ = 2 * Math.PI * 40;
-  const data = [
-    {id:'d1', val:193, total:248, color:'#1E8449'},
-    {id:'d2', val:18,  total:248, color:'#D35400'},
-    {id:'d3', val:13,  total:248, color:'#C0392B'},
-    {id:'d4', val:24,  total:248, color:'#2980B9'},
-  ];
-  let offset = 0;
-  data.forEach(d=>{
-    const pct = d.val / d.total;
-    const dash = pct * circ;
-    const gap  = circ - dash;
-    const el = document.getElementById(d.id);
-    el.style.strokeDasharray = `${dash} ${gap}`;
-    el.style.strokeDashoffset = -offset;
-    offset += dash;
-  });
-}, 300);
+// ── WEEKLY CHART ──
+document.getElementById('weekChart').innerHTML = [
+  {day:'Mon',pct:83},{day:'Tue',pct:88},{day:'Wed',pct:81},{day:'Thu',pct:85,today:true},{day:'Fri',pct:null}
+].map(d=>`
+  <div class="wk-col">
+    <div class="wk-pct" style="color:${d.today?'var(--red)':d.pct?'var(--ink-2)':'var(--ink-3)'}">${d.pct?d.pct+'%':'—'}</div>
+    <div class="wk-track"><div class="wk-fill" style="height:${d.pct||0}%;background:${d.today?'linear-gradient(180deg,#E74C3C,#C0392B)':d.pct?'linear-gradient(180deg,#25A35A,#1A7A41)':'var(--rule)'}"></div></div>
+    <div class="wk-day" style="${d.today?'color:var(--red);font-weight:600':''}">${d.day}</div>
+  </div>
+`).join('');
 
-// ── SIDEBAR NAV ──
-document.querySelectorAll('.nav-item').forEach(item=>{
+// ── PATTERNS ──
+document.getElementById('patternList').innerHTML = [
+  {r:1,n:'Batangas Branch',s:'5 repeat absentees — Monday cluster',c:14},
+  {r:2,n:'Davao Branch',   s:'3 recurring absentees this month',   c:9},
+  {r:3,n:'NCR North',      s:'Lates converting to absences',       c:7},
+  {r:4,n:'NCR South',      s:'2 employees with 4+ absences each',  c:5},
+].map(p=>`
+  <div class="pitem">
+    <div class="prank">${p.r}</div>
+    <div class="pinfo"><div class="pname">${p.n}</div><div class="psub">${p.s}</div></div>
+    <div class="pcount">${p.c} incidents</div>
+  </div>
+`).join('');
+
+// ── FORECAST ──
+document.getElementById('fcList').innerHTML = [
+  {icon:'fci-r',ltr:'!',title:'Batangas likely below 60% tomorrow',body:'No roster backup confirmed. Without intervention today, further decline expected.',prob:'HIGH',pc:'var(--red)'},
+  {icon:'fci-o',ltr:'T',title:'Late spike may persist through Friday',body:'NCR North late pattern correlates with end-of-week fatigue.',prob:'MED',pc:'var(--orange)'},
+  {icon:'fci-b',ltr:'L',title:'Leave backlog impact — next week',body:'If all 12 requests approved, headcount drops ~4.8% next week.',prob:'LIKELY',pc:'var(--blue)'},
+  {icon:'fci-g',ltr:'C',title:'Cebu & Iloilo — stable, no VP action',body:'Both branches above 90% MTD. Minimal intervention required.',prob:'STABLE',pc:'var(--green)'},
+].map(f=>`
+  <div class="fc-item">
+    <div class="fc-icon ${f.icon}">${f.ltr}</div>
+    <div class="fc-text"><div class="fc-title">${f.title}</div><div class="fc-body">${f.body}</div></div>
+    <div class="fc-prob" style="color:${f.pc}">${f.prob}</div>
+  </div>
+`).join('');
+
+// ── DEPT ──
+document.getElementById('deptBody').innerHTML = [
+  {n:'Operations',    hc:42,p:38,a:2,h:7.9,r:90},
+  {n:'Sales & Retail',hc:28,p:24,a:1,h:7.5,r:86},
+  {n:'Security',      hc:16,p:13,a:2,h:8.0,r:81},
+  {n:'Finance',       hc:8, p:7, a:1,h:7.8,r:88},
+  {n:'HR & Admin',    hc:12,p:11,a:0,h:8.1,r:92},
+  {n:'IT & Systems',  hc:6, p:6, a:0,h:8.3,r:100},
+].map(d=>{
+  const col=d.r>=90?'var(--green)':d.r>=80?'var(--orange)':'var(--red)';
+  const hl=d.r>=90?'Good':d.r>=80?'Watch':'Risk';
+  return `<tr>
+    <td style="font-weight:600">${d.n}</td>
+    <td style="font-family:var(--mono)">${d.hc}</td>
+    <td style="font-family:var(--mono);font-weight:600;color:var(--green)">${d.p}</td>
+    <td style="font-family:var(--mono);font-weight:600;color:${d.a>0?'var(--red)':'var(--ink-3)'}">${d.a}</td>
+    <td style="font-family:var(--mono)">${d.h}h</td>
+    <td><div class="rate-wrap"><div class="rate-bar"><div class="rate-fill" style="width:${d.r}%;background:${rateGrad(d.r)}"></div></div><span class="rate-num" style="color:${rateColor(d.r)}">${d.r}%</span></div></td>
+    <td><span class="h-dot" style="background:${col}"></span><span style="font-size:11.5px;font-weight:600;color:${col}">${hl}</span></td>
+  </tr>`;
+}).join('');
+
+// ── MTD ──
+document.getElementById('mtdGrid').innerHTML = [
+  {v:'248',   l:'Total Workforce', s:'Across 6 branches', c:'var(--ink)'},
+  {v:'87.2%', l:'MTD Attendance',  s:'Target: 90.0%',     c:'var(--orange)'},
+  {v:'7.6h',  l:'Avg Daily Hours', s:'Target: 8.0h/day',  c:'var(--orange)'},
+  {v:'31',    l:'Off Today',       s:'Absent + on leave', c:'var(--red)'},
+].map(m=>`
+  <div class="mtd-box">
+    <div class="mtd-val" style="color:${m.c}">${m.v}</div>
+    <div class="mtd-lbl">${m.l}</div>
+    <div class="mtd-sub">${m.s}</div>
+  </div>
+`).join('');
+
+document.querySelectorAll('.sb-item').forEach(item=>{
   item.addEventListener('click', function(){
-    document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
     this.classList.add('active');
+    const target = this.getAttribute('data-page');
+    Object.keys(pages).forEach(k=>{
+      document.getElementById(pages[k].pageId).classList.remove('active');
+    });
+    if(pages[target]){
+      document.getElementById(pages[target].pageId).classList.add('active');
+      document.getElementById('topbarTitle').textContent = pages[target].title;
+    }
   });
 });
+
+// Special nav for account management
+document.querySelectorAll('[data-page="accounts"]').forEach(el=>{
+  el.setAttribute('data-page','accounts');
+});
+
+// ── MODAL ──
+let currentRole = 'hq-hr';
+
+
+function selectRole(role, el){
+  currentRole = role;
+  document.querySelectorAll('.role-opt').forEach(o=>o.classList.remove('selected','rb-orange','rb-blue-sel'));
+  el.classList.add('selected');
+  if(role==='branch-admin') el.classList.add('rb-orange');
+  if(role==='employee') el.classList.add('rb-blue-sel');
+
+  const bf = document.getElementById('branchField');
+  const hf = document.getElementById('hqDeptField');
+
+  if(role==='hq-hr'){
+    bf.style.display='none'; hf.style.display='block';
+    document.getElementById('createBtn').textContent='Create HQ HR Admin';
+  } else if(role==='branch-admin'){
+    bf.style.display='block'; hf.style.display='none';
+    document.getElementById('createBtn').textContent='Create Branch Admin';
+  } else {
+    bf.style.display='block'; hf.style.display='none';
+    document.getElementById('createBtn').textContent='Create Employee Account';
+  }
+}
+
+function selectRoleByKey(role){
+  const map = {'hq-hr':'roleOpt1','branch-admin':'roleOpt2','employee':'roleOpt3'};
+  const el = document.getElementById(map[role]);
+  if(el) selectRole(role, el);
+}
+
+// Initialize modal role display
+selectRoleByKey('hq-hr');
+document.getElementById('branchField').style.display='none';
+document.getElementById('hqDeptField').style.display='block';
 </script>
 </body>
 </html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDC ManPower — Branch Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:          #C0392B;
+  --red-deep:     #7B1E1E;
+  --red-muted:    rgba(192,57,43,0.09);
+  --red-border:   rgba(192,57,43,0.22);
+  --gold:         #B8942A;
+  --green:        #1A7A41;
+  --green-lt:     #25A35A;
+  --green-muted:  rgba(26,122,65,0.10);
+  --orange:       #C05621;
+  --orange-muted: rgba(192,86,33,0.09);
+  --blue:         #1B5FA8;
+  --blue-muted:   rgba(27,95,168,0.09);
+  --ink:          #111318;
+  --ink-2:        #3C4049;
+  --ink-3:        #6B7280;
+  --rule:         #E4E7EB;
+  --surface:      #F8F9FA;
+  --canvas:       #F0F2F5;
+  --white:        #FFFFFF;
+  --sidebar:      220px;
+  --font:         'IBM Plex Sans', sans-serif;
+  --mono:         'IBM Plex Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--canvas); color: var(--ink); display: flex; min-height: 100vh; font-size: 14px; line-height: 1.5; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+
+/* ══ SIDEBAR ══ */
+.sidebar {
+  width: var(--sidebar);
+  background: #610e03;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  display: flex; flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.sidebar::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+}
+.sb-brand { padding: 22px 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sb-logo  { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sb-icon  {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--red), var(--red-deep));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px; color: #fff; flex-shrink: 0;
+}
+.sb-name  { font-size: 13px; font-weight: 600; color: #fff; }
+.sb-sub   { font-size: 10px; color: rgba(255,255,255,0.32); letter-spacing: 1.4px; text-transform: uppercase; }
+.sb-tag   {
+  display: inline-block;
+  background: rgba(184,148,42,0.14); border: 1px solid rgba(184,148,42,0.28);
+  color: #C9A84C; font-size: 9.5px; font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 4px;
+}
+.sb-nav  { flex: 1; padding: 12px 0; overflow-y: auto; }
+.sb-sec  {
+  font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.18); padding: 10px 18px 5px;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 9px; padding: 9px 18px;
+  color: rgba(255,255,255,0.42); font-size: 12.5px;
+  cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s;
+}
+.sb-item:hover  { color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.04); }
+.sb-item.active { color: #fff; background: rgba(192,57,43,0.15); border-left-color: var(--red); font-weight: 500; }
+.sb-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.4; flex-shrink: 0; }
+.sb-item.active .sb-dot { background: var(--red); opacity: 1; }
+.sb-foot {
+  padding: 13px 18px; border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 10px;
+}
+.sb-av {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--red-deep));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.14);
+}
+.sb-uname { font-size: 12px; font-weight: 600; color: #fff; }
+.sb-urole { font-size: 10px; color: rgba(255,255,255,0.28); }
+.sb-live  { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 9.5px; color: var(--green-lt); font-weight: 600; }
+.sb-ld    { width: 6px; height: 6px; border-radius: 50%; background: var(--green-lt); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+/* ══ MAIN ══ */
+.main    { margin-left: var(--sidebar); flex: 1; display: flex; flex-direction: column; }
+.topbar  {
+  background: var(--white); border-bottom: 1px solid var(--rule);
+  height: 58px; padding: 0 28px;
+  display: flex; align-items: center;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.tb-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+.tb-sub   { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+.tb-right { display: flex; align-items: center; gap: 9px; margin-left: auto; }
+.chip     { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 500; border: 1px solid; }
+.ch-live  { background: var(--green-muted); border-color: rgba(26,122,65,0.22); color: var(--green); }
+.ch-ld    { width: 6px; height: 6px; border-radius: 50%; background: var(--green-lt); animation: blink 2s infinite; }
+.ch-date  { background: var(--surface); border-color: var(--rule); color: var(--ink-2); }
+.ch-vp    { background: var(--red-muted); border-color: var(--red-border); color: var(--red); font-weight: 600; font-size: 10.5px; letter-spacing: 0.5px; }
+.content  { padding: 22px 28px; flex: 1; }
+
+/* ══ LAYER HEADERS ══ */
+.lh  { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; margin-top: 2px; }
+.ll  { font-size: 9.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.lr  { flex: 1; height: 1px; background: var(--rule); }
+.lbg { font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+.lb-gray { background: var(--surface); color: var(--ink-3); border: 1px solid var(--rule); }
+.lb-red  { background: var(--red-muted); color: var(--red); border: 1px solid var(--red-border); }
+.lb-warn { background: var(--orange-muted); color: var(--orange); border: 1px solid rgba(192,86,33,0.2); }
+.lb-blue { background: var(--blue-muted); color: var(--blue); border: 1px solid rgba(27,95,168,0.2); }
+.lb-green{ background: var(--green-muted); color: var(--green); border: 1px solid rgba(26,122,65,0.2); }
+
+/* ══ BRANCH TABS ══ */
+.branch-tabs { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+.btab {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 15px; border-radius: 8px;
+  border: 1px solid var(--rule); background: var(--white);
+  cursor: pointer; transition: all 0.15s; font-family: var(--font);
+}
+.btab:hover { border-color: var(--red-border); background: var(--red-muted); }
+.btab.active { border-color: var(--red); background: var(--red-muted); }
+.btab-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.btab-name { font-size: 12.5px; font-weight: 500; color: var(--ink-2); }
+.btab.active .btab-name { color: var(--red); font-weight: 600; }
+.btab-rate { font-family: var(--mono); font-size: 11px; font-weight: 700; }
+
+/* ══ SCORECARD ══ */
+.scorecard { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 22px; }
+.scard {
+  background: var(--white); border-radius: 10px; border: 1px solid var(--rule);
+  padding: 17px 17px 14px; position: relative; overflow: hidden;
+  transition: box-shadow 0.2s; animation: fadeUp 0.4s ease both;
+}
+.scard:hover { box-shadow: 0 5px 18px rgba(0,0,0,0.07); }
+.scard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.sc-green::before { background: var(--green); }
+.sc-red::before   { background: var(--red); }
+.sc-orange::before{ background: var(--orange); }
+.sc-blue::before  { background: var(--blue); }
+.sc-gold::before  { background: var(--gold); }
+.scard:nth-child(1){animation-delay:.03s} .scard:nth-child(2){animation-delay:.07s}
+.scard:nth-child(3){animation-delay:.11s} .scard:nth-child(4){animation-delay:.15s} .scard:nth-child(5){animation-delay:.19s}
+.sc-label { font-size: 9.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-3); margin-bottom: 9px; }
+.sc-value { font-family: var(--mono); font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+.sc-sub   { font-size: 11px; color: var(--ink-3); margin-bottom: 8px; }
+.sc-pill  { display: inline-flex; align-items: center; font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 5px; }
+.p-ok   { background: var(--green-muted); color: var(--green); }
+.p-warn { background: var(--orange-muted); color: var(--orange); }
+.p-bad  { background: var(--red-muted); color: var(--red); }
+.p-neu  { background: var(--blue-muted); color: var(--blue); }
+
+/* ══ MAIN ROW: CHART + SIDE ══ */
+.row-main { display: grid; grid-template-columns: 1fr 320px; gap: 14px; margin-bottom: 14px; }
+.row-two  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+
+.card { background: var(--white); border-radius: 10px; border: 1px solid var(--rule); overflow: hidden; animation: fadeUp 0.45s ease both; animation-delay: 0.2s; }
+.card-head { padding: 14px 18px 12px; border-bottom: 1px solid var(--surface); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.card-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.card-desc  { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+.card-body  { padding: 16px 18px; }
+
+/* ══ 30-DAY BAR CHART ══ */
+.day-chart { display: flex; align-items: flex-end; gap: 3px; height: 110px; }
+.day-col   { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative; }
+.day-track { flex: 1; width: 100%; background: var(--canvas); border-radius: 3px 3px 0 0; position: relative; overflow: visible; cursor: default; }
+.day-fill  { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 3px 3px 0 0; transition: height 1s cubic-bezier(0.34,1.1,0.64,1); }
+.day-lbl   { font-family: var(--mono); font-size: 8.5px; color: var(--ink-3); }
+.day-tip   {
+  display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff; font-size: 10px; font-family: var(--mono);
+  padding: 4px 8px; border-radius: 5px; white-space: nowrap; z-index: 20; pointer-events: none;
+}
+.day-col:hover .day-tip { display: block; }
+.day-col.is-weekend .day-fill { background: var(--canvas) !important; opacity: 0.5; }
+
+/* ══ STATUS BREAKDOWN ══ */
+.breakdown { display: flex; flex-direction: column; gap: 9px; }
+.bk-row    { display: flex; align-items: center; gap: 10px; }
+.bk-label  { font-size: 11.5px; font-weight: 500; width: 58px; flex-shrink: 0; }
+.bk-track  { flex: 1; height: 5px; background: var(--canvas); border-radius: 3px; overflow: hidden; }
+.bk-fill   { height: 100%; border-radius: 3px; transition: width 1s ease; }
+.bk-count  { font-family: var(--mono); font-size: 11.5px; font-weight: 600; width: 36px; text-align: right; flex-shrink: 0; }
+
+/* ══ RISK VERDICT ══ */
+.verdict-box { border-radius: 8px; padding: 14px 16px; border: 1px solid; border-left: 3px solid; }
+.verdict-lvl { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+.verdict-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+.verdict-body  { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+.verdict-action { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06); font-size: 11.5px; font-weight: 500; color: var(--ink-2); }
+.verdict-action strong { color: var(--ink); }
+
+/* ══ ROOT CAUSES ══ */
+.cause-list { display: flex; flex-direction: column; gap: 8px; }
+.cause-item { border-radius: 8px; border-left: 3px solid; padding: 11px 14px; }
+.ci-crit { background: rgba(192,57,43,0.04); border-color: var(--red); }
+.ci-warn { background: rgba(192,86,33,0.04); border-color: var(--orange); }
+.ci-info { background: rgba(27,95,168,0.04);  border-color: var(--blue); }
+.ci-good { background: rgba(26,122,65,0.04);  border-color: var(--green); }
+.ci-type  { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 3px; }
+.ct-crit { color: var(--red); } .ct-warn { color: var(--orange); } .ct-info { color: var(--blue); } .ct-good { color: var(--green); }
+.ci-title { font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.ci-body  { font-size: 11.5px; color: var(--ink-3); line-height: 1.45; }
+
+/* ══ DAY-OF-WEEK GRID ══ */
+.dow-wrap { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; }
+.dow-cell {
+  border-radius: 8px; padding: 10px 8px; text-align: center;
+  border: 1px solid var(--rule); transition: transform 0.15s;
+}
+.dow-cell:hover { transform: translateY(-2px); }
+.dow-day  { font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
+.dow-num  { font-family: var(--mono); font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+.dow-sub  { font-size: 9.5px; color: var(--ink-3); }
+.dow-insight { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--surface); font-size: 11px; color: var(--ink-3); line-height: 1.5; }
+
+/* ══ REPORTS SECTION ══ */
+.reports-banner {
+  background: linear-gradient(135deg, #0D1117 0%, #1C2333 100%);
+  border-radius: 10px; padding: 20px 24px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.reports-banner::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+}
+.rb-left h3   { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.rb-left p    { font-size: 11.5px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+.rb-right     { font-size: 11px; color: rgba(255,255,255,0.3); max-width: 280px; text-align: right; line-height: 1.5; }
+
+.reports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.report-card  {
+  background: var(--white); border-radius: 10px; border: 1px solid var(--rule);
+  padding: 18px; display: flex; gap: 14px; align-items: flex-start;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  animation: fadeUp 0.45s ease both;
+}
+.report-card:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.08); border-color: rgba(192,57,43,0.22); }
+.report-card:nth-child(1){animation-delay:.05s} .report-card:nth-child(2){animation-delay:.1s}
+.report-card:nth-child(3){animation-delay:.15s} .report-card:nth-child(4){animation-delay:.2s}
+.rep-icon {
+  width: 42px; height: 42px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; font-family: var(--mono);
+}
+.ri-red    { background: var(--red); }
+.ri-orange { background: var(--orange); }
+.ri-blue   { background: var(--blue); }
+.ri-green  { background: var(--green); }
+.rep-info  { flex: 1; min-width: 0; }
+.rep-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.rep-desc  { font-size: 11.5px; color: var(--ink-3); line-height: 1.45; margin-bottom: 10px; }
+.rep-meta  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rep-tag   { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.rt-inc  { background: var(--red-muted); color: var(--red); }
+.rt-sum  { background: var(--blue-muted); color: var(--blue); }
+.rt-risk { background: var(--orange-muted); color: var(--orange); }
+.rt-com  { background: var(--green-muted); color: var(--green); }
+.rep-period { font-size: 10px; color: var(--ink-3); }
+.rep-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 7px;
+  background: var(--ink); color: #fff; border: none;
+  font-size: 12px; font-weight: 600; font-family: var(--font);
+  cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  flex-shrink: 0; align-self: center; margin-left: 6px;
+}
+.rep-btn:hover   { background: var(--red-deep); }
+.rep-btn.loading { background: var(--orange); cursor: default; pointer-events: none; }
+.rep-btn.done    { background: var(--green); cursor: default; pointer-events: none; }
+
+/* ══ RATE HELPERS ══ */
+.rate-wrap { display: flex; align-items: center; gap: 8px; }
+.rate-bar  { flex: 1; height: 5px; background: var(--canvas); border-radius: 4px; overflow: hidden; min-width: 60px; }
+.rate-fill { height: 100%; border-radius: 4px; }
+.rate-num  { font-family: var(--mono); font-size: 12px; font-weight: 600; width: 38px; text-align: right; flex-shrink: 0; }
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <div class="sb-icon">GDC</div>
+      <div>
+        <div class="sb-name">ManPower</div>
+        <div class="sb-sub">Intelligence</div>
+      </div>
+    </div>
+    <div class="sb-tag">VP Executive</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Dashboard</div>
+    <div class="sb-item"><div class="sb-dot"></div>Decision Dashboard</div>
+    <div class="sb-item active"><div class="sb-dot"></div>Branch Intelligence</div>
+
+    <div class="sb-sec">Administration</div>
+    <div class="sb-item"><div class="sb-dot"></div>Account Management</div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-av">VP</div>
+    <div>
+      <div class="sb-uname">Vice President</div>
+      <div class="sb-urole">Read-only · HQ</div>
+    </div>
+    <div class="sb-live"><div class="sb-ld"></div>Live</div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div class="tb-title">Branch Intelligence</div>
+      <div class="tb-sub">Per-branch analysis, risk signals, and executive reports — Feb 19, 2026</div>
+    </div>
+    <div class="tb-right">
+      <div class="chip ch-live"><div class="ch-ld"></div>Live Data</div>
+      <div class="chip ch-date">Feb 19, 2026</div>
+      <div class="chip ch-vp">VP ACCESS</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- BRANCH SELECTOR -->
+    <div class="lh">
+      <div class="ll">Select Branch to Analyze</div>
+      <div class="lr"></div>
+      <div class="lbg lb-gray">6 Branches</div>
+    </div>
+    <div class="branch-tabs" id="branchTabs"></div>
+
+    <!-- SCORECARD -->
+    <div class="lh">
+      <div class="ll">Branch Scorecard — Today vs. Target</div>
+      <div class="lr"></div>
+      <div class="lbg lb-gray" id="scDate">Feb 19, 2026</div>
+    </div>
+    <div class="scorecard" id="scorecard"></div>
+
+    <!-- 30-DAY CHART + SIDE PANEL -->
+    <div class="lh">
+      <div class="ll">30-Day Attendance History</div>
+      <div class="lr"></div>
+      <div class="lbg lb-gray">February 2026</div>
+    </div>
+    <div class="row-main">
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title" id="chartTitle">Daily Attendance Rate</div>
+            <div class="card-desc">Each bar = one working day. Hover for exact rate. Weekends shown as gaps.</div>
+          </div>
+          <div class="lbg lb-gray">Last 30 Days</div>
+        </div>
+        <div class="card-body">
+          <div class="day-chart" id="dayChart"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:7px;">
+            <span style="font-family:var(--mono);font-size:9px;color:var(--ink-3)">Feb 1</span>
+            <span style="font-family:var(--mono);font-size:9px;color:var(--ink-3)">Feb 19</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+
+        <!-- MTD BREAKDOWN -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">MTD Status Breakdown</div>
+              <div class="card-desc">February month-to-date totals</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="breakdown" id="breakdown"></div>
+          </div>
+        </div>
+
+        <!-- VP VERDICT -->
+        <div class="card" style="flex:1">
+          <div class="card-head">
+            <div>
+              <div class="card-title">VP Risk Verdict</div>
+              <div class="card-desc">What this branch needs from VP level</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="verdict"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ROOT CAUSES + DAY-OF-WEEK -->
+    <div class="row-two">
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Root Cause Analysis</div>
+            <div class="card-desc">Key drivers behind this branch's attendance numbers</div>
+          </div>
+          <div class="lbg" id="causeBadge">—</div>
+        </div>
+        <div class="card-body">
+          <div class="cause-list" id="causeList"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Absence Pattern by Day of Week</div>
+            <div class="card-desc">Which days this branch loses the most headcount — MTD</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="dow-wrap" id="dowWrap"></div>
+          <div class="dow-insight" id="dowInsight"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- REPORTS -->
+    <div class="lh" style="margin-top:6px;">
+      <div class="ll">Executive Reports — Download</div>
+      <div class="lr"></div>
+      <div class="lbg lb-red">VP Only · 4 Reports</div>
+    </div>
+
+    <div class="reports-banner">
+      <div class="rb-left">
+        <h3>Important Reports Available for Download</h3>
+        <p>Only the 4 reports a VP needs for manpower decisions. Raw attendance logs stay with HR Admin.</p>
+      </div>
+      <div class="rb-right">
+        Reports are generated for the <strong style="color:rgba(255,255,255,0.7)" id="bannerBranch">selected branch</strong> and current period. Downloads as CSV — ready for presentation or escalation.
+      </div>
+    </div>
+    <div class="reports-grid" id="reportsGrid"></div>
+
+  </div>
+</main>
+
+<script>
+// ══════════════════════
+// BRANCH DATA
+// ══════════════════════
+const BRANCHES = {
+  'Batangas Branch': {
+    region: 'Luzon', color: '#C0392B', risk: 'critical',
+    today: { rate:61, present:11, total:18, late:2, absent:5, avgHrs:6.8 },
+    mtd:   { rate:64, present:178, late:29, absent:54, onLeave:14, totalDays:275 },
+    days30: [79,75,0,0,73,72,74,70,68,0,0,65,71,68,64,63,0,0,68,65,63,62,0,0,66,64,62,61,61,0],
+    dow: { Mon:8, Tue:6, Wed:9, Thu:7, Fri:5 },
+    dowNote: 'Absences cluster heavily on Mondays (8 incidents) — a persistent start-of-week pattern suggesting a morale or scheduling issue that warrants an HR field investigation.',
+    causes: [
+      { type:'crit', title:'5 Repeat Offenders — Chronic Absenteeism', body:'5 employees have 4+ unexcused absences this month with no progressive discipline initiated. This is the primary driver of the branch\'s low rate.' },
+      { type:'crit', title:'No Standby Roster in Place', body:'The branch has no documented backup roster. Every unplanned absence directly reduces operational headcount with no recovery mechanism.' },
+      { type:'warn', title:'Monday Absence Cluster — Possible Morale Issue', body:'62% of all absences fall on Mondays. This pattern is sustained across 3+ weeks and suggests a systemic attendance culture problem.' },
+      { type:'info', title:'Branch Manager Has Not Filed Incident Reports', body:'Zero disciplinary notices filed this month despite 54 MTD absences. Policy enforcement is not being applied at the branch level.' },
+    ],
+    verdict: {
+      level: 'critical', color: var_red,
+      title: 'Critical — VP Intervention Required Today',
+      body: 'Batangas Branch is the most at-risk in the organization at 61% attendance. The branch manager has not enforced attendance policy and chronic absentees are unaddressed. This requires VP-level escalation immediately.',
+      action: 'Call branch manager directly. Mandate standby roster activation and incident report submission by end of day.'
+    }
+  },
+  'Davao Branch': {
+    region: 'Mindanao', color: '#C05621', risk: 'warning',
+    today: { rate:84, present:26, total:31, late:4, absent:3, avgHrs:7.6 },
+    mtd:   { rate:85, present:380, late:42, absent:35, onLeave:18, totalDays:465 },
+    days30: [91,88,0,0,87,86,88,87,85,0,0,84,86,85,84,83,0,0,85,84,85,85,0,0,86,85,84,84,84,0],
+    dow: { Mon:4, Tue:4, Wed:7, Thu:5, Fri:4 },
+    dowNote: 'Absences are more evenly distributed but Wednesday shows a notable spike (7 incidents). Mid-week dip is worth monitoring — may indicate scheduling fatigue.',
+    causes: [
+      { type:'warn', title:'Late Rate Rising — 4 Today vs. 2.1 Weekly Avg', body:'Late arrivals have increased from 2.1% last week to 4.8% this week. Shift schedule adherence appears to be slipping without corrective action.' },
+      { type:'warn', title:'3 Employees on Informal Leave Pattern', body:'3 employees are taking frequent single-day absences without proper leave filings. This creates payroll and compliance documentation gaps.' },
+      { type:'info', title:'Attendance Borderline — Could Slip Below 80%', body:'At current trajectory and without intervention, the branch risks falling below 80% attendance by end of month if two more employees go absent.' },
+    ],
+    verdict: {
+      level: 'warning', color: var_orange,
+      title: 'Warning — HR Action Needed This Week',
+      body: 'Davao Branch is showing early warning signals. Late rate is rising and informal leave patterns are not being documented. Uncorrected, this branch could deteriorate to critical within 1–2 weeks.',
+      action: 'Direct HR Admin to conduct a branch review, address informal leave filings, and issue a schedule compliance memo.'
+    }
+  },
+  'NCR North': {
+    region: 'Metro Manila', color: '#8B1A1A', risk: 'warning',
+    today: { rate:85, present:41, total:48, late:6, absent:4, avgHrs:7.5 },
+    mtd:   { rate:86, present:618, late:58, absent:40, onLeave:22, totalDays:740 },
+    days30: [90,88,0,0,87,87,88,88,87,0,0,86,87,86,86,85,0,0,86,86,87,87,0,0,87,86,85,85,85,0],
+    dow: { Mon:5, Tue:4, Wed:5, Thu:8, Fri:6 },
+    dowNote: 'Thursday is the worst day for this branch — 8 absence incidents. End-of-week fatigue and late arrivals often precede Thursday absences. Needs attendance policy re-enforcement.',
+    causes: [
+      { type:'warn', title:'Today\'s Late Spike — 6 Lates vs. Avg 2.5', body:'NCR North recorded 6 late arrivals today — more than double the weekly average. Pattern suggests schedule adherence is breaking down.' },
+      { type:'warn', title:'2 Repeat Absentees — Not Yet on Record', body:'2 of today\'s 4 absentees have prior unexcused absences this month. No formal notice has been issued to either employee.' },
+      { type:'info', title:'Attendance Rate Stable But Late Rate Is Problematic', body:'The attendance rate (85%) is acceptable, but the late rate (7.8% MTD) is well above the 5% org target. Lates left unchecked convert to absences.' },
+    ],
+    verdict: {
+      level: 'warning', color: var_orange,
+      title: 'Warning — Late Policy Must Be Enforced',
+      body: 'NCR North\'s attendance rate is acceptable but its late incident rate is a red flag. Uncorrected late patterns typically convert to absences within 1–2 weeks. The spike today makes this urgent.',
+      action: 'Issue a branch-wide attendance policy reminder. Flag 2 repeat absentees for formal documentation by HR Admin.'
+    }
+  },
+  'NCR South': {
+    region: 'Metro Manila', color: '#1A5276', risk: 'stable',
+    today: { rate:86, present:30, total:35, late:3, absent:2, avgHrs:7.8 },
+    mtd:   { rate:87, present:440, late:33, absent:28, onLeave:12, totalDays:520 },
+    days30: [90,89,0,0,88,88,89,88,88,0,0,87,88,88,87,87,0,0,87,87,88,88,0,0,87,86,86,87,86,0],
+    dow: { Mon:3, Tue:3, Wed:4, Thu:5, Fri:4 },
+    dowNote: 'Fairly distributed absence pattern. Thursday is slightly elevated but no dominant problem day. This branch has consistent week-over-week behavior.',
+    causes: [
+      { type:'info', title:'2 Pending Leave Requests Not Yet Processed', body:'Leave requests submitted but awaiting HR approval. If employees assume approval and go absent, it creates unexcused absence records.' },
+      { type:'info', title:'Below 90% MTD Target — Minor Gap', body:'At 87% MTD, NCR South is 3 points below the organizational target. No urgent risk, but HR should monitor to prevent further dip.' },
+    ],
+    verdict: {
+      level: 'stable', color: var_green,
+      title: 'Stable — No VP Action Required',
+      body: 'NCR South is operating within acceptable parameters. No chronic absentees, no policy violations, and no escalating patterns. HR Admin can manage routine oversight without VP involvement.',
+      action: 'No action required. Ensure HR Admin processes the 2 pending leave requests to keep records clean.'
+    }
+  },
+  'Cebu Main': {
+    region: 'Visayas', color: '#1A7A41', risk: 'stable',
+    today: { rate:90, present:38, total:42, late:2, absent:2, avgHrs:8.0 },
+    mtd:   { rate:91, present:556, late:22, absent:18, onLeave:16, totalDays:620 },
+    days30: [93,92,0,0,91,91,92,91,91,0,0,90,91,91,90,90,0,0,90,90,91,91,0,0,91,90,90,90,90,0],
+    dow: { Mon:2, Tue:2, Wed:3, Thu:4, Fri:2 },
+    dowNote: 'No dominant absence day — very even distribution across the week. Reflects consistent discipline and effective local management.',
+    causes: [
+      { type:'good', title:'Consistently Above 90% Attendance MTD', body:'Cebu Main is the second-best performing branch. Attendance discipline is strong and the branch manager is actively managing headcount.' },
+      { type:'info', title:'2 Isolated Absences Today — No Pattern', body:'Both absent employees today have no prior absences this month. These appear to be isolated incidents with no risk of repeat pattern.' },
+    ],
+    verdict: {
+      level: 'stable', color: var_green,
+      title: 'Stable — Top Performer, No Action Needed',
+      body: 'Cebu Main is performing well above the organizational target. No repeat absentees, low late rate, and average hours are on target. VP attention is not required.',
+      action: 'No action required. Consider using Cebu Main\'s attendance practices as a model for struggling branches.'
+    }
+  },
+  'Iloilo Branch': {
+    region: 'Visayas', color: '#6C3483', risk: 'stable',
+    today: { rate:93, present:26, total:28, late:1, absent:1, avgHrs:8.2 },
+    mtd:   { rate:93, present:377, late:14, absent:12, onLeave:8, totalDays:411 },
+    days30: [95,94,0,0,93,93,94,93,93,0,0,93,93,93,94,93,0,0,93,93,93,94,0,0,94,93,93,93,93,0],
+    dow: { Mon:1, Tue:2, Wed:2, Thu:3, Fri:2 },
+    dowNote: 'Near-uniform distribution with minimal absences on all days. This branch has the best attendance culture in the organization.',
+    causes: [
+      { type:'good', title:'Best Performing Branch — 93% MTD Attendance', body:'Iloilo Branch consistently leads the organization in attendance. Strong branch leadership and staff discipline are the primary drivers.' },
+      { type:'good', title:'Late Rate at 3.4% — Well Below 5% Target', body:'The late rate is the lowest in the organization, well below the 5% threshold. No corrective action needed at this branch.' },
+    ],
+    verdict: {
+      level: 'stable', color: var_green,
+      title: 'Stable — Organization\'s Best Branch',
+      body: 'Iloilo Branch leads the organization in every attendance metric. VP oversight is not required. The branch manager is effectively managing the workforce.',
+      action: 'No action required. Document Iloilo\'s practices and share as a benchmark during the next VP operations review.'
+    }
+  }
+};
+
+// CSS var shims for use in JS data
+function var_red()    { return 'var(--red)'; }
+function var_orange() { return 'var(--orange)'; }
+function var_green()  { return 'var(--green)'; }
+
+// Fix verdict colors since we can't call functions in data literals
+const VERDICT_COLORS = {
+  critical: { bg:'rgba(192,57,43,0.05)',  border:'rgba(192,57,43,0.22)',  left:'var(--red)',    lbl:'var(--red)' },
+  warning:  { bg:'rgba(192,86,33,0.05)',  border:'rgba(192,86,33,0.22)',  left:'var(--orange)', lbl:'var(--orange)' },
+  stable:   { bg:'rgba(26,122,65,0.05)',  border:'rgba(26,122,65,0.22)',  left:'var(--green)',  lbl:'var(--green)' },
+};
+
+let selected = 'Batangas Branch';
+
+// ══ HELPERS ══
+function rateGrad(r) {
+  return r >= 88 ? 'linear-gradient(90deg,#1A7A41,#25A35A)'
+       : r >= 75 ? 'linear-gradient(90deg,#C05621,#E5873A)'
+       : 'linear-gradient(90deg,#C0392B,#E74C3C)';
+}
+function rateColor(r) {
+  return r >= 88 ? 'var(--green)' : r >= 75 ? 'var(--orange)' : 'var(--red)';
+}
+function riskBadge(risk) {
+  if (risk === 'critical') return '<span class="lbg lb-red">Critical</span>';
+  if (risk === 'warning')  return '<span class="lbg lb-warn">Needs Attention</span>';
+  return '<span class="lbg lb-green">Stable</span>';
+}
+
+// ══ RENDER BRANCH TABS ══
+function renderTabs() {
+  const order = ['critical','warning','stable'];
+  const sorted = Object.entries(BRANCHES).sort((a,b) => order.indexOf(a[1].risk) - order.indexOf(b[1].risk));
+  document.getElementById('branchTabs').innerHTML = sorted.map(([name, d]) => {
+    const dotColor = d.risk === 'critical' ? 'var(--red)' : d.risk === 'warning' ? 'var(--orange)' : 'var(--green-lt)';
+    return `<div class="btab ${name === selected ? 'active' : ''}" onclick="selectBranch('${name}')">
+      <div class="btab-dot" style="background:${dotColor}"></div>
+      <div class="btab-name">${name}</div>
+      <div class="btab-rate" style="color:${rateColor(d.today.rate)}">${d.today.rate}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ RENDER SCORECARD ══
+function renderScorecard(d) {
+  const items = [
+    { label:'Attendance Rate',   val:`${d.today.rate}%`, sub:`${d.today.present} of ${d.today.total} present today`, pill: d.today.rate>=88?['p-ok','Meets target']:d.today.rate>=75?['p-warn','Needs attention']:['p-bad','Critical — action required'], cls:'sc-green' },
+    { label:'Unexcused Absent',  val:`${d.today.absent}`, sub:'employees with no notice filed', pill: d.today.absent>=4?['p-bad','High — escalate']:d.today.absent>=2?['p-warn','Monitor closely']:['p-ok','Low — acceptable'], cls:'sc-red' },
+    { label:'Late Arrivals',     val:`${d.today.late}`, sub:'after cutoff today', pill: d.today.late>=5?['p-bad','Spike — enforce policy']:d.today.late>=3?['p-warn','Above average']:['p-ok','Within normal range'], cls:'sc-orange' },
+    { label:'Avg Hours Today',   val:`${d.today.avgHrs}h`, sub:'target: 8.0h per day', pill: d.today.avgHrs>=8?['p-ok','On target']:d.today.avgHrs>=7.5?['p-warn','Slightly below']:['p-bad','Below target'], cls:'sc-blue' },
+    { label:'MTD Attendance',    val:`${d.mtd.rate}%`, sub:'February month-to-date rate', pill: d.mtd.rate>=90?['p-ok','Meets 90% target']:d.mtd.rate>=82?['p-warn','Below 90% target']:['p-bad','Far below target'], cls:'sc-gold' },
+  ];
+  document.getElementById('scorecard').innerHTML = items.map((s,i) => `
+    <div class="scard ${s.cls}" style="animation-delay:${0.03+i*0.04}s">
+      <div class="sc-label">${s.label}</div>
+      <div class="sc-value" style="color:${s.cls.includes('green')?'var(--green)':s.cls.includes('red')?'var(--red)':s.cls.includes('orange')?'var(--orange)':s.cls.includes('blue')?'var(--blue)':'#A07830'}">${s.val}</div>
+      <div class="sc-sub">${s.sub}</div>
+      <div class="sc-pill ${s.pill[0]}">${s.pill[1]}</div>
+    </div>`).join('');
+}
+
+// ══ RENDER 30-DAY CHART ══
+function renderChart(name, d) {
+  document.getElementById('chartTitle').textContent = `Daily Attendance Rate — ${name}`;
+  const days = d.days30;
+  document.getElementById('dayChart').innerHTML = days.map((v, i) => {
+    const date = i + 1;
+    const isGap = v === 0;
+    if (isGap) return `<div class="day-col is-weekend"><div class="day-track" style="background:transparent;flex:1"></div><div class="day-lbl"></div></div>`;
+    return `<div class="day-col">
+      <div class="day-track">
+        <div class="day-fill" style="height:${v}%;background:${rateGrad(v)}"></div>
+        <div class="day-tip">Feb ${date} · ${v}%</div>
+      </div>
+      <div class="day-lbl">${date % 5 === 0 ? date : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ RENDER MTD BREAKDOWN ══
+function renderBreakdown(d) {
+  const total = d.mtd.totalDays;
+  const rows = [
+    { label:'Present', count:d.mtd.present, color:'var(--green)' },
+    { label:'Late',    count:d.mtd.late,    color:'var(--orange)' },
+    { label:'Absent',  count:d.mtd.absent,  color:'var(--red)' },
+    { label:'On Leave',count:d.mtd.onLeave, color:'var(--blue)' },
+  ];
+  document.getElementById('breakdown').innerHTML = rows.map(r => {
+    const pct = Math.min(Math.round(r.count / total * 100), 100);
+    return `<div class="bk-row">
+      <div class="bk-label" style="color:${r.color};font-weight:600;font-size:11px">${r.label}</div>
+      <div class="bk-track"><div class="bk-fill" style="width:${pct}%;background:${r.color}"></div></div>
+      <div class="bk-count" style="color:${r.color}">${r.count}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ RENDER VERDICT ══
+function renderVerdict(d) {
+  const vc = VERDICT_COLORS[d.risk];
+  const v  = BRANCHES[selected].verdict;
+  const lvlMap = { critical:'CRITICAL', warning:'WARNING', stable:'STABLE' };
+  document.getElementById('verdict').innerHTML = `
+    <div class="verdict-box" style="background:${vc.bg};border-color:${vc.border};border-left-color:${vc.left}">
+      <div class="verdict-lvl" style="color:${vc.lbl}">${lvlMap[d.risk]}</div>
+      <div class="verdict-title">${v.title}</div>
+      <div class="verdict-body">${v.body}</div>
+      <div class="verdict-action"><strong>VP Action:</strong> ${v.action}</div>
+    </div>`;
+}
+
+// ══ RENDER ROOT CAUSES ══
+function renderCauses(d, name) {
+  const data = BRANCHES[name];
+  const badge = data.risk === 'critical' ? '<span class="lbg lb-red">Critical Factors</span>' : data.risk === 'warning' ? '<span class="lbg lb-warn">Warning Factors</span>' : '<span class="lbg lb-green">Stable — Notes Only</span>';
+  document.getElementById('causeBadge').outerHTML = `<div class="lbg" id="causeBadge">${badge.match(/>(.*?)<\/span>/)[1]}</div>`;
+  document.getElementById('causeBadge').innerHTML = badge;
+
+  const typeMap = {
+    crit: { cls:'ci-crit', tc:'ct-crit', lbl:'Critical' },
+    warn: { cls:'ci-warn', tc:'ct-warn', lbl:'Warning' },
+    info: { cls:'ci-info', tc:'ct-info', lbl:'Note' },
+    good: { cls:'ci-good', tc:'ct-good', lbl:'Positive' },
+  };
+  document.getElementById('causeList').innerHTML = data.causes.map(c => {
+    const m = typeMap[c.type];
+    return `<div class="cause-item ${m.cls}">
+      <div class="ci-type ${m.tc}">${m.lbl}</div>
+      <div class="ci-title">${c.title}</div>
+      <div class="ci-body">${c.body}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ RENDER DAY-OF-WEEK ══
+function renderDow(d, name) {
+  const data = BRANCHES[name];
+  const dow  = data.dow;
+  const max  = Math.max(...Object.values(dow));
+  document.getElementById('dowWrap').innerHTML = Object.entries(dow).map(([day, val]) => {
+    const isMax = val === max;
+    const col = val >= 7 ? 'var(--red)' : val >= 4 ? 'var(--orange)' : 'var(--green)';
+    const bg  = val >= 7 ? 'rgba(192,57,43,0.07)' : val >= 4 ? 'rgba(192,86,33,0.07)' : 'rgba(26,122,65,0.05)';
+    return `<div class="dow-cell" style="background:${bg};border-color:${isMax ? col : 'var(--rule)'}">
+      <div class="dow-day">${day}</div>
+      <div class="dow-num" style="color:${col}">${val}</div>
+      <div class="dow-sub">absences</div>
+    </div>`;
+  }).join('');
+  document.getElementById('dowInsight').innerHTML = `<strong style="color:var(--ink)">Pattern:</strong> ${data.dowNote}`;
+}
+
+// ══ RENDER REPORTS ══
+function renderReports() {
+  const reports = [
+    {
+      icon:'ri-red', ltr:'AI', tag:'rt-inc', tagLabel:'Incident Report',
+      title:'Absent & Late Incident Report',
+      desc:'All unexcused absences and late incidents for the selected branch — employee IDs, dates, frequency count, and whether a disciplinary notice was filed. The VP\'s primary escalation document.',
+      period:'February 2026 · Branch-level',
+      key:'incident'
+    },
+    {
+      icon:'ri-blue', ltr:'AS', tag:'rt-sum', tagLabel:'Attendance Summary',
+      title:'Branch Attendance Summary',
+      desc:'Month-to-date attendance rate, present/absent/leave breakdown, average hours worked, and comparison vs. prior month and the 90% organizational target.',
+      period:'February 2026 · All Branches',
+      key:'summary'
+    },
+    {
+      icon:'ri-orange', ltr:'MR', tag:'rt-risk', tagLabel:'Risk Report',
+      title:'Manpower Risk Report',
+      desc:'VP-level risk ranking of all 6 branches — identifies branches at critical risk, names repeat absentees by branch, and flags where operational continuity is at risk.',
+      period:'February 2026 · Org-wide',
+      key:'risk'
+    },
+    {
+      icon:'ri-green', ltr:'BC', tag:'rt-com', tagLabel:'Compliance Report',
+      title:'Branch Compliance Report',
+      desc:'Tracks whether each branch meets the 90% attendance target, 5% late rate ceiling, and 8.0h daily hours target — with gap analysis and month-on-month trend direction.',
+      period:'February 2026 · All Branches',
+      key:'compliance'
+    },
+  ];
+
+  document.getElementById('reportsGrid').innerHTML = reports.map((r, i) => `
+    <div class="report-card">
+      <div class="rep-icon ${r.icon}">${r.ltr}</div>
+      <div class="rep-info">
+        <div class="rep-title">${r.title}</div>
+        <div class="rep-desc">${r.desc}</div>
+        <div class="rep-meta">
+          <span class="rep-tag ${r.tag}">${r.tagLabel}</span>
+          <span class="rep-period">${r.period}</span>
+        </div>
+      </div>
+      <button class="rep-btn" id="repBtn-${i}" onclick="downloadReport('${r.key}', ${i})">Download CSV</button>
+    </div>`).join('');
+}
+
+// ══ CSV GENERATION ══
+function buildCSV(key) {
+  const bname = selected;
+  const d = BRANCHES[bname];
+  const now = 'Feb 19, 2026';
+
+  if (key === 'incident') {
+    const rows = [
+      ['GDC MANPOWER — ABSENT & LATE INCIDENT REPORT','','','','',''],
+      [`Branch: ${bname}`, `Region: ${d.region}`, `Period: February 2026`, `Generated: ${now}`, '', ''],
+      ['','','','','',''],
+      ['DATE','EMPLOYEE ID','INCIDENT TYPE','ARRIVAL TIME','NOTICE FILED','REMARKS'],
+    ];
+    // Generate sample incident rows
+    const incidents = [
+      ['Feb 3','EMP-041','Absent','—','No','No prior notice'],
+      ['Feb 3','EMP-012','Late','08:31','No','31 mins late'],
+      ['Feb 5','EMP-041','Absent','—','No','2nd occurrence'],
+      ['Feb 10','EMP-019','Absent','—','No','No prior notice'],
+      ['Feb 10','EMP-006','Late','08:44','No','44 mins late'],
+      ['Feb 12','EMP-041','Absent','—','No','3rd occurrence — chronic'],
+      ['Feb 14','EMP-033','Absent','—','No','No prior notice'],
+      ['Feb 17','EMP-041','Absent','—','No','4th occurrence — escalate'],
+      ['Feb 17','EMP-019','Late','08:22','No','22 mins late'],
+      ['Feb 19','EMP-041','Absent','—','No','5th occurrence — critical'],
+      ['Feb 19','EMP-007','Absent','—','No','No prior notice'],
+      ['Feb 19','EMP-011','Late','08:13','No','13 mins late'],
+    ];
+    incidents.forEach(r => rows.push(r));
+    rows.push(['','','','','','']);
+    rows.push([`Total Absences MTD: ${d.mtd.absent}`, `Total Lates MTD: ${d.mtd.late}`, `Notices Filed: 0`, `Repeat Offenders: 5`, '', '']);
+    return rows.map(r => r.join(',')).join('\n');
+  }
+
+  if (key === 'summary') {
+    const rows = [
+      ['GDC MANPOWER — BRANCH ATTENDANCE SUMMARY REPORT','','','',''],
+      [`Period: February 2026`, `Generated: ${now}`, '', '', ''],
+      ['','','','',''],
+      ['BRANCH','REGION','MTD RATE','PRESENT DAYS','ABSENT','LATE','ON LEAVE','AVG HRS','TARGET MET'],
+    ];
+    Object.entries(BRANCHES).forEach(([name, bd]) => {
+      rows.push([name, bd.region, `${bd.mtd.rate}%`, bd.mtd.present, bd.mtd.absent, bd.mtd.late, bd.mtd.onLeave, bd.today.avgHrs+'h', bd.mtd.rate >= 90 ? 'YES' : 'NO']);
+    });
+    rows.push(['','','','','','','','','']);
+    rows.push(['Org-wide average','—','86.2%','','','','','7.6h','NO — Target 90%']);
+    return rows.map(r => r.join(',')).join('\n');
+  }
+
+  if (key === 'risk') {
+    const order = ['critical','warning','stable'];
+    const sorted = Object.entries(BRANCHES).sort((a,b) => order.indexOf(a[1].risk) - order.indexOf(b[1].risk));
+    const rows = [
+      ['GDC MANPOWER — MANPOWER RISK REPORT','','','',''],
+      [`Generated: ${now}`, `Period: February 2026`, '', '', ''],
+      ['','','','',''],
+      ['RISK RANK','BRANCH','RISK LEVEL','MTD RATE','ABSENT TODAY','LATE TODAY','VP ACTION REQUIRED'],
+    ];
+    sorted.forEach(([name, bd], i) => {
+      const actionMap = { critical:'YES — Immediate escalation', warning:'YES — HR action this week', stable:'No' };
+      rows.push([i+1, name, bd.risk.toUpperCase(), `${bd.mtd.rate}%`, bd.today.absent, bd.today.late, actionMap[bd.risk]]);
+    });
+    rows.push(['','','','','','','']);
+    rows.push(['KEY FINDING','Batangas Branch is at critical risk (61%). VP intervention required today.','','','','','']);
+    return rows.map(r => r.join(',')).join('\n');
+  }
+
+  if (key === 'compliance') {
+    const rows = [
+      ['GDC MANPOWER — BRANCH COMPLIANCE REPORT','','','','',''],
+      [`Period: February 2026`, `Generated: ${now}`, '', '', '', ''],
+      ['','','','','',''],
+      ['BRANCH','ATTENDANCE RATE','TARGET (90%)','LATE RATE','TARGET (<5%)','AVG HOURS','TARGET (8.0h)','OVERALL STATUS'],
+    ];
+    Object.entries(BRANCHES).forEach(([name, bd]) => {
+      const lateRate = ((bd.mtd.late / bd.mtd.present) * 100).toFixed(1);
+      const status = bd.risk === 'critical' ? 'NON-COMPLIANT' : bd.risk === 'warning' ? 'BELOW TARGET' : 'COMPLIANT';
+      rows.push([name, `${bd.mtd.rate}%`, bd.mtd.rate >= 90 ? 'MET' : 'NOT MET', `${lateRate}%`, parseFloat(lateRate) < 5 ? 'MET' : 'NOT MET', bd.today.avgHrs+'h', bd.today.avgHrs >= 8 ? 'MET' : 'NOT MET', status]);
+    });
+    rows.push(['','','','','','','','']);
+    rows.push(['SUMMARY','2 branches compliant','4 branches below target','1 branch critical (Batangas)','','','','']);
+    return rows.map(r => r.join(',')).join('\n');
+  }
+
+  return 'No data';
+}
+
+function downloadReport(key, idx) {
+  const btn = document.getElementById(`repBtn-${idx}`);
+  btn.textContent = 'Generating...';
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const csv  = buildCSV(key);
+    const name = selected.replace(/\s+/g,'_');
+    const filenames = {
+      incident:   `GDC_Incident_Report_${name}_Feb2026.csv`,
+      summary:    `GDC_Attendance_Summary_AllBranches_Feb2026.csv`,
+      risk:       `GDC_Manpower_Risk_Report_Feb2026.csv`,
+      compliance: `GDC_Compliance_Report_AllBranches_Feb2026.csv`,
+    };
+    const a   = document.createElement('a');
+    a.href    = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download= filenames[key];
+    a.click();
+
+    btn.textContent = 'Downloaded';
+    btn.classList.remove('loading');
+    btn.classList.add('done');
+    setTimeout(() => {
+      btn.textContent = 'Download CSV';
+      btn.classList.remove('done');
+      btn.disabled = false;
+    }, 3000);
+  }, 900);
+}
+
+// ══ SELECT BRANCH ══
+function selectBranch(name) {
+  selected = name;
+  renderTabs();
+  const d = BRANCHES[name];
+  document.getElementById('bannerBranch').textContent = name;
+  renderScorecard(d);
+  renderChart(name, d);
+  renderBreakdown(d);
+  renderVerdict(d);
+  renderCauses(d, name);
+  renderDow(d, name);
+}
+
+// ══ INIT ══
+renderTabs();
+selectBranch(selected);
+renderReports();
+</script>
+</body>
+</html>
