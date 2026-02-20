@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Payroll — GDC ManPower</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   RESET & VARIABLES
+══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red-900: #3d0c0c;
+  --red-800: #5a1010;
+  --red-500: #b91c1c;
+  --red-400: #dc2626;
+  --red-300: #f87171;
+  --red-100: #fee2e2;
+  --red-50:  #fff5f5;
+  --amber:        #d97706;
+  --amber-dark:   #92400e;
+  --amber-light:  #fef3c7;
+  --green:        #16a34a;
+  --green-dark:   #14532d;
+  --green-light:  #dcfce7;
+  --blue:         #2563eb;
+  --blue-light:   #dbeafe;
+  --gray-900: #111827;
+  --gray-700: #374151;
+  --gray-600: #4b5563;
+  --gray-500: #6b7280;
+  --gray-400: #9ca3af;
+  --gray-300: #d1d5db;
+  --gray-200: #e5e7eb;
+  --gray-100: #f3f4f6;
+  --gray-50:  #f9fafb;
+  --bg: #f0efed;
+  --sidebar-w: 240px;
+  --safe-bottom: env(safe-area-inset-bottom, 12px);
+}
+
+html, body { height: 100%; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--gray-900);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ══════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════ */
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: linear-gradient(180deg, var(--red-900) 0%, #1a0505 100%);
+  display: none; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 50; overflow-y: auto;
+}
+.sb-logo { padding: 22px 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.sb-logo-row { display: flex; align-items: center; gap: 10px; }
+.sb-logo-icon { width: 40px; height: 40px; background: var(--red-500); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 13px; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.sb-logo-title { color: #fff; font-weight: 800; font-size: 14px; }
+.sb-logo-sub   { color: var(--red-300); font-size: 9px; letter-spacing: 2.5px; font-weight: 700; }
+.sb-user-pill  { display: inline-block; margin-top: 12px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; }
+.sb-section-lbl { padding: 14px 18px 4px; color: rgba(255,255,255,0.28); font-size: 9px; letter-spacing: 2.5px; font-weight: 700; text-transform: uppercase; }
+.sb-nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 18px; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; cursor: pointer; border: none; border-left: 3px solid transparent; background: none; font-family: inherit; width: 100%; text-align: left; transition: all 0.15s; }
+.sb-nav-item:hover  { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+.sb-nav-item.active { color: #fff; background: rgba(255,255,255,0.1); border-left-color: var(--red-300); font-weight: 700; }
+.sb-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.sb-footer { padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.07); margin-top: auto; display: flex; align-items: center; gap: 10px; }
+.sb-avatar { width: 36px; height: 36px; background: var(--red-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.sb-footer-name { color: #fff; font-size: 12px; font-weight: 700; }
+.sb-footer-role { color: rgba(255,255,255,0.38); font-size: 10px; }
+
+.main-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* ══════════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════════ */
+.topbar {
+  background: linear-gradient(145deg, var(--red-900) 0%, var(--red-800) 100%);
+  padding: 44px 20px 60px; position: relative; overflow: hidden;
+}
+.topbar::before { content:""; position:absolute; width:240px; height:240px; background:rgba(255,255,255,0.04); border-radius:50%; top:-70px; right:-50px; }
+.topbar::after  { content:""; position:absolute; width:130px; height:130px; background:rgba(255,255,255,0.03); border-radius:50%; bottom:0; left:-30px; }
+.topbar-inner { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 1; }
+.greeting-hello  { color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500; }
+.greeting-name   { color: #fff; font-size: 20px; font-weight: 800; margin-top: 2px; }
+.greeting-branch { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 2px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.icon-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.12); border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.avatar-btn { width: 40px; height: 40px; background: var(--red-500); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; border: none; cursor: pointer; }
+
+/* ══════════════════════════════════════════════
+   CONTENT
+══════════════════════════════════════════════ */
+.content-area { padding: 0 14px 100px; flex: 1; }
+.float-wrap   { margin-top: -40px; position: relative; z-index: 10; }
+
+/* ══════════════════════════════════════════════
+   PERIOD SELECTOR CARD (floating)
+══════════════════════════════════════════════ */
+.period-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.pc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.pc-title  { font-size: 13px; font-weight: 800; color: var(--gray-900); }
+.pc-status-pill {
+  border-radius: 20px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.pc-status-pill.released  { background: var(--green-light); color: var(--green); }
+.pc-status-pill.pending   { background: var(--amber-light); color: var(--amber); }
+.pc-status-pill.processing { background: var(--blue-light); color: var(--blue); }
+
+/* Period tabs */
+.period-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.period-tabs::-webkit-scrollbar { display: none; }
+.period-tab {
+  flex-shrink: 0; border-radius: 12px; padding: 8px 16px;
+  border: 1.5px solid var(--gray-200); background: #fff;
+  font-size: 12px; font-weight: 700; color: var(--gray-500);
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+  transition: all 0.15s;
+}
+.period-tab.active { background: var(--red-500); color: #fff; border-color: var(--red-500); }
+.period-tab:hover:not(.active) { border-color: var(--red-300); color: var(--red-500); }
+
+/* ══════════════════════════════════════════════
+   NET PAY CARD (dark gradient)
+══════════════════════════════════════════════ */
+.netpay-card {
+  background: linear-gradient(135deg, var(--red-900) 0%, #5a1010 100%);
+  border-radius: 20px; padding: 22px; margin-top: 16px;
+  position: relative; overflow: hidden;
+}
+.netpay-card::before { content:""; position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:rgba(255,255,255,0.05); border-radius:50%; }
+.netpay-card::after  { content:""; position:absolute; bottom:-10px; left: 30px; width:60px; height:60px; background:rgba(255,255,255,0.03); border-radius:50%; }
+
+.np-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; position: relative; z-index: 1; }
+.np-period-label { color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.np-period       { color: #fff; font-size: 14px; font-weight: 700; margin-top: 3px; }
+.np-badge { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; }
+
+.np-label  { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; position: relative; z-index: 1; }
+.np-amount { color: #fff; font-size: 36px; font-weight: 800; letter-spacing: -1px; margin: 4px 0 20px; font-family: 'DM Mono', monospace; position: relative; z-index: 1; }
+
+/* Earnings vs Deductions quick split */
+.np-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; position: relative; z-index: 1; }
+.np-split-cell { background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; }
+.np-split-label { color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+.np-split-val   { color: #fff; font-size: 16px; font-weight: 800; }
+.np-split-val.red { color: #fca5a5; }
+
+.np-footer { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+.np-released-on { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; }
+.btn-payslip {
+  background: rgba(255,255,255,0.15); color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px; padding: 7px 14px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-payslip:hover  { background: rgba(255,255,255,0.22); }
+.btn-payslip:active { transform: scale(0.97); }
+
+/* ══════════════════════════════════════════════
+   SECTION
+══════════════════════════════════════════════ */
+.section { margin-top: 20px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.section-title  { font-size: 15px; font-weight: 800; }
+.section-link   { font-size: 12px; color: var(--red-500); font-weight: 700; cursor: pointer; }
+
+/* ══════════════════════════════════════════════
+   HOURS BREAKDOWN CARD
+   (shows hours only — rate/multiplier hidden)
+══════════════════════════════════════════════ */
+.hours-card {
+  background: #fff; border-radius: 20px;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.hc-notice {
+  margin: 0; padding: 10px 16px;
+  background: var(--amber-light); 
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; color: var(--amber-dark);
+  border-bottom: 1px solid #fcd34d;
+}
+
+.hc-table-header {
+  display: grid;
+  grid-template-columns: 1fr 80px 80px;
+  gap: 8px; padding: 10px 16px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-100);
+}
+.hc-th { font-size: 10px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.8px; }
+.hc-th.right { text-align: right; }
+
+.hc-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 80px;
+  gap: 8px; padding: 13px 16px;
+  border-bottom: 1px solid var(--gray-50);
+  align-items: center; transition: background 0.15s;
+}
+.hc-row:hover { background: var(--gray-50); }
+.hc-row:last-child { border-bottom: none; }
+
+.hc-row-label { display: flex; flex-direction: column; gap: 2px; }
+.hc-label     { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+.hc-sublabel  { font-size: 10px; color: var(--gray-400); font-weight: 600; }
+
+.hc-hours {
+  text-align: right; font-size: 14px; font-weight: 800;
+  font-family: 'DM Mono', monospace; color: var(--gray-900);
+}
+.hc-hours.highlight { color: var(--blue); }
+.hc-hours.special   { color: var(--amber); }
+.hc-hours.holiday   { color: var(--red-500); }
+
+/* Rate hidden badge */
+.hc-rate-cell { text-align: right; }
+.hc-rate-hidden {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--gray-100); color: var(--gray-400);
+  border-radius: 8px; padding: 4px 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+
+/* Total row */
+.hc-total-row {
+  display: grid; grid-template-columns: 1fr 80px 80px;
+  gap: 8px; padding: 14px 16px;
+  background: linear-gradient(135deg, var(--red-50), #fff5f5);
+  border-top: 2px solid var(--red-100);
+  align-items: center;
+}
+.hc-total-label { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+.hc-total-hours { text-align: right; font-size: 16px; font-weight: 800; font-family: 'DM Mono', monospace; color: var(--red-500); }
+.hc-total-rate  { text-align: right; }
+.hc-total-confidential {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--red-100); color: var(--red-500);
+  border-radius: 8px; padding: 5px 10px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+}
+
+/* ══════════════════════════════════════════════
+   DAILY HOURS LOG
+══════════════════════════════════════════════ */
+.daily-log-card {
+  background: #fff; border-radius: 20px;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.dl-header-row {
+  display: grid; grid-template-columns: 52px 1fr 56px 56px 60px;
+  gap: 6px; padding: 10px 16px;
+  background: var(--gray-50); border-bottom: 1px solid var(--gray-100);
+  font-size: 10px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.dl-header-row span { }
+.dl-header-row .right { text-align: right; }
+
+.dl-row {
+  display: grid; grid-template-columns: 52px 1fr 56px 56px 60px;
+  gap: 6px; padding: 11px 16px; border-bottom: 1px solid var(--gray-50);
+  align-items: center; cursor: pointer; transition: background 0.15s;
+}
+.dl-row:hover { background: var(--gray-50); }
+.dl-row:last-child { border-bottom: none; }
+
+.dl-date-badge {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--gray-100); border-radius: 8px; padding: 4px 2px;
+  font-weight: 700;
+}
+.dl-date-day { font-size: 8px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+.dl-date-num { font-size: 15px; color: var(--gray-900); line-height: 1.1; }
+
+.dl-status-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  border-radius: 20px; padding: 3px 8px;
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;
+  width: fit-content;
+}
+
+.dl-time { font-size: 11px; font-weight: 700; color: var(--gray-700); font-family: 'DM Mono', monospace; text-align: right; }
+.dl-hrs  { font-size: 12px; font-weight: 800; font-family: 'DM Mono', monospace; text-align: right; color: var(--gray-900); }
+.dl-type { font-size: 10px; font-weight: 700; text-align: right; }
+
+/* ══════════════════════════════════════════════
+   DEDUCTIONS CARD
+══════════════════════════════════════════════ */
+.ded-card {
+  background: #fff; border-radius: 20px;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.ded-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; border-bottom: 1px solid var(--gray-50);
+}
+.ded-row:last-child { border-bottom: none; }
+
+.ded-icon  { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.ded-info  { flex: 1; min-width: 0; }
+.ded-name  { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+.ded-desc  { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+.ded-amount { font-size: 14px; font-weight: 800; font-family: 'DM Mono', monospace; color: var(--red-500); flex-shrink: 0; }
+
+.ded-total-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fff5f5, #fff);
+  border-top: 2px solid var(--red-100);
+}
+.ded-total-lbl { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+.ded-total-amt { font-size: 18px; font-weight: 800; font-family: 'DM Mono', monospace; color: var(--red-500); }
+
+/* ══════════════════════════════════════════════
+   PAYROLL HISTORY
+══════════════════════════════════════════════ */
+.history-card {
+  background: #fff; border-radius: 20px;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.hist-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-bottom: 1px solid var(--gray-50);
+  cursor: pointer; transition: background 0.15s;
+}
+.hist-row:hover { background: var(--gray-50); }
+.hist-row:last-child { border-bottom: none; }
+
+.hist-period-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+  flex-shrink: 0; gap: 1px;
+}
+.hist-info { flex: 1; min-width: 0; }
+.hist-period { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+.hist-days   { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+.hist-right  { text-align: right; flex-shrink: 0; }
+.hist-amount { font-size: 15px; font-weight: 800; font-family: 'DM Mono', monospace; color: var(--gray-900); }
+.hist-status { font-size: 10px; font-weight: 700; margin-top: 3px; }
+
+.hist-status-pill { border-radius: 20px; padding: 3px 9px; font-size: 10px; font-weight: 800; }
+
+/* ══════════════════════════════════════════════
+   BOTTOM NAV
+══════════════════════════════════════════════ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff; border-top: 1px solid var(--gray-200);
+  display: grid; grid-template-columns: repeat(5,1fr);
+  padding-bottom: var(--safe-bottom); z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+}
+.bn-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 10px 0 8px; cursor: pointer; border: none; background: none;
+  font-family: inherit; -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s; position: relative;
+}
+.bn-icon  { font-size: 22px; transition: transform 0.15s; }
+.bn-label { font-size: 9px; font-weight: 700; color: var(--gray-400); letter-spacing: 0.3px; text-transform: uppercase; }
+.bn-item.active .bn-label { color: var(--red-500); }
+.bn-item.active .bn-icon  { transform: translateY(-2px); }
+.bn-pip   { position: absolute; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--red-500); }
+
+/* ══════════════════════════════════════════════
+   MODAL / PAYSLIP VIEWER
+══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 200; display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-sheet {
+  background: #fff; border-radius: 28px 28px 0 0;
+  width: 100%; max-width: 560px; margin: 0 auto;
+  max-height: 90vh; overflow-y: auto;
+  transform: translateY(100%); padding-bottom: var(--safe-bottom);
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
+.modal-handle { width: 40px; height: 4px; background: var(--gray-200); border-radius: 2px; margin: 14px auto 0; }
+.modal-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
+.modal-title  { font-size: 16px; font-weight: 800; }
+.modal-close  { width: 32px; height: 32px; border-radius: 50%; background: var(--gray-100); border: none; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* Payslip document */
+.payslip-doc { padding: 20px; }
+.payslip-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.payslip-logo-icon { width: 36px; height: 36px; background: var(--red-500); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 12px; }
+.payslip-logo-name { font-size: 14px; font-weight: 800; color: var(--gray-900); }
+.payslip-logo-sub  { font-size: 10px; color: var(--gray-500); }
+.payslip-divider { height: 1px; background: var(--gray-100); margin: 14px 0; }
+.payslip-emp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.payslip-field-lbl { font-size: 10px; color: var(--gray-500); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.payslip-field-val { font-size: 13px; font-weight: 700; color: var(--gray-900); }
+
+.payslip-section-title { font-size: 11px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.payslip-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--gray-100); font-size: 13px; }
+.payslip-line:last-child { border-bottom: none; }
+.payslip-line-lbl { color: var(--gray-700); font-weight: 600; }
+.payslip-line-val { font-weight: 800; font-family: 'DM Mono', monospace; color: var(--gray-900); }
+.payslip-line-val.red { color: var(--red-500); }
+.payslip-line-val.hidden-rate { color: var(--gray-300); font-size: 11px; letter-spacing: 2px; }
+
+.payslip-net-box {
+  background: linear-gradient(135deg, var(--red-900), #5a1010);
+  border-radius: 14px; padding: 16px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16px;
+}
+.payslip-net-lbl { color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 700; }
+.payslip-net-amt { color: #fff; font-size: 24px; font-weight: 800; font-family: 'DM Mono', monospace; }
+
+.payslip-confidential-notice {
+  background: var(--amber-light); border: 1px solid #fcd34d;
+  border-radius: 10px; padding: 10px 14px; margin-top: 14px;
+  display: flex; gap: 8px; align-items: flex-start;
+  font-size: 11px; color: var(--amber-dark); font-weight: 600; line-height: 1.4;
+}
+
+.btn-download-payslip {
+  width: 100%; margin: 14px 0 0;
+  background: var(--red-500); color: #fff; border: none;
+  border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 800;
+  cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s;
+}
+.btn-download-payslip:active { transform: scale(0.98); }
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--gray-900); color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 13px; font-weight: 700; opacity: 0; transition: all 0.3s; z-index: 500; white-space: nowrap; pointer-events: none; max-width: 90vw; text-align: center; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.anim { animation: slideUp 0.4s ease both; }
+.d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.10s; }
+.d3 { animation-delay: 0.15s; } .d4 { animation-delay: 0.20s; }
+.d5 { animation-delay: 0.25s; } .d6 { animation-delay: 0.30s; }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — DESKTOP 1024px+
+══════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .sidebar   { display: flex; }
+  .main-wrap { margin-left: var(--sidebar-w); }
+  .topbar {
+    padding: 20px 30px 24px;
+    background: #fff; border-bottom: 1px solid var(--gray-200);
+  }
+  .topbar::before, .topbar::after { display: none; }
+  .greeting-hello  { color: var(--gray-500); }
+  .greeting-name   { color: var(--gray-900); }
+  .greeting-branch { color: var(--gray-400); }
+  .icon-btn  { background: var(--gray-100); border: 1px solid var(--gray-200); }
+
+  .float-wrap  { margin-top: 0; }
+  .period-card { box-shadow: none; border: 1px solid var(--gray-200); }
+
+  .content-area {
+    padding: 26px 30px 40px;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 24px; align-items: start;
+  }
+
+  /* Grid placement */
+  .float-wrap       { grid-column: 1; grid-row: 1; }
+  .section-hours    { grid-column: 2; grid-row: 1 / 3; margin-top: 0; }
+  .section-ded      { grid-column: 1; grid-row: 2; margin-top: 0; }
+  .section-daily    { grid-column: 1 / -1; grid-row: 3; margin-top: 0; }
+  .section-history  { grid-column: 1 / -1; grid-row: 4; margin-top: 0; }
+
+  .section { margin-top: 0; }
+  .bottom-nav { display: none; }
+  .toast { bottom: 28px; }
+
+  /* Modal centered on desktop */
+  .modal-overlay { align-items: center; }
+  .modal-sheet { border-radius: 24px; max-width: 480px; transform: scale(0.92) translateY(20px); transition: transform 0.3s cubic-bezier(.4,0,.2,1); }
+  .modal-overlay.open .modal-sheet { transform: scale(1) translateY(0); }
+  .modal-handle { display: none; }
+}
+
+@media (min-width: 1280px) {
+  :root { --sidebar-w: 256px; }
+  .content-area { padding: 28px 36px 40px; gap: 26px; }
+  .topbar { padding: 22px 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <div class="sb-logo-icon">GDC</div>
+        <div><div class="sb-logo-title">ManPower</div><div class="sb-logo-sub">Employee Portal</div></div>
+      </div>
+      <div class="sb-user-pill">👤 Employee</div>
+    </div>
+    <div class="sb-section-lbl">Main</div>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">🏠</span> Dashboard</button>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">📅</span> My Attendance</button>
+    <button class="sb-nav-item active" onclick="sbNav(this)"><span class="sb-nav-icon">💸</span> Payroll</button>
+    <div class="sb-section-lbl">Requests</div>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">🏖️</span> File Leave</button>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">⏰</span> Overtime</button>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">📩</span> Concerns</button>
+    <div class="sb-section-lbl">Info</div>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">📢</span> Announcements</button>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">📋</span> My Schedule</button>
+    <button class="sb-nav-item" onclick="sbNav(this)"><span class="sb-nav-icon">👤</span> My Profile</button>
+    <div class="sb-footer">
+      <div class="sb-avatar">JD</div>
+      <div><div class="sb-footer-name">Juan dela Cruz</div><div class="sb-footer-role">Security Guard · NCR North</div></div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-wrap">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div>
+          <div class="greeting-hello">💸 Payroll</div>
+          <div class="greeting-name">My Payroll</div>
+          <div class="greeting-branch">Hours Breakdown · February 2026</div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn">🔔</button>
+          <button class="avatar-btn">JD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area" id="content-area">
+
+      <!-- ── Period Selector + Net Pay ── -->
+      <div class="float-wrap anim d1">
+        <div class="period-card">
+          <div class="pc-header">
+            <div class="pc-title">Pay Period</div>
+            <div class="pc-status-pill released" id="pay-status-pill">✅ Released</div>
+          </div>
+          <div class="period-tabs" id="period-tabs">
+            <button class="period-tab active" onclick="selectPeriod(this, 0)">Feb 1–15</button>
+            <button class="period-tab" onclick="selectPeriod(this, 1)">Jan 16–31</button>
+            <button class="period-tab" onclick="selectPeriod(this, 2)">Jan 1–15</button>
+            <button class="period-tab" onclick="selectPeriod(this, 3)">Dec 16–31</button>
+            <button class="period-tab" onclick="selectPeriod(this, 4)">Dec 1–15</button>
+          </div>
+
+          <!-- Net pay card inside -->
+          <div class="netpay-card">
+            <div class="np-row">
+              <div>
+                <div class="np-period-label">Pay Period</div>
+                <div class="np-period" id="np-period-text">February 1 – 15, 2026</div>
+              </div>
+              <div class="np-badge" id="np-badge">Semi-Monthly</div>
+            </div>
+            <div class="np-label">Net Pay</div>
+            <div class="np-amount" id="np-amount">₱ 12,480.00</div>
+            <div class="np-split">
+              <div class="np-split-cell">
+                <div class="np-split-label">GROSS EARNINGS</div>
+                <div class="np-split-val" id="np-gross">₱ 15,280.00</div>
+              </div>
+              <div class="np-split-cell">
+                <div class="np-split-label">TOTAL DEDUCTIONS</div>
+                <div class="np-split-val red" id="np-deductions">– ₱ 2,800.00</div>
+              </div>
+            </div>
+            <div class="np-footer">
+              <div class="np-released-on" id="np-released-on">📅 Released: Feb 15, 2026</div>
+              <button class="btn-payslip" onclick="openPayslip()">📄 View Payslip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Hours Breakdown ── -->
+      <div class="section section-hours anim d2">
+        <div class="section-header">
+          <span class="section-title">Hours Breakdown</span>
+          <span style="font-size:11px;color:var(--gray-400);font-weight:600">🔒 Rates Confidential</span>
+        </div>
+        <div class="hours-card">
+          <div class="hc-notice">
+            ℹ️ Rate per hour and multipliers are managed by HR and not displayed here.
+          </div>
+          <div class="hc-table-header">
+            <div class="hc-th">Category</div>
+            <div class="hc-th right">Hours</div>
+            <div class="hc-th right">Rate</div>
+          </div>
+
+          <!-- Regular Hours -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Regular Hours</div>
+              <div class="hc-sublabel">Standard working time</div>
+            </div>
+            <div class="hc-hours highlight">96.0h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Night Differential -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Night Differential</div>
+              <div class="hc-sublabel">10:00 PM – 6:00 AM</div>
+            </div>
+            <div class="hc-hours special">4.5h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Overtime -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Overtime</div>
+              <div class="hc-sublabel">Beyond 8 hrs / Rest day OT</div>
+            </div>
+            <div class="hc-hours special">6.0h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Rest Day -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Rest Day Worked</div>
+              <div class="hc-sublabel">Feb 8 (Saturday)</div>
+            </div>
+            <div class="hc-hours holiday">8.0h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Holiday -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Special Non-Working Day</div>
+              <div class="hc-sublabel">No holiday this period</div>
+            </div>
+            <div class="hc-hours" style="color:var(--gray-300)">0.0h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Undertime -->
+          <div class="hc-row">
+            <div class="hc-row-label">
+              <div class="hc-label">Undertime / Late</div>
+              <div class="hc-sublabel">Deducted from total</div>
+            </div>
+            <div class="hc-hours" style="color:var(--red-400)">–1.2h</div>
+            <div class="hc-rate-cell">
+              <span class="hc-rate-hidden">🔒 Hidden</span>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="hc-total-row">
+            <div class="hc-total-label">Total Computed Hours</div>
+            <div class="hc-total-hours">113.3h</div>
+            <div class="hc-total-rate">
+              <span class="hc-total-confidential">🔒 Confidential</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Deductions ── -->
+      <div class="section section-ded anim d3">
+        <div class="section-header">
+          <span class="section-title">Deductions</span>
+        </div>
+        <div class="ded-card">
+          <div class="ded-row">
+            <div class="ded-icon" style="background:#dbeafe">🏛️</div>
+            <div class="ded-info">
+              <div class="ded-name">SSS Contribution</div>
+              <div class="ded-desc">Social Security System</div>
+            </div>
+            <div class="ded-amount">₱ 1,125.00</div>
+          </div>
+          <div class="ded-row">
+            <div class="ded-icon" style="background:#dcfce7">🏥</div>
+            <div class="ded-info">
+              <div class="ded-name">PhilHealth</div>
+              <div class="ded-desc">Health Insurance Premium</div>
+            </div>
+            <div class="ded-amount">₱ 400.00</div>
+          </div>
+          <div class="ded-row">
+            <div class="ded-icon" style="background:#fef3c7">🏠</div>
+            <div class="ded-info">
+              <div class="ded-name">Pag-IBIG</div>
+              <div class="ded-desc">HDMF Contribution</div>
+            </div>
+            <div class="ded-amount">₱ 200.00</div>
+          </div>
+          <div class="ded-row">
+            <div class="ded-icon" style="background:#fee2e2">💳</div>
+            <div class="ded-info">
+              <div class="ded-name">Loan Deduction</div>
+              <div class="ded-desc">SSS Salary Loan</div>
+            </div>
+            <div class="ded-amount">₱ 875.00</div>
+          </div>
+          <div class="ded-row">
+            <div class="ded-icon" style="background:#ede9fe">📋</div>
+            <div class="ded-info">
+              <div class="ded-name">Withholding Tax</div>
+              <div class="ded-desc">BIR Tax Computation</div>
+            </div>
+            <div class="ded-amount">₱ 200.00</div>
+          </div>
+          <div class="ded-total-row">
+            <div class="ded-total-lbl">Total Deductions</div>
+            <div class="ded-total-amt">₱ 2,800.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Daily Hours Log ── -->
+      <div class="section section-daily anim d4">
+        <div class="section-header">
+          <span class="section-title">Daily Hours Log</span>
+          <span class="section-link" onclick="showToast('Exporting log...')">Export →</span>
+        </div>
+        <div class="daily-log-card">
+          <div class="dl-header-row">
+            <span>Date</span>
+            <span>Status</span>
+            <span class="right">In / Out</span>
+            <span class="right">Hrs</span>
+            <span class="right">Type</span>
+          </div>
+          <div id="daily-log-body"></div>
+        </div>
+      </div>
+
+      <!-- ── Payroll History ── -->
+      <div class="section section-history anim d5">
+        <div class="section-header">
+          <span class="section-title">Payroll History</span>
+        </div>
+        <div class="history-card" id="history-list"></div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-wrap -->
+</div><!-- /app-shell -->
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <button class="bn-item" onclick="setBn(this)"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></button>
+  <button class="bn-item" onclick="setBn(this)"><span class="bn-icon">📅</span><span class="bn-label">Attend</span></button>
+  <button class="bn-item active" onclick="setBn(this)"><div class="bn-pip"></div><span class="bn-icon">💸</span><span class="bn-label">Payroll</span></button>
+  <button class="bn-item" onclick="setBn(this)"><span class="bn-icon">📋</span><span class="bn-label">Leave</span></button>
+  <button class="bn-item" onclick="setBn(this)"><span class="bn-icon">👤</span><span class="bn-label">Profile</span></button>
+</nav>
+
+<!-- ══ PAYSLIP MODAL ══ -->
+<div class="modal-overlay" id="payslip-modal" onclick="closeModalBg(event,'payslip-modal')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">📄 Payslip</div>
+      <button class="modal-close" onclick="closeModal('payslip-modal')">✕</button>
+    </div>
+    <div class="payslip-doc">
+      <!-- Logo -->
+      <div class="payslip-logo">
+        <div class="payslip-logo-icon">GDC</div>
+        <div>
+          <div class="payslip-logo-name">GDC ManPower Services</div>
+          <div class="payslip-logo-sub">Payslip — Confidential</div>
+        </div>
+      </div>
+      <div class="payslip-divider"></div>
+
+      <!-- Employee info -->
+      <div class="payslip-emp-row">
+        <div><div class="payslip-field-lbl">Employee</div><div class="payslip-field-val">Juan dela Cruz</div></div>
+        <div><div class="payslip-field-lbl">ID No.</div><div class="payslip-field-val">EMP-00142</div></div>
+        <div><div class="payslip-field-lbl">Position</div><div class="payslip-field-val">Security Guard</div></div>
+        <div><div class="payslip-field-lbl">Branch</div><div class="payslip-field-val">NCR North</div></div>
+        <div><div class="payslip-field-lbl">Pay Period</div><div class="payslip-field-val" id="ps-period">Feb 1–15, 2026</div></div>
+        <div><div class="payslip-field-lbl">Release Date</div><div class="payslip-field-val" id="ps-release">Feb 15, 2026</div></div>
+      </div>
+      <div class="payslip-divider"></div>
+
+      <!-- Hours worked section (visible) -->
+      <div class="payslip-section-title">Hours Worked</div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Regular Hours</span><span class="payslip-line-val">96.0 hrs</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Night Differential Hours</span><span class="payslip-line-val">4.5 hrs</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Overtime Hours</span><span class="payslip-line-val">6.0 hrs</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Rest Day Worked</span><span class="payslip-line-val">8.0 hrs</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Undertime / Late Deduction</span><span class="payslip-line-val red">–1.2 hrs</span></div>
+
+      <div class="payslip-divider"></div>
+
+      <!-- Earnings section (amounts visible, rates hidden) -->
+      <div class="payslip-section-title">Earnings (Gross)</div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Basic Pay (Regular)</span><span class="payslip-line-val hidden-rate">● ● ● ● ●</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Night Differential</span><span class="payslip-line-val hidden-rate">● ● ● ● ●</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Overtime Pay</span><span class="payslip-line-val hidden-rate">● ● ● ● ●</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Rest Day Premium</span><span class="payslip-line-val hidden-rate">● ● ● ● ●</span></div>
+      <div class="payslip-line" style="border-top:2px solid var(--gray-100);padding-top:10px;margin-top:4px">
+        <span class="payslip-line-lbl" style="font-weight:800;color:var(--gray-900)">Gross Earnings</span>
+        <span class="payslip-line-val" style="font-size:15px">₱ 15,280.00</span>
+      </div>
+
+      <div class="payslip-divider"></div>
+
+      <!-- Deductions -->
+      <div class="payslip-section-title">Deductions</div>
+      <div class="payslip-line"><span class="payslip-line-lbl">SSS Contribution</span><span class="payslip-line-val red">₱ 1,125.00</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">PhilHealth</span><span class="payslip-line-val red">₱ 400.00</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Pag-IBIG (HDMF)</span><span class="payslip-line-val red">₱ 200.00</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">SSS Salary Loan</span><span class="payslip-line-val red">₱ 875.00</span></div>
+      <div class="payslip-line"><span class="payslip-line-lbl">Withholding Tax (BIR)</span><span class="payslip-line-val red">₱ 200.00</span></div>
+      <div class="payslip-line" style="border-top:2px solid var(--gray-100);padding-top:10px;margin-top:4px">
+        <span class="payslip-line-lbl" style="font-weight:800;color:var(--gray-900)">Total Deductions</span>
+        <span class="payslip-line-val red" style="font-size:15px">– ₱ 2,800.00</span>
+      </div>
+
+      <!-- Net Pay -->
+      <div class="payslip-net-box">
+        <div>
+          <div class="payslip-net-lbl">NET PAY</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px">February 1–15, 2026</div>
+        </div>
+        <div class="payslip-net-amt">₱ 12,480.00</div>
+      </div>
+
+      <!-- Confidential notice -->
+      <div class="payslip-confidential-notice">
+        <span style="font-size:16px;flex-shrink:0">🔒</span>
+        <span>Rate per hour and pay multipliers are confidential and managed by HR. Individual pay rates are not disclosed on this payslip.</span>
+      </div>
+
+      <button class="btn-download-payslip" onclick="showToast('📥 Payslip downloaded!'); closeModal('payslip-modal')">
+        📥 Download Payslip (PDF)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════ */
+const periods = [
+  {
+    label: 'Feb 1–15',
+    full: 'February 1 – 15, 2026',
+    released: 'Released: Feb 15, 2026',
+    status: 'released',
+    net: '₱ 12,480.00',
+    gross: '₱ 15,280.00',
+    ded: '– ₱ 2,800.00',
+    psRelease: 'Feb 15, 2026',
+    psPeriod: 'Feb 1–15, 2026',
+  },
+  {
+    label: 'Jan 16–31',
+    full: 'January 16 – 31, 2026',
+    released: 'Released: Jan 31, 2026',
+    status: 'released',
+    net: '₱ 11,920.00',
+    gross: '₱ 14,520.00',
+    ded: '– ₱ 2,600.00',
+    psRelease: 'Jan 31, 2026',
+    psPeriod: 'Jan 16–31, 2026',
+  },
+  {
+    label: 'Jan 1–15',
+    full: 'January 1 – 15, 2026',
+    released: 'Released: Jan 15, 2026',
+    status: 'released',
+    net: '₱ 12,100.00',
+    gross: '₱ 14,900.00',
+    ded: '– ₱ 2,800.00',
+    psRelease: 'Jan 15, 2026',
+    psPeriod: 'Jan 1–15, 2026',
+  },
+  {
+    label: 'Dec 16–31',
+    full: 'December 16 – 31, 2025',
+    released: 'Released: Dec 31, 2025',
+    status: 'released',
+    net: '₱ 13,400.00',
+    gross: '₱ 16,200.00',
+    ded: '– ₱ 2,800.00',
+    psRelease: 'Dec 31, 2025',
+    psPeriod: 'Dec 16–31, 2025',
+  },
+  {
+    label: 'Dec 1–15',
+    full: 'December 1 – 15, 2025',
+    released: 'Released: Dec 15, 2025',
+    status: 'released',
+    net: '₱ 11,680.00',
+    gross: '₱ 14,480.00',
+    ded: '– ₱ 2,800.00',
+    psRelease: 'Dec 15, 2025',
+    psPeriod: 'Dec 1–15, 2025',
+  },
+];
+
+// Daily log data — Feb 1–15
+const dailyLogs = [
+  { day:'Mon', date:2,  status:'present', in:'07:55', out:'17:02', hrs:9.1, type:'Regular' },
+  { day:'Tue', date:3,  status:'present', in:'07:48', out:'17:00', hrs:9.2, type:'Regular' },
+  { day:'Wed', date:4,  status:'present', in:'08:01', out:'17:05', hrs:9.1, type:'Regular' },
+  { day:'Thu', date:5,  status:'present', in:'07:50', out:'17:00', hrs:9.2, type:'Regular' },
+  { day:'Fri', date:6,  status:'late',    in:'08:35', out:'17:10', hrs:8.6, type:'Regular' },
+  { day:'Sat', date:7,  status:'present', in:'07:55', out:'17:00', hrs:9.1, type:'Regular' },
+  { day:'Sun', date:8,  status:'present', in:'07:52', out:'17:00', hrs:9.1, type:'Rest Day' },
+  { day:'Mon', date:9,  status:'present', in:'07:49', out:'17:00', hrs:9.2, type:'Regular' },
+  { day:'Tue', date:10, status:'present', in:'07:50', out:'19:30', hrs:11.7,type:'Regular+OT' },
+  { day:'Wed', date:11, status:'leave',   in:'—',     out:'—',    hrs:0,   type:'Vacation' },
+  { day:'Thu', date:12, status:'absent',  in:'—',     out:'—',    hrs:0,   type:'Absent' },
+  { day:'Fri', date:13, status:'present', in:'07:58', out:'17:01', hrs:9.1, type:'Regular' },
+  { day:'Sat', date:14, status:'present', in:'07:50', out:'17:00', hrs:9.2, type:'Regular' },
+  { day:'Sun', date:15, status:'rest',    in:'—',     out:'—',    hrs:0,   type:'Rest Day' },
+];
+
+const statusStyle = {
+  present:  { bg:'#dcfce7', color:'#16a34a', label:'Present' },
+  late:     { bg:'#fef3c7', color:'#d97706', label:'Late' },
+  absent:   { bg:'#fee2e2', color:'#dc2626', label:'Absent' },
+  leave:    { bg:'#ede9fe', color:'#7c3aed', label:'Leave' },
+  rest:     { bg:'#f3f4f6', color:'#9ca3af', label:'Rest Day' },
+};
+
+const typeStyle = {
+  'Regular':    { color:'#2563eb' },
+  'Regular+OT': { color:'#d97706' },
+  'Rest Day':   { color:'#b91c1c' },
+  'Vacation':   { color:'#7c3aed' },
+  'Absent':     { color:'#dc2626' },
+};
+
+/* ══════════════════════════════════════════════
+   RENDER FUNCTIONS
+══════════════════════════════════════════════ */
+function selectPeriod(btn, idx) {
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const p = periods[idx];
+  document.getElementById('np-period-text').textContent = p.full;
+  document.getElementById('np-amount').textContent      = p.net;
+  document.getElementById('np-gross').textContent       = p.gross;
+  document.getElementById('np-deductions').textContent  = p.ded;
+  document.getElementById('np-released-on').textContent = '📅 ' + p.released;
+  document.getElementById('ps-period').textContent      = p.psPeriod;
+  document.getElementById('ps-release').textContent     = p.psRelease;
+
+  const pill = document.getElementById('pay-status-pill');
+  pill.className = 'pc-status-pill ' + p.status;
+  pill.textContent = p.status === 'released' ? '✅ Released' : p.status === 'pending' ? '⏳ Pending' : '🔄 Processing';
+}
+
+function renderDailyLog() {
+  const body = document.getElementById('daily-log-body');
+  body.innerHTML = dailyLogs.map(row => {
+    const ss = statusStyle[row.status] || statusStyle.rest;
+    const ts = typeStyle[row.type] || { color: 'var(--gray-500)' };
+    const hrsDisplay = row.hrs > 0 ? row.hrs.toFixed(1) + 'h' : '—';
+    const inOut = row.in !== '—' ? `${row.in}<br>${row.out}` : '—';
+
+    return `
+      <div class="dl-row">
+        <div class="dl-date-badge" style="background:${ss.bg};color:${ss.color}">
+          <div class="dl-date-day">${row.day}</div>
+          <div class="dl-date-num">${row.date}</div>
+        </div>
+        <div>
+          <span class="dl-status-pill" style="background:${ss.bg};color:${ss.color}">${ss.label}</span>
+        </div>
+        <div class="dl-time">${inOut}</div>
+        <div class="dl-hrs" style="color:${row.hrs > 0 ? 'var(--gray-900)' : 'var(--gray-300)'}">${hrsDisplay}</div>
+        <div class="dl-type" style="color:${ts.color}">${row.type}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderHistory() {
+  const container = document.getElementById('history-list');
+  const monthInitials = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+  const histData = [
+    { period:'February 1–15, 2026', half:'1st Half', days:'13 days worked', net:'₱ 12,480', status:'released', color:'#16a34a', bg:'#dcfce7', month:'Feb', num:'26' },
+    { period:'January 16–31, 2026', half:'2nd Half', days:'12 days worked', net:'₱ 11,920', status:'released', color:'#16a34a', bg:'#dcfce7', month:'Jan', num:'26' },
+    { period:'January 1–15, 2026',  half:'1st Half', days:'12 days worked', net:'₱ 12,100', status:'released', color:'#16a34a', bg:'#dcfce7', month:'Jan', num:'26' },
+    { period:'December 16–31, 2025',half:'2nd Half', days:'13 days worked', net:'₱ 13,400', status:'released', color:'#16a34a', bg:'#dcfce7', month:'Dec', num:'25' },
+    { period:'December 1–15, 2025', half:'1st Half', days:'12 days worked', net:'₱ 11,680', status:'released', color:'#16a34a', bg:'#dcfce7', month:'Dec', num:'25' },
+  ];
+
+  container.innerHTML = histData.map((h,i) => `
+    <div class="hist-row" onclick="showToast('Viewing ${h.period}')">
+      <div class="hist-period-icon" style="background:${h.bg};color:${h.color}">
+        <div style="font-size:14px;font-weight:800">${h.month}</div>
+        <div style="font-size:9px;opacity:0.7">'${h.num}</div>
+        <div style="font-size:8px;letter-spacing:0.5px">${h.half}</div>
+      </div>
+      <div class="hist-info">
+        <div class="hist-period">${h.period}</div>
+        <div class="hist-days">📅 ${h.days}</div>
+      </div>
+      <div class="hist-right">
+        <div class="hist-amount">${h.net}</div>
+        <div style="margin-top:4px">
+          <span class="hist-status-pill" style="background:${h.bg};color:${h.color}">✅ Released</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════ */
+function openPayslip() { document.getElementById('payslip-modal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalBg(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+function setBn(btn) {
+  document.querySelectorAll('.bn-item').forEach(b => { b.classList.remove('active'); b.querySelector('.bn-pip')?.remove(); });
+  btn.classList.add('active');
+  const pip = document.createElement('div'); pip.className = 'bn-pip'; btn.prepend(pip);
+}
+function sbNav(btn) {
+  document.querySelectorAll('.sb-nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+renderDailyLog();
+renderHistory();
+</script>
+</body>
+</html>

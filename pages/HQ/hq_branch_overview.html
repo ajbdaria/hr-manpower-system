@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Branch Overview — GDC ManPower System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red-900: #3d0c0c;
+    --red-800: #1a0505;
+    --red-700: #7f1d1d;
+    --red-600: #991b1b;
+    --red-500: #b91c1c;
+    --red-400: #dc2626;
+    --red-300: #f87171;
+    --red-100: #fee2e2;
+    --red-50: #fff5f5;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --blue: #2563eb;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-300: #d1d5db;
+    --gray-100: #f3f4f6;
+    --gray-50: #f9fafb;
+    --white: #ffffff;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0eeec;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    color: var(--gray-900);
+  }
+
+  /* ─── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, var(--red-900) 0%, var(--red-800) 100%);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-logo {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--red-500);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 13px; letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .logo-text { line-height: 1.1; }
+  .logo-title { color: #fff; font-weight: 800; font-size: 14px; }
+  .logo-sub { color: var(--red-300); font-size: 9px; letter-spacing: 2.5px; font-weight: 600; }
+
+  .badge-hq {
+    display: inline-block;
+    margin-top: 10px;
+    background: var(--red-500);
+    color: #fecaca;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .sidebar-section-label {
+    padding: 12px 16px 4px;
+    color: rgba(255,255,255,0.28);
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    text-decoration: none;
+    gap: 8px;
+  }
+  .nav-item .nav-left { display: flex; align-items: center; gap: 8px; }
+  .nav-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+  .nav-item.active {
+    color: #fff;
+    background: rgba(255,255,255,0.09);
+    border-left: 3px solid var(--red-300);
+    font-weight: 700;
+  }
+
+  .nav-badge {
+    background: var(--red-500);
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .sidebar-body { flex: 1; padding: 8px 0; overflow-y: auto; }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .avatar {
+    width: 34px; height: 34px;
+    background: var(--red-500);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .avatar-info .name { color: #fff; font-size: 12px; font-weight: 600; }
+  .avatar-info .role { color: rgba(255,255,255,0.38); font-size: 10px; }
+
+  /* ─── MAIN ─────────────────────────────────── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: #fff;
+    padding: 16px 26px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .header-title { font-size: 21px; font-weight: 800; color: var(--gray-900); }
+  .header-sub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+
+  .badge-critical {
+    background: var(--red-100); color: var(--red-500);
+    border-radius: 8px; padding: 6px 12px;
+    font-size: 12px; font-weight: 700;
+    border: 1px solid #fca5a5;
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .btn {
+    border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 12px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--red-500); color: #fff; }
+  .btn-primary:hover { background: var(--red-400); }
+  .btn-outline { background: #fff; color: var(--gray-700); border: 1px solid var(--gray-300); }
+  .btn-outline:hover { background: var(--gray-50); }
+
+  /* KPI Row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    padding: 18px 26px 0;
+    flex-shrink: 0;
+  }
+
+  .kpi-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid #e5e7eb;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    animation: fadeUp 0.4s ease both;
+  }
+  .kpi-card.alert { border: 2px solid #fca5a5; box-shadow: 0 0 0 4px rgba(254,226,226,0.4); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .kpi-label { font-size: 11px; color: var(--gray-500); font-weight: 600; }
+  .kpi-value { font-size: 30px; font-weight: 800; line-height: 1.1; margin-top: 2px; }
+  .kpi-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  .kpi-icon { font-size: 22px; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 2px;
+    padding: 14px 26px 0;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    background: transparent;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    border: none; background: transparent;
+    font-size: 13px; font-weight: 600;
+    color: var(--gray-500);
+    border-bottom: 3px solid transparent;
+    cursor: pointer; margin-bottom: -1px;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .tab-btn.active { color: var(--red-500); border-bottom-color: var(--red-500); }
+  .tab-btn:hover:not(.active) { color: var(--gray-700); }
+
+  /* Content area */
+  .content {
+    flex: 1; overflow-y: auto;
+    padding: 20px 26px;
+  }
+
+  /* Filter chips */
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+  .chip {
+    padding: 5px 14px; border-radius: 20px;
+    border: 2px solid #e5e7eb;
+    background: #fff; color: var(--gray-700);
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .chip.active { background: var(--red-500); color: #fff; border-color: var(--red-500); }
+  .chip:hover:not(.active) { border-color: var(--red-400); color: var(--red-500); }
+
+  /* Branch Grid */
+  .branch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 14px;
+  }
+
+  .branch-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+  .branch-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+  .branch-card.selected { border: 2px solid var(--red-500); box-shadow: 0 4px 20px rgba(185,28,28,0.15); }
+  .branch-card.critical { border: 2px solid #fca5a5; }
+  .branch-card.critical:hover { box-shadow: 0 4px 20px rgba(220,38,38,0.15); }
+
+  .bc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .bc-name { font-size: 17px; font-weight: 800; color: var(--gray-900); }
+  .bc-meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  .status-pill {
+    border-radius: 20px; padding: 3px 11px;
+    font-size: 11px; font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .status-good { background: var(--green-light); color: #15803d; border-color: rgba(22,163,74,0.2); }
+  .status-warning { background: var(--amber-light); color: #92400e; border-color: rgba(217,119,6,0.2); }
+  .status-critical { background: var(--red-100); color: var(--red-500); border-color: rgba(220,38,38,0.2); }
+
+  /* Manpower bar */
+  .mp-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 7px; }
+  .mp-label { color: var(--gray-700); font-weight: 600; }
+  .mp-count { color: var(--gray-700); }
+  .mp-count strong { font-size: 14px; font-weight: 800; }
+  .mp-count span { color: var(--gray-500); }
+
+  .bar-track { background: var(--gray-100); border-radius: 6px; height: 10px; overflow: hidden; margin-bottom: 8px; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+  .bar-green { background: linear-gradient(90deg, #16a34a, #22c55e); }
+  .bar-amber { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .bar-red { background: linear-gradient(90deg, #b91c1c, #dc2626); }
+
+  .gap-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--red-100); color: var(--red-500);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 12px; font-weight: 700; margin-bottom: 12px;
+  }
+
+  /* Attendance mini stats */
+  .att-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .att-cell { text-align: center; background: var(--gray-50); border-radius: 8px; padding: 8px 4px; }
+  .att-num { font-size: 19px; font-weight: 800; line-height: 1; }
+  .att-lbl { font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+
+  .rate-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .rate-label { font-size: 12px; color: var(--gray-500); }
+  .rate-val { font-size: 14px; font-weight: 700; }
+
+  /* Urgent hiring */
+  .hiring-section { border-top: 1px solid var(--gray-100); padding-top: 12px; margin-top: 10px; }
+  .hiring-title { font-size: 11px; font-weight: 700; color: var(--red-500); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+  .hiring-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .htag {
+    border-radius: 20px; padding: 3px 11px;
+    font-size: 11px; font-weight: 700;
+    border: 1px solid;
+  }
+  .htag-urgent { background: var(--red-100); color: var(--red-500); border-color: #fca5a5; }
+  .htag-moderate { background: var(--amber-light); color: #92400e; border-color: #fcd34d; }
+
+  /* ─── POSTINGS TAB ─────────────────────────────────── */
+  .notice-bar {
+    background: linear-gradient(135deg, #fff7ed, #fef3c7);
+    border: 1px solid #fcd34d;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .notice-icon { font-size: 24px; flex-shrink: 0; }
+  .notice-title { font-weight: 700; color: #92400e; font-size: 14px; }
+  .notice-sub { font-size: 12px; color: #b45309; margin-top: 2px; }
+
+  .postings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .post-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    border-left-width: 4px;
+    padding: 16px 18px;
+    animation: fadeUp 0.35s ease both;
+    transition: box-shadow 0.2s;
+  }
+  .post-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+  .post-card.urgent-card { border-left-color: var(--red-400); }
+  .post-card.moderate-card { border-left-color: var(--amber); }
+
+  .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .post-position { font-weight: 800; font-size: 15px; }
+  .post-meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  .priority-pill {
+    border-radius: 20px; padding: 3px 10px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; flex-shrink: 0;
+  }
+  .pill-urgent { background: var(--red-400); color: #fff; }
+  .pill-moderate { background: var(--amber); color: #fff; }
+
+  .post-stats { display: flex; gap: 14px; font-size: 12px; color: var(--gray-700); margin-bottom: 10px; }
+
+  .public-badge {
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 8px; padding: 5px 10px;
+    font-size: 11px; font-weight: 700;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .post-actions { display: flex; gap: 8px; }
+  .post-btn {
+    flex: 1; border: none; border-radius: 8px;
+    padding: 8px 0; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit; transition: all 0.15s;
+  }
+  .post-btn-outline { background: #fff; color: var(--gray-700); border: 1px solid #e5e7eb; }
+  .post-btn-outline:hover { background: var(--gray-50); }
+  .post-btn-solid { background: var(--red-500); color: #fff; border: none; }
+  .post-btn-solid:hover { background: var(--red-400); }
+
+  /* ─── LANDING PREVIEW ─────────────────────────────────── */
+  .landing-preview {
+    background: linear-gradient(160deg, #1a0505 0%, #3d0c0c 100%);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .preview-bar {
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .dot-row { display: flex; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .preview-url {
+    color: var(--red-300); font-size: 12px;
+    background: rgba(255,255,255,0.06);
+    padding: 4px 12px; border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .preview-body { padding: 28px; }
+
+  .preview-eyebrow {
+    text-align: center;
+    color: var(--red-300); font-size: 10px; letter-spacing: 3px;
+    font-weight: 700; margin-bottom: 6px;
+  }
+  .preview-title {
+    text-align: center; color: #fff;
+    font-size: 24px; font-weight: 800; margin-bottom: 6px;
+  }
+  .preview-sub {
+    text-align: center; color: rgba(255,255,255,0.45);
+    font-size: 13px; margin-bottom: 24px;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .preview-card {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 14px 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
+  }
+  .preview-card:hover { background: rgba(255,255,255,0.1); }
+
+  .preview-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .preview-pos { color: #fff; font-weight: 700; font-size: 14px; }
+  .preview-urgent { background: var(--red-400); color: #fff; border-radius: 4px; padding: 1px 7px; font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+  .preview-loc { color: rgba(255,255,255,0.45); font-size: 11px; margin-bottom: 12px; }
+
+  .preview-apply {
+    width: 100%; background: var(--red-500); color: #fff;
+    border: none; border-radius: 7px;
+    padding: 8px 0; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .preview-apply:hover { background: var(--red-400); }
+
+  .more-jobs {
+    text-align: center; margin-top: 16px;
+    color: rgba(255,255,255,0.3); font-size: 12px;
+  }
+
+  /* Scrollbar */
+  .content::-webkit-scrollbar { width: 5px; }
+  .content::-webkit-scrollbar-track { background: transparent; }
+  .content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+  /* Tab panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Stagger animation */
+  .branch-card:nth-child(1) { animation-delay: 0.05s; }
+  .branch-card:nth-child(2) { animation-delay: 0.1s; }
+  .branch-card:nth-child(3) { animation-delay: 0.15s; }
+  .branch-card:nth-child(4) { animation-delay: 0.2s; }
+  .branch-card:nth-child(5) { animation-delay: 0.25s; }
+  .branch-card:nth-child(6) { animation-delay: 0.3s; }
+
+  .post-card:nth-child(1) { animation-delay: 0.05s; }
+  .post-card:nth-child(2) { animation-delay: 0.1s; }
+  .post-card:nth-child(3) { animation-delay: 0.15s; }
+  .post-card:nth-child(4) { animation-delay: 0.2s; }
+  .post-card:nth-child(5) { animation-delay: 0.25s; }
+  .post-card:nth-child(6) { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-row">
+      <div class="logo-icon">GDC</div>
+      <div class="logo-text">
+        <div class="logo-title">ManPower</div>
+        <div class="logo-sub">Monitoring System</div>
+      </div>
+    </div>
+    <div class="badge-hq">★ HQ — HR ADMIN</div>
+  </div>
+
+  <div class="sidebar-body">
+    <div class="sidebar-section-label">Navigation</div>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>▦</span> HQ Dashboard</div>
+    </a>
+    <a class="nav-item active" href="#">
+      <div class="nav-left"><span>⊞</span> Branch Overview</div>
+    </a>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>📊</span> Analytics & Reports</div>
+    </a>
+
+    <div class="sidebar-section-label">Workforce</div>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>👥</span> All Employees</div>
+      <span class="nav-badge">248</span>
+    </a>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>🕐</span> Attendance Monitor</div>
+    </a>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>📅</span> Schedules</div>
+    </a>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>🚀</span> Deployments</div>
+    </a>
+
+    <div class="sidebar-section-label">Hiring</div>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>📋</span> Job Postings</div>
+      <span class="nav-badge" id="sidebar-postings-count">10</span>
+    </a>
+    <a class="nav-item" href="#">
+      <div class="nav-left"><span>📥</span> Applications</div>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="avatar">BA</div>
+    <div class="avatar-info">
+      <div class="name">HR Administrator</div>
+      <div class="role">HQ — Super Admin</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="header-title">⊞ Branch Overview</div>
+      <div class="header-sub">Manpower status, attendance rates & urgent hiring needs — Feb 20, 2026</div>
+    </div>
+    <div class="header-actions">
+      <div class="badge-critical" id="critical-badge">🔴 2 Critical Branches</div>
+      <button class="btn btn-outline">🔔 Notify Branches</button>
+      <button class="btn btn-primary">📤 Export Report</button>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi-card" style="animation-delay:0.05s">
+      <div>
+        <div class="kpi-label">Total Branches</div>
+        <div class="kpi-value" style="color:var(--blue)" id="kpi-branches">6</div>
+        <div class="kpi-sub">Active nationwide</div>
+      </div>
+      <div class="kpi-icon">🏢</div>
+    </div>
+    <div class="kpi-card" style="animation-delay:0.1s">
+      <div>
+        <div class="kpi-label">Present Today</div>
+        <div class="kpi-value" style="color:var(--green)" id="kpi-present">172</div>
+        <div class="kpi-sub" id="kpi-present-sub">of 202 deployed</div>
+      </div>
+      <div class="kpi-icon">✅</div>
+    </div>
+    <div class="kpi-card alert" style="animation-delay:0.15s">
+      <div>
+        <div class="kpi-label">Manpower Gap</div>
+        <div class="kpi-value" style="color:var(--red-400)" id="kpi-gap">26</div>
+        <div class="kpi-sub">Positions unfilled vs required</div>
+      </div>
+      <div class="kpi-icon">⚠️</div>
+    </div>
+    <div class="kpi-card" style="animation-delay:0.2s">
+      <div>
+        <div class="kpi-label">Open Job Postings</div>
+        <div class="kpi-value" style="color:var(--amber)" id="kpi-postings">10</div>
+        <div class="kpi-sub">Urgent positions needed</div>
+      </div>
+      <div class="kpi-icon">📋</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">Branch Status</button>
+    <button class="tab-btn" onclick="switchTab('postings', this)" id="postings-tab-btn">📋 Job Postings (10)</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ── OVERVIEW TAB ── -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="filters">
+        <button class="chip active" onclick="filterBranches('all', this)">All Branches</button>
+        <button class="chip" onclick="filterBranches('good', this)">✅ Good</button>
+        <button class="chip" onclick="filterBranches('warning', this)">⚠️ Warning</button>
+        <button class="chip" onclick="filterBranches('critical', this)">🔴 Critical</button>
+      </div>
+      <div class="branch-grid" id="branch-grid"></div>
+    </div>
+
+    <!-- ── POSTINGS TAB ── -->
+    <div class="tab-panel" id="tab-postings">
+      <div class="notice-bar">
+        <div class="notice-icon">🌐</div>
+        <div>
+          <div class="notice-title">Public Job Postings — Visible on Company Landing Page</div>
+          <div class="notice-sub">Only positions marked as "Needed" are automatically published. Applicants can apply directly from the public careers page.</div>
+        </div>
+        <button class="btn btn-primary" style="margin-left:auto;flex-shrink:0" onclick="scrollToPreview()">🌐 View Preview ↓</button>
+      </div>
+
+      <div class="postings-grid" id="postings-grid"></div>
+
+      <!-- Landing Page Preview -->
+      <div class="landing-preview" id="landing-preview">
+        <div class="preview-bar">
+          <div class="dot-row">
+            <div class="dot" style="background:#ff5f57"></div>
+            <div class="dot" style="background:#febc2e"></div>
+            <div class="dot" style="background:#28c840"></div>
+          </div>
+          <div class="preview-url">🌐 gdcmanpower.com/careers — Public Landing Page Preview</div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-eyebrow">GDC MANPOWER · CAREERS</div>
+          <div class="preview-title">We're Hiring — Join Our Team</div>
+          <div class="preview-sub">Urgent openings available across our branches nationwide</div>
+          <div class="preview-grid" id="preview-grid"></div>
+          <div class="more-jobs" id="more-jobs-label"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const branches = [
+  {
+    id: "ncr-north",
+    name: "NCR North",
+    location: "Quezon City",
+    manager: "Ana Reyes",
+    present: 41, total: 48, required: 50,
+    late: 3, absent: 4, onLeave: 2, rate: 85,
+    status: "warning",
+    urgentHiring: [
+      { position: "Security Guard", needed: 3, priority: "urgent" },
+      { position: "HR Staff", needed: 1, priority: "moderate" },
+    ],
+  },
+  {
+    id: "ncr-south",
+    name: "NCR South",
+    location: "Parañaque City",
+    manager: "Ben Santos",
+    present: 30, total: 35, required: 40,
+    late: 2, absent: 3, onLeave: 1, rate: 86,
+    status: "warning",
+    urgentHiring: [
+      { position: "Admin Assistant", needed: 2, priority: "urgent" },
+      { position: "Technician", needed: 3, priority: "urgent" },
+    ],
+  },
+  {
+    id: "cebu-main",
+    name: "Cebu Main",
+    location: "Cebu City",
+    manager: "Clara Lim",
+    present: 38, total: 42, required: 42,
+    late: 1, absent: 2, onLeave: 1, rate: 90,
+    status: "good",
+    urgentHiring: [],
+  },
+  {
+    id: "davao",
+    name: "Davao",
+    location: "Davao City",
+    manager: "Dan Cruz",
+    present: 26, total: 31, required: 38,
+    late: 4, absent: 1, onLeave: 3, rate: 84,
+    status: "critical",
+    urgentHiring: [
+      { position: "Driver", needed: 4, priority: "urgent" },
+      { position: "Security Guard", needed: 2, priority: "urgent" },
+      { position: "Admin Staff", needed: 1, priority: "moderate" },
+    ],
+  },
+  {
+    id: "iloilo",
+    name: "Iloilo",
+    location: "Iloilo City",
+    manager: "Eva Flores",
+    present: 26, total: 28, required: 28,
+    late: 0, absent: 2, onLeave: 0, rate: 93,
+    status: "good",
+    urgentHiring: [],
+  },
+  {
+    id: "batangas",
+    name: "Batangas",
+    location: "Batangas City",
+    manager: "Fred Mendez",
+    present: 11, total: 18, required: 30,
+    late: 2, absent: 5, onLeave: 0, rate: 61,
+    status: "critical",
+    urgentHiring: [
+      { position: "Technician", needed: 5, priority: "urgent" },
+      { position: "Driver", needed: 3, priority: "urgent" },
+      { position: "Security Guard", needed: 4, priority: "urgent" },
+    ],
+  },
+];
+
+const postings = branches.flatMap(b =>
+  b.urgentHiring.map(h => ({
+    branch: b.name,
+    location: b.location,
+    position: h.position,
+    needed: h.needed,
+    priority: h.priority,
+  }))
+);
+
+let selectedBranchId = null;
+let activeFilter = "all";
+
+function statusLabel(s) {
+  if (s === "good") return "✅ Good";
+  if (s === "warning") return "⚠️ Warning";
+  return "🔴 Critical";
+}
+
+function barClass(branch) {
+  const pct = branch.total / branch.required;
+  if (pct >= 1) return "bar-green";
+  if (pct >= 0.8) return "bar-amber";
+  return "bar-red";
+}
+
+function rateColor(s) {
+  if (s === "good") return "var(--green)";
+  if (s === "warning") return "var(--amber)";
+  return "var(--red-400)";
+}
+
+function renderBranches(filter) {
+  const grid = document.getElementById("branch-grid");
+  const filtered = filter === "all" ? branches : branches.filter(b => b.status === filter);
+
+  grid.innerHTML = filtered.map(b => {
+    const gap = Math.max(0, b.required - b.total);
+    const pct = Math.min(100, (b.total / b.required) * 100);
+
+    const hiringHtml = b.urgentHiring.length > 0 ? `
+      <div class="hiring-section">
+        <div class="hiring-title">🚨 URGENT HIRING NEEDED</div>
+        <div class="hiring-tags">
+          ${b.urgentHiring.map(h => `
+            <span class="htag ${h.priority === "urgent" ? "htag-urgent" : "htag-moderate"}">
+              ${h.position} ×${h.needed}
+            </span>
+          `).join("")}
+        </div>
+      </div>` : "";
+
+    const gapHtml = gap > 0 ? `
+      <div class="gap-badge">⚡ Needs ${gap} more employee${gap > 1 ? "s" : ""}</div>` : "";
+
+    return `
+      <div class="branch-card ${b.status === "critical" ? "critical" : ""} ${selectedBranchId === b.id ? "selected" : ""}"
+           id="bc-${b.id}"
+           onclick="selectBranch('${b.id}')">
+        <div class="bc-header">
+          <div>
+            <div class="bc-name">${b.name}</div>
+            <div class="bc-meta">📍 ${b.location} · Manager: ${b.manager}</div>
+          </div>
+          <span class="status-pill status-${b.status}">${statusLabel(b.status)}</span>
+        </div>
+
+        <div class="mp-row">
+          <span class="mp-label">Manpower Level</span>
+          <span class="mp-count"><strong>${b.total}</strong><span> / ${b.required} required</span></span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill ${barClass(b)}" style="width:${pct}%"></div>
+        </div>
+        ${gapHtml}
+
+        <div class="att-grid">
+          <div class="att-cell">
+            <div class="att-num" style="color:var(--green)">${b.present}</div>
+            <div class="att-lbl">Present</div>
+          </div>
+          <div class="att-cell">
+            <div class="att-num" style="color:var(--amber)">${b.late}</div>
+            <div class="att-lbl">Late</div>
+          </div>
+          <div class="att-cell">
+            <div class="att-num" style="color:var(--red-400)">${b.absent}</div>
+            <div class="att-lbl">Absent</div>
+          </div>
+          <div class="att-cell">
+            <div class="att-num" style="color:var(--gray-500)">${b.onLeave}</div>
+            <div class="att-lbl">On Leave</div>
+          </div>
+        </div>
+
+        <div class="rate-row">
+          <span class="rate-label">Attendance Rate</span>
+          <span class="rate-val" style="color:${rateColor(b.status)}">${b.rate}%</span>
+        </div>
+
+        ${hiringHtml}
+      </div>`;
+  }).join("");
+}
+
+function renderPostings() {
+  const grid = document.getElementById("postings-grid");
+  grid.innerHTML = postings.map((p, i) => `
+    <div class="post-card ${p.priority}-card" style="animation-delay:${(i+1)*0.05}s">
+      <div class="post-header">
+        <div>
+          <div class="post-position">${p.position}</div>
+          <div class="post-meta">📍 ${p.branch} · ${p.location}</div>
+        </div>
+        <span class="priority-pill pill-${p.priority}">${p.priority}</span>
+      </div>
+      <div class="post-stats">
+        <span>👥 <strong style="color:var(--red-500)">${p.needed}</strong> slot${p.needed > 1 ? "s" : ""} needed</span>
+        <span>📅 Feb 20, 2026</span>
+      </div>
+      <div class="public-badge">🌐 Visible on public careers page</div>
+      <div class="post-actions">
+        <button class="post-btn post-btn-outline">✏️ Edit Posting</button>
+        <button class="post-btn post-btn-solid">👤 View Applicants</button>
+      </div>
+    </div>
+  `).join("");
+
+  const preview = document.getElementById("preview-grid");
+  const show = postings.slice(0, 6);
+  preview.innerHTML = show.map(p => `
+    <div class="preview-card">
+      <div class="preview-card-top">
+        <span class="preview-pos">${p.position}</span>
+        ${p.priority === "urgent" ? '<span class="preview-urgent">URGENT</span>' : ""}
+      </div>
+      <div class="preview-loc">📍 ${p.branch} · ${p.needed} opening${p.needed > 1 ? "s" : ""}</div>
+      <button class="preview-apply">Apply Now →</button>
+    </div>
+  `).join("");
+
+  const extra = postings.length - 6;
+  document.getElementById("more-jobs-label").textContent =
+    extra > 0 ? `+${extra} more positions available` : "";
+}
+
+function updateKPIs() {
+  const totalPresent = branches.reduce((a, b) => a + b.present, 0);
+  const totalDeployed = branches.reduce((a, b) => a + b.total, 0);
+  const totalGap = branches.reduce((a, b) => a + Math.max(0, b.required - b.total), 0);
+  const critical = branches.filter(b => b.status === "critical").length;
+
+  document.getElementById("kpi-present").textContent = totalPresent;
+  document.getElementById("kpi-present-sub").textContent = `of ${totalDeployed} deployed`;
+  document.getElementById("kpi-gap").textContent = totalGap;
+  document.getElementById("kpi-postings").textContent = postings.length;
+  document.getElementById("kpi-branches").textContent = branches.length;
+  document.getElementById("critical-badge").innerHTML = `🔴 ${critical} Critical Branch${critical !== 1 ? "es" : ""}`;
+  document.getElementById("postings-tab-btn").textContent = `📋 Job Postings (${postings.length})`;
+  document.getElementById("sidebar-postings-count").textContent = postings.length;
+  document.getElementById("kpi-postings").textContent = postings.length;
+}
+
+function selectBranch(id) {
+  selectedBranchId = selectedBranchId === id ? null : id;
+  document.querySelectorAll(".branch-card").forEach(el => el.classList.remove("selected"));
+  if (selectedBranchId) {
+    const el = document.getElementById("bc-" + selectedBranchId);
+    if (el) el.classList.add("selected");
+  }
+}
+
+function filterBranches(filter, btn) {
+  activeFilter = filter;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  btn.classList.add("active");
+  selectedBranchId = null;
+  renderBranches(filter);
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-" + tab).classList.add("active");
+}
+
+function scrollToPreview() {
+  document.getElementById("landing-preview").scrollIntoView({ behavior: "smooth" });
+}
+
+// Init
+updateKPIs();
+renderBranches("all");
+renderPostings();
+</script>
+</body>
+</html>
